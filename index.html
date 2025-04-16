@@ -2,39 +2,74 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #FFFFFF; /* 배경색: 하얀색 */
-            height: 100vh; /* 전체 화면 높이 */
+            background-color: #FFFFFF;
+            height: 100vh;
             display: flex;
-            flex-direction: column; /* 세로 배치 */
-            justify-content: center; /* 전체를 중앙으로 */
-            align-items: center; /* 가운데 정렬 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         h1 {
-            color: #000000; /* 글자색: 검정색 */
-            font-size: 24px; /* 글자 크기 */
-            margin: 0; /* 기본 여백 제거 */
-            padding-bottom: 10px; /* 보드와의 간격 최소화 */
+            color: #000000;
+            font-size: 24px;
+            margin: 0;
+            padding-bottom: 10px;
             text-align: center;
         }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1240px; /* 패딩 포함 1200px + 20px*2 */
+        }
         .attractt-container {
-            width: 1200px; /* 가로 1200px */
-            height: 675px; /* 세로 675px (16:9 비율) */
-            margin: 0; /* 외부 여백 제거 */
-            padding: 20px; /* 내부 여백 유지 */
-            box-sizing: border-box; /* 패딩 포함 크기 계산 */
-            overflow: hidden; /* 넘치는 콘텐츠 숨김 */
-            background-color: #FFFFFF; /* 보드 주변 배경 하얀색 */
+            width: 1200px;
+            height: 675px;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+            background-color: #FFFFFF;
+        }
+        .side-image {
+            display: none; /* PC에서는 이미지 숨김 */
+        }
+
+        /* 모바일 뷰 (최대 768px, 가로 orientation) */
+        @media screen and (max-width: 768px) and (orientation: landscape) {
+            .content-container {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 100%;
+                padding: 0 10px;
+            }
+            .attractt-container {
+                width: 50%;
+                height: 675px;
+                padding: 10px;
+            }
+            .side-image {
+                display: block;
+                width: 50%;
+                height: 675px;
+                object-fit: cover; /* 이미지 비율 유지 */
+            }
         }
     </style>
 </head>
 <body>
     <h1>Attractt #꽃게당 #シンサコッケタン</h1>
 
-    <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
+    <div class="content-container">
+        <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="grid" data-grid="4x2"></div>
+        <img class="side-image" src="https://www.dailysecu.com/news/photo/202501/162741_190795_5437.jpg" alt="Side Image">
+    </div>
 
     <script type="text/javascript">
         // ATTRACTT 기본 스크립트
@@ -49,13 +84,22 @@
             e.parentNode.insertBefore(j, e);
         })(document, "script");
 
+        // 모바일 뷰에서 data-grid 변경
+        (function() {
+            const attracttContainer = document.querySelector(".attractt-container");
+            if (window.matchMedia("(max-width: 768px) and (orientation: landscape)").matches) {
+                attracttContainer.setAttribute("data-grid", "2x2");
+                console.log("Set grid to 2x2 for mobile landscape");
+            }
+        })();
+
         // 자동 슬라이드 스크립트
         (function() {
             try {
                 console.log("Auto-slide script started");
 
-                const slideInterval = 5000; // n초 (5초)
-                const direction = "right"; // k 방향 ("left" 또는 "right")
+                const slideInterval = 5000;
+                const direction = "right";
                 const nextButtonSelector = "#next-button";
                 const prevButtonSelector = "#prev-button";
 
@@ -65,7 +109,6 @@
                         const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
                         if (button) {
                             console.log("Button found:", button);
-                            // 버튼 위치 정보 로그
                             const rect = button.getBoundingClientRect();
                             console.log("Button position: right side, width ~50px, height 675px, rect:", rect);
 
@@ -79,7 +122,7 @@
                                 console.warn("Mouseover event failed:", e);
                             }
 
-                            // 호버 후 약간 지연 후 클릭
+                            // 호버 후 클릭
                             setTimeout(() => {
                                 try {
                                     button.click();
@@ -87,7 +130,7 @@
                                 } catch (e) {
                                     console.warn("Default click failed:", e);
                                 }
-                            }, 100); // 100ms 지연
+                            }, 100);
                         } else {
                             console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
                             const altButton = document.querySelector(".arrow-button.right");
@@ -106,18 +149,24 @@
                     setInterval(moveSlide, slideInterval);
                 }
 
-                // 버튼 로드 대기
+                // 버튼 및 보드 로드 대기
                 let attempts = 0;
-                const maxAttempts = 60; // 최대 30초 대기
+                const maxAttempts = 60;
                 setTimeout(function checkButtonLoaded() {
                     try {
                         const button = document.querySelector(nextButtonSelector);
                         const board = document.querySelector(".attractt-container");
                         attempts++;
-                        if (board && board.children.length > 0) {
-                            console.log("Board has content, children:", board.children.length);
-                        } else {
-                            console.warn("Board is empty or not loaded");
+                        if (board) {
+                            if (board.children.length > 0) {
+                                console.log("Board has content, children:", board.children.length);
+                                const boardContent = board.innerHTML.toLowerCase();
+                                if (boardContent.includes("유료") || boardContent.includes("premium") || boardContent.includes("upgrade")) {
+                                    console.warn("Premium plan message detected in board content");
+                                }
+                            } else {
+                                console.warn("Board is empty or not loaded");
+                            }
                         }
                         if (button) {
                             console.log("Next button loaded, starting slider");
