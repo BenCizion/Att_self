@@ -29,24 +29,10 @@
             overflow: hidden; /* 넘치는 콘텐츠 숨김 */
             background-color: #FFFFFF; /* 보드 주변 배경 하얀색 */
         }
-        /* 버튼 강제 활성화 */
-        .arrow-button, #prev-button, #next-button {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            position: static !important;
-            z-index: 9999 !important;
-            width: 50px !important; /* 버튼 크기 보장 */
-            height: 580px !important;
-        }
-        /* 버튼 부모 컨테이너도 강제 표시 */
-        .attractt-container * {
-            display: block !important;
-        }
     </style>
 </head>
 <body>
-    <h1>Attractt #꽃게당 #シンサコッケタン v.2</h1>
+    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
 
     <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
 
@@ -58,76 +44,87 @@
             j = d.createElement(s);
             j.src = h;
             j.async = true;
+            j.onload = function() { console.log("Attractt index.js loaded"); };
+            j.onerror = function() { console.warn("Failed to load Attractt index.js"); alert("Failed to load Attractt script"); };
             e.parentNode.insertBefore(j, e);
         })(document, "script");
 
         // 자동 슬라이드 스크립트
         (function() {
-            const slideInterval = 5000; // n초 (5초)
-            const direction = "right"; // k 방향 ("left" 또는 "right")
+            try {
+                console.log("Auto-slide script started");
+                alert("Auto-slide script started"); // Full Screen Browser 디버깅용
 
-            // 버튼 선택자
-            const prevButtonSelector = "#prev-button"; // <div id="prev-button" class="arrow-button left">
-            const nextButtonSelector = "#next-button"; // <div id="next-button" class="arrow-button right">
+                const slideInterval = 5000; // n초 (5초)
+                const direction = "right"; // k 방향 ("left" 또는 "right")
+                const prevButtonSelector = "#prev-button";
+                const nextButtonSelector = "#next-button";
 
-            // 슬라이드 이동 함수
-            function moveSlide() {
-                // 1. ATTRACTT API 우선 시도
-                if (window.AttracttTower && typeof window.AttracttTower.next === "function" && direction === "right") {
-                    console.log("Using AttracttTower.next()");
-                    window.AttracttTower.next();
-                    return;
-                }
-                if (window.AttracttTower && typeof window.AttracttTower.prev === "function" && direction === "left") {
-                    console.log("Using AttracttTower.prev()");
-                    window.AttracttTower.prev();
-                    return;
-                }
-
-                // 2. 버튼 클릭 대체
-                const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
-                if (button) {
-                    console.log("Button found:", button);
-                    // 버튼 강제 활성화
-                    button.style.display = "block";
-                    button.style.visibility = "visible";
-                    button.style.opacity = "1";
-
-                    // 기본 클릭
+                // 슬라이드 이동 함수
+                function moveSlide() {
                     try {
-                        button.click();
-                        console.log("Default click attempted");
+                        // 버튼 클릭 대체
+                        const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
+                        if (button) {
+                            console.log("Button found:", button);
+                            button.click();
+                            console.log("Default click attempted");
+                        } else {
+                            console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
+                        }
                     } catch (e) {
-                        console.warn("Default click failed:", e);
+                        console.warn("Move slide error:", e);
+                        alert("Move slide error: " + e.message);
                     }
+                }
 
-                    // MouseEvent 클릭
+                // 슬라이더 초기화
+                function initSlider() {
+                    console.log("Slider initialized");
+                    alert("Slider initialized");
+                    setInterval(moveSlide, slideInterval);
+                }
+
+                // 보드 및 버튼 로드 대기
+                let attempts = 0;
+                const maxAttempts = 120; // 최대 60초 대기
+                setTimeout(function checkBoardLoaded() {
                     try {
-                        const clickEvent = document.createEvent("MouseEvents");
-                        clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                        button.dispatchEvent(clickEvent);
-                        console.log("MouseEvent click dispatched");
+                        const board = document.querySelector(".attractt-container");
+                        const button = document.querySelector(nextButtonSelector);
+                        attempts++;
+                        if (board) {
+                            console.log("Board container loaded");
+                            if (board.children.length > 0) {
+                                console.log("Board has content, children:", board.children.length);
+                            } else {
+                                console.warn("Board is empty (white screen?)");
+                                alert("Board is empty (white screen?)");
+                            }
+                        }
+                        if (button || (window.AttracttTower && typeof window.AttracttTower.next === "function")) {
+                            console.log("Next button or API loaded, starting slider");
+                            alert("Slider starting");
+                            initSlider();
+                        } else {
+                            console.log("Waiting for button/API... Attempt:", attempts);
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkBoardLoaded, 500);
+                            } else {
+                                console.warn("Failed to load button/API after", maxAttempts, "attempts");
+                                alert("Failed to load slider after 60s");
+                            }
+                        }
                     } catch (e) {
-                        console.warn("MouseEvent click failed:", e);
+                        console.warn("Check board error:", e);
+                        alert("Check board error: " + e.message);
                     }
-                } else {
-                    console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
-                    // 추가 디버깅: DOM에 버튼 있는지 확인
-                    const altButton = document.querySelector(".arrow-button.right");
-                    if (altButton) {
-                        console.log("Alternative button found:", altButton);
-                    }
-                }
+                }, 500);
+            } catch (e) {
+                console.warn("Auto-slide script error:", e);
+                alert("Auto-slide script error: " + e.message);
             }
-
-            // 슬라이더 초기화
-            function initSlider() {
-                console.log("Slider initialized");
-                setInterval(moveSlide, slideInterval);
-                // ATTRACTT API 확인
-                if (window.AttracttTower) {
-                    console.log("AttracttTower API found:", window.AttracttTower);
-                }
-            }
-
-            // 버튼 로
+        })();
+    </script>
+</body>
+</html>
