@@ -40,12 +40,12 @@
         // ATTRACTT 기본 스크립트
         (function(d, s) {
             var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
-            if (typeof AttracttTower === "function" || e.src === h) { return; }
+            if (e.src === h) { return; }
             j = d.createElement(s);
             j.src = h;
             j.async = true;
             j.onload = function() { console.log("Attractt index.js loaded"); };
-            j.onerror = function() { console.warn("Failed to load Attractt index.js"); alert("Failed to load Attractt script"); };
+            j.onerror = function() { console.warn("Failed to load Attractt index.js"); };
             e.parentNode.insertBefore(j, e);
         })(document, "script");
 
@@ -53,76 +53,89 @@
         (function() {
             try {
                 console.log("Auto-slide script started");
-                alert("Auto-slide script started"); // Full Screen Browser 디버깅용
 
                 const slideInterval = 5000; // n초 (5초)
                 const direction = "right"; // k 방향 ("left" 또는 "right")
-                const prevButtonSelector = "#prev-button";
                 const nextButtonSelector = "#next-button";
+                const prevButtonSelector = "#prev-button";
 
                 // 슬라이드 이동 함수
                 function moveSlide() {
                     try {
-                        // 버튼 클릭 대체
                         const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
                         if (button) {
                             console.log("Button found:", button);
-                            button.click();
-                            console.log("Default click attempted");
+                            // 버튼 위치 정보 로그
+                            const rect = button.getBoundingClientRect();
+                            console.log("Button position: right side, width ~50px, height 675px, rect:", rect);
+
+                            // 호버 이벤트
+                            try {
+                                const hoverEvent = document.createEvent("MouseEvents");
+                                hoverEvent.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                button.dispatchEvent(hoverEvent);
+                                console.log("Mouseover event dispatched");
+                            } catch (e) {
+                                console.warn("Mouseover event failed:", e);
+                            }
+
+                            // 호버 후 약간 지연 후 클릭
+                            setTimeout(() => {
+                                try {
+                                    button.click();
+                                    console.log("Default click attempted");
+                                } catch (e) {
+                                    console.warn("Default click failed:", e);
+                                }
+                            }, 100); // 100ms 지연
                         } else {
                             console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
+                            const altButton = document.querySelector(".arrow-button.right");
+                            if (altButton) {
+                                console.log("Alternative button found:", altButton);
+                            }
                         }
                     } catch (e) {
                         console.warn("Move slide error:", e);
-                        alert("Move slide error: " + e.message);
                     }
                 }
 
                 // 슬라이더 초기화
                 function initSlider() {
                     console.log("Slider initialized");
-                    alert("Slider initialized");
                     setInterval(moveSlide, slideInterval);
                 }
 
-                // 보드 및 버튼 로드 대기
+                // 버튼 로드 대기
                 let attempts = 0;
-                const maxAttempts = 120; // 최대 60초 대기
-                setTimeout(function checkBoardLoaded() {
+                const maxAttempts = 60; // 최대 30초 대기
+                setTimeout(function checkButtonLoaded() {
                     try {
-                        const board = document.querySelector(".attractt-container");
                         const button = document.querySelector(nextButtonSelector);
+                        const board = document.querySelector(".attractt-container");
                         attempts++;
-                        if (board) {
-                            console.log("Board container loaded");
-                            if (board.children.length > 0) {
-                                console.log("Board has content, children:", board.children.length);
-                            } else {
-                                console.warn("Board is empty (white screen?)");
-                                alert("Board is empty (white screen?)");
-                            }
+                        if (board && board.children.length > 0) {
+                            console.log("Board has content, children:", board.children.length);
+                        } else {
+                            console.warn("Board is empty or not loaded");
                         }
-                        if (button || (window.AttracttTower && typeof window.AttracttTower.next === "function")) {
-                            console.log("Next button or API loaded, starting slider");
-                            alert("Slider starting");
+                        if (button) {
+                            console.log("Next button loaded, starting slider");
                             initSlider();
                         } else {
-                            console.log("Waiting for button/API... Attempt:", attempts);
+                            console.log("Waiting for button... Attempt:", attempts);
                             if (attempts < maxAttempts) {
-                                setTimeout(checkBoardLoaded, 500);
+                                setTimeout(checkButtonLoaded, 500);
                             } else {
-                                console.warn("Failed to load button/API after", maxAttempts, "attempts");
-                                alert("Failed to load slider after 60s");
+                                console.warn("Failed to load button after", maxAttempts, "attempts");
                             }
                         }
                     } catch (e) {
-                        console.warn("Check board error:", e);
-                        alert("Check board error: " + e.message);
+                        console.warn("Check button error:", e);
                     }
                 }, 500);
             } catch (e) {
                 console.warn("Auto-slide script error:", e);
-                alert("Auto-slide script error: " + e.message);
             }
         })();
     </script>
