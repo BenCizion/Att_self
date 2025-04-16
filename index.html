@@ -1,88 +1,64 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-            /* ✅ 배경 이미지 추가 */
-            background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+    h1 {
+      color: #000;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.7); /* 배경이 흐릴 때 가독성용 */
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
 
-        h1 {
-            color: #000000;
-            font-size: 24px;
-            margin: 0;
-            padding-bottom: 10px;
-            text-align: center;
-        }
+    .attractt-container {
+      width: 1200px;
+      height: 675px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
 
-        .content-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 1240px;
-        }
-
-        .attractt-container {
-            width: 1200px;
-            height: 675px;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.9); /* ✅ 반투명 배경 처리 */
-            border-radius: 12px;
-        }
-
-        .side-image {
-            display: none;
-        }
-
-        @media screen and (max-width: 768px) and (orientation: landscape) {
-            .content-container {
-                flex-direction: row;
-                justify-content: space-between;
-                max-width: 100%;
-                padding: 0 10px;
-            }
-            .attractt-container {
-                width: 50%;
-                height: 675px;
-                padding: 10px;
-            }
-            .side-image {
-                display: block;
-                width: 50%;
-                height: 675px;
-                object-fit: cover;
-            }
-        }
-    </style>
+    @media screen and (max-width: 768px) {
+      .attractt-container {
+        width: 90%;
+        height: auto;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
+  <h1>Attractt #꽃게당 #シンサコッケタン</h1>
 
-    <div class="content-container">
-        <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="grid" data-grid="4x2"></div>
-        <img class="side-image" src="https://www.dailysecu.com/news/photo/202501/162741_190795_5437.jpg" alt="Side Image">
-    </div>
+  <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
 
-    <!-- 👇 이하 스크립트 동일 (생략) -->
-    <script type="text/javascript">
-        /* 기존 스크립트 동일 */
-    </script>
+  <script type="text/javascript">
+    (function(d, s) {
+      var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
+      if (typeof AttracttTower === "function" || e.src === h) { return; }
+      j = d.createElement(s);
+      j.src = h;
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, "script");
+  </script>
 </body>
 </html>
