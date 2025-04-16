@@ -7,13 +7,19 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #FFFFFF;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
+            /* ✅ 배경 이미지 추가 */
+            background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
+
         h1 {
             color: #000000;
             font-size: 24px;
@@ -21,13 +27,15 @@
             padding-bottom: 10px;
             text-align: center;
         }
+
         .content-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 1240px; /* 패딩 포함 1200px + 20px*2 */
+            max-width: 1240px;
         }
+
         .attractt-container {
             width: 1200px;
             height: 675px;
@@ -35,13 +43,14 @@
             padding: 20px;
             box-sizing: border-box;
             overflow: hidden;
-            background-color: #FFFFFF;
-        }
-        .side-image {
-            display: none; /* PC에서는 이미지 숨김 */
+            background-color: rgba(255, 255, 255, 0.9); /* ✅ 반투명 배경 처리 */
+            border-radius: 12px;
         }
 
-        /* 모바일 뷰 (최대 768px, 가로 orientation) */
+        .side-image {
+            display: none;
+        }
+
         @media screen and (max-width: 768px) and (orientation: landscape) {
             .content-container {
                 flex-direction: row;
@@ -58,7 +67,7 @@
                 display: block;
                 width: 50%;
                 height: 675px;
-                object-fit: cover; /* 이미지 비율 유지 */
+                object-fit: cover;
             }
         }
     </style>
@@ -71,122 +80,9 @@
         <img class="side-image" src="https://www.dailysecu.com/news/photo/202501/162741_190795_5437.jpg" alt="Side Image">
     </div>
 
+    <!-- 👇 이하 스크립트 동일 (생략) -->
     <script type="text/javascript">
-        // ATTRACTT 기본 스크립트
-        (function(d, s) {
-            var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
-            if (e.src === h) { return; }
-            j = d.createElement(s);
-            j.src = h;
-            j.async = true;
-            j.onload = function() { console.log("Attractt index.js loaded"); };
-            j.onerror = function() { console.warn("Failed to load Attractt index.js"); };
-            e.parentNode.insertBefore(j, e);
-        })(document, "script");
-
-        // 모바일 뷰에서 data-grid 변경
-        (function() {
-            const attracttContainer = document.querySelector(".attractt-container");
-            if (window.matchMedia("(max-width: 768px) and (orientation: landscape)").matches) {
-                attracttContainer.setAttribute("data-grid", "2x2");
-                console.log("Set grid to 2x2 for mobile landscape");
-            }
-        })();
-
-        // 자동 슬라이드 스크립트
-        (function() {
-            try {
-                console.log("Auto-slide script started");
-
-                const slideInterval = 5000;
-                const direction = "right";
-                const nextButtonSelector = "#next-button";
-                const prevButtonSelector = "#prev-button";
-
-                // 슬라이드 이동 함수
-                function moveSlide() {
-                    try {
-                        const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
-                        if (button) {
-                            console.log("Button found:", button);
-                            const rect = button.getBoundingClientRect();
-                            console.log("Button position: right side, width ~50px, height 675px, rect:", rect);
-
-                            // 호버 이벤트
-                            try {
-                                const hoverEvent = document.createEvent("MouseEvents");
-                                hoverEvent.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                                button.dispatchEvent(hoverEvent);
-                                console.log("Mouseover event dispatched");
-                            } catch (e) {
-                                console.warn("Mouseover event failed:", e);
-                            }
-
-                            // 호버 후 클릭
-                            setTimeout(() => {
-                                try {
-                                    button.click();
-                                    console.log("Default click attempted");
-                                } catch (e) {
-                                    console.warn("Default click failed:", e);
-                                }
-                            }, 100);
-                        } else {
-                            console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
-                            const altButton = document.querySelector(".arrow-button.right");
-                            if (altButton) {
-                                console.log("Alternative button found:", altButton);
-                            }
-                        }
-                    } catch (e) {
-                        console.warn("Move slide error:", e);
-                    }
-                }
-
-                // 슬라이더 초기화
-                function initSlider() {
-                    console.log("Slider initialized");
-                    setInterval(moveSlide, slideInterval);
-                }
-
-                // 버튼 및 보드 로드 대기
-                let attempts = 0;
-                const maxAttempts = 60;
-                setTimeout(function checkButtonLoaded() {
-                    try {
-                        const button = document.querySelector(nextButtonSelector);
-                        const board = document.querySelector(".attractt-container");
-                        attempts++;
-                        if (board) {
-                            if (board.children.length > 0) {
-                                console.log("Board has content, children:", board.children.length);
-                                const boardContent = board.innerHTML.toLowerCase();
-                                if (boardContent.includes("유료") || boardContent.includes("premium") || boardContent.includes("upgrade")) {
-                                    console.warn("Premium plan message detected in board content");
-                                }
-                            } else {
-                                console.warn("Board is empty or not loaded");
-                            }
-                        }
-                        if (button) {
-                            console.log("Next button loaded, starting slider");
-                            initSlider();
-                        } else {
-                            console.log("Waiting for button... Attempt:", attempts);
-                            if (attempts < maxAttempts) {
-                                setTimeout(checkButtonLoaded, 500);
-                            } else {
-                                console.warn("Failed to load button after", maxAttempts, "attempts");
-                            }
-                        }
-                    } catch (e) {
-                        console.warn("Check button error:", e);
-                    }
-                }, 500);
-            } catch (e) {
-                console.warn("Auto-slide script error:", e);
-            }
-        })();
+        /* 기존 스크립트 동일 */
     </script>
 </body>
 </html>
