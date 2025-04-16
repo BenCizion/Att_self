@@ -49,51 +49,57 @@
 
         // 자동 슬라이드 스크립트
         (function() {
-            const slideInterval = 5000; // n초 (밀리초 단위, 5초)
+            const slideInterval = 5000; // n초 (5초)
             const direction = "right"; // k 방향 ("left" 또는 "right")
-            let preloadedImages = []; // 프리로딩용 이미지 배열
 
-            // 버튼 클래스명 (실제 클래스명으로 변경 필요)
-            const prevButtonClass = "prev-button"; // 가정
-            const nextButtonClass = "next-button"; // 가정
+            // 버튼 ID (확인한 ID 사용)
+            const prevButtonId = "#prev-button"; // <div id="prev-button" class="arrow-button left">
+            const nextButtonId = "#next-button"; // <div id="next-button" class="arrow-button right">
 
             // 버튼 클릭 함수
             function clickSlideButton() {
-                const button = document.querySelector(direction === "right" ? nextButtonClass : prevButtonClass);
+                const button = document.querySelector(direction === "right" ? nextButtonId : prevButtonId);
                 if (button) {
+                    console.log("Button found:", button);
                     button.click(); // 버튼 클릭
-                    preloadNextContent(); // 다음 콘텐츠 프리로딩
                 } else {
-                    console.warn("Slide button not found. Check class names:", prevButtonClass, nextButtonClass);
+                    console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonId : prevButtonId);
                 }
             }
 
-            // 프리로딩 함수 (이미지 캐싱)
-            function preloadNextContent() {
-                // ATTRACTT의 콘텐츠는 동적으로 로드되므로, 이미지 URL을 추측하거나 API 호출
-                // 실제로는 ATTRACTT API 문서가 필요하지만, 예시로 이미지 캐싱 구현
-                try {
-                    const images = document.querySelectorAll(".attractt-container img");
-                    preloadedImages = []; // 이전 캐시 초기화
-                    images.forEach(img => {
-                        const src = img.src;
-                        if (src) {
-                            const preloadImg = new Image();
-                            preloadImg.src = src;
-                            preloadedImages.push(preloadImg);
-                        }
-                    });
-                } catch (e) {
-                    console.warn("Error preloading images:", e);
-                }
-            }
-
-            // 페이지 로드 후 초기화
-            window.addEventListener("load", () => {
-                // 초기 프리로딩
-                preloadNextContent();
-                // 주기적 슬라이드
+            // 슬라이더 초기화
+            function initSlider() {
+                console.log("Slider initialized");
                 setInterval(clickSlideButton, slideInterval);
+            }
+
+            // MutationObserver로 버튼 로드 감지
+            function observeButtons() {
+                const target = document.querySelector(".attractt-container");
+                if (!target) {
+                    console.warn("Attractt container not found");
+                    return;
+                }
+
+                const observer = new MutationObserver((mutations, obs) => {
+                    const button = document.querySelector(nextButtonId);
+                    if (button) {
+                        console.log("Next button detected, starting slider");
+                        obs.disconnect(); // 감지 후 중지
+                        initSlider();
+                    }
+                });
+
+                observer.observe(target, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+
+            // 페이지 로드 후 실행
+            window.addEventListener("load", () => {
+                console.log("Page loaded, starting button observation");
+                observeButtons();
             });
         })();
     </script>
