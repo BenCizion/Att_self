@@ -29,6 +29,14 @@
             overflow: hidden; /* 넘치는 콘텐츠 숨김 */
             background-color: #FFFFFF; /* 보드 주변 배경 하얀색 */
         }
+        /* 버튼 강제 활성화 */
+        .arrow-button {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: static !important; /* 위치 고정 해제 */
+            z-index: 9999 !important; /* 최상위 표시 */
+        }
     </style>
 </head>
 <body>
@@ -52,18 +60,49 @@
             const slideInterval = 5000; // n초 (5초)
             const direction = "right"; // k 방향 ("left" 또는 "right")
 
-            // 버튼 ID (확인한 ID 사용)
-            const prevButtonId = "#prev-button"; // <div id="prev-button" class="arrow-button left">
-            const nextButtonId = "#next-button"; // <div id="next-button" class="arrow-button right">
+            // 버튼 선택자
+            const prevButtonSelector = "#prev-button"; // <div id="prev-button" class="arrow-button left">
+            const nextButtonSelector = "#next-button"; // <div id="next-button" class="arrow-button right">
 
             // 버튼 클릭 함수
             function clickSlideButton() {
-                const button = document.querySelector(direction === "right" ? nextButtonId : prevButtonId);
+                const button = document.querySelector(direction === "right" ? nextButtonSelector : prevButtonSelector);
                 if (button) {
                     console.log("Button found:", button);
-                    button.click(); // 버튼 클릭
+                    // 버튼 강제 활성화
+                    button.style.display = "block";
+                    button.style.visibility = "visible";
+                    button.style.opacity = "1";
+
+                    // 1. 기본 클릭
+                    try {
+                        button.click();
+                        console.log("Default click attempted");
+                    } catch (e) {
+                        console.warn("Default click failed:", e);
+                    }
+
+                    // 2. MouseEvent 클릭
+                    try {
+                        const clickEvent = document.createEvent("MouseEvents");
+                        clickEvent.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                        button.dispatchEvent(clickEvent);
+                        console.log("MouseEvent click dispatched");
+                    } catch (e) {
+                        console.warn("MouseEvent click failed:", e);
+                    }
+
+                    // 3. mousedown 이벤트 (대비)
+                    try {
+                        const mouseDownEvent = document.createEvent("MouseEvents");
+                        mouseDownEvent.initMouseEvent("mousedown", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                        button.dispatchEvent(mouseDownEvent);
+                        console.log("MouseDown event dispatched");
+                    } catch (e) {
+                        console.warn("MouseDown event failed:", e);
+                    }
                 } else {
-                    console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonId : prevButtonId);
+                    console.warn("Slide button not found. Selector:", direction === "right" ? nextButtonSelector : prevButtonSelector);
                 }
             }
 
@@ -71,36 +110,30 @@
             function initSlider() {
                 console.log("Slider initialized");
                 setInterval(clickSlideButton, slideInterval);
-            }
-
-            // MutationObserver로 버튼 로드 감지
-            function observeButtons() {
-                const target = document.querySelector(".attractt-container");
-                if (!target) {
-                    console.warn("Attractt container not found");
-                    return;
+                // ATTRACTT API 확인
+                if (window.AttracttTower) {
+                    console.log("AttracttTower API found:", window.AttracttTower);
                 }
-
-                const observer = new MutationObserver((mutations, obs) => {
-                    const button = document.querySelector(nextButtonId);
-                    if (button) {
-                        console.log("Next button detected, starting slider");
-                        obs.disconnect(); // 감지 후 중지
-                        initSlider();
-                    }
-                });
-
-                observer.observe(target, {
-                    childList: true,
-                    subtree: true
-                });
             }
 
-            // 페이지 로드 후 실행
-            window.addEventListener("load", () => {
-                console.log("Page loaded, starting button observation");
-                observeButtons();
-            });
+            // 버튼 로드 대기
+            let attempts = 0;
+            const maxAttempts = 60; // 최대 30초 대기
+            const checkButtonLoaded = setInterval(() => {
+                const button = document.querySelector(nextButtonSelector);
+                attempts++;
+                if (button) {
+                    console.log("Next button loaded, starting slider");
+                    clearInterval(checkButtonLoaded);
+                    initSlider();
+                } else {
+                    console.log("Waiting for button... Attempt:", attempts);
+                    if (attempts >= maxAttempts) {
+                        console.warn("Failed to load button after", maxAttempts, "attempts");
+                        clearInterval(checkButtonLoaded);
+                    }
+                }
+            }, 500); // 0.5초마다 체크
         })();
     </script>
 </body>
