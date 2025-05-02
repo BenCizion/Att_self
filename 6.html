@@ -1,50 +1,62 @@
-  <!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+ <html lang="ko">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+     body {
+       margin: 0;
+       padding: 0;
+       height: 100vh;
+       background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png');
+       background-size: cover;
+       background-position: center;
+       background-repeat: no-repeat;
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+     }
+ 
+     h1 {
+       color: #000;
+       font-size: 24px;
+       margin-bottom: 20px;
+       text-align: center;
+       background-color: rgba(255, 255, 255, 0.7); /* 배경이 흐릴 때 가독성용 */
+       padding: 10px 20px;
+       border-radius: 8px;
+     }
+ 
+     .attractt-container {
+       width: 1200px;
+       height: 675px;
+       background-color: rgba(255, 255, 255, 0.9);
+       padding: 20px;
+       border-radius: 12px;
+       box-sizing: border-box;
+     }
+ 
+     @media screen and (max-width: 768px) {
+       .attractt-container {
+         width: 90%;
+         height: auto;
+       }
+     }
+   </style>
+ </head>
+ <body>
    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #000;
-        }
-        video {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    </style>
-</head>
-<body>
-    <video id="videoPlayer" autoplay muted></video>
-
-    <script>
-        const videos = [
-            "DJJd3EWv7LQ_video.mp4",
-            "DJJd8m6PIQ0_video.mp4",
-            "DJJeBjJvD7Y_video.mp4"
-        ];
-
-        const videoPlayer = document.getElementById("videoPlayer");
-        let currentVideoIndex = 0;
-
-        function playNextVideo() {
-            videoPlayer.src = videos[currentVideoIndex];
-            videoPlayer.play();
-            currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-        }
-
-        videoPlayer.addEventListener("ended", playNextVideo);
-
-        // Start playing the first video
-        playNextVideo();
-    </script>
-</body>
-</html>
-
-</body>
-</html>
+ 
+   <div>
+     <video width="1280" height="720" controls>
+   <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
+   Your browser does not support the video tag.
+ </video>
+   </div>
+   <video autoplay loop muted>
+         <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
+   </video>
+ 
+ </body>
+ </html>
