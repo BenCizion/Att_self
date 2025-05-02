@@ -27,36 +27,41 @@
        padding: 10px 20px;
        border-radius: 8px;
      }
- 
-     .attractt-container {
-       width: 1200px;
-       height: 675px;
-       background-color: rgba(255, 255, 255, 0.9);
-       padding: 20px;
-       border-radius: 12px;
-       box-sizing: border-box;
-     }
- 
-     @media screen and (max-width: 768px) {
-       .attractt-container {
-         width: 90%;
-         height: auto;
-       }
+
+    video {
+            width: 1280px; /* 비디오 너비 */
+            height: 720px; /* 비디오 높이 */
+        }
+
      }
    </style>
  </head>
  <body>
    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
  
-   <div>
-     <video width="1280" height="720" controls>
-   <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
-   Your browser does not support the video tag.
- </video>
-   </div>
-   <video autoplay loop muted>
-         <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
-   </video>
+   <video id="videoPlayer" autoplay muted></video>
+
+    <script>
+        const videos = [
+            "DJJd3EWv7LQ_video.mp4",
+            "DJJd8m6PIQ0_video.mp4",
+            "DJJeBjJvD7Y_video.mp4"
+        ];
+
+        const videoPlayer = document.getElementById("videoPlayer");
+        let currentVideoIndex = 0;
+
+        function playNextVideo() {
+            videoPlayer.src = videos[currentVideoIndex];
+            videoPlayer.play();
+            currentVideoIndex = (currentVideoIndex + 1) % videos.length; // 인덱스 순환
+        }
+
+        videoPlayer.addEventListener("ended", playNextVideo);
+
+        // 첫 번째 비디오 재생 시작
+        playNextVideo();
+    </script>
  
  </body>
  </html>
