@@ -28,24 +28,37 @@
       border-radius: 8px;
     }
 
-    .attractt-container {
+    .display-container {
       width: 1200px;
       height: 675px;
       background-color: rgba(255, 255, 255, 0.9);
       padding: 20px;
       border-radius: 12px;
       box-sizing: border-box;
+      position: relative;
+    }
+
+    .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .content.active {
+      display: block;
     }
 
     video {
-      width: 1200px;
-      height: 675px;
+      width: 100%;
+      height: 100%;
       border-radius: 12px;
-      margin-bottom: 20px;
     }
 
     @media screen and (max-width: 768px) {
-      .attractt-container, video {
+      .display-container, video {
         width: 90%;
         height: auto;
       }
@@ -55,26 +68,35 @@
 <body>
   <h1>Attractt #꽃게당 #シンサコッケタン</h1>
 
-  <video controls>
-    <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
-
-  <video controls>
-    <source src="DJJd8m6PIQ0_video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <div class="attractt-container" data-idx="1" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
-
-  <video controls>
-    <source src="DJJeBjJvD7Y_video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <div class="attractt-container" data-idx="2" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
+  <div class="display-container">
+    <div class="content active">
+      <video controls>
+        <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="content">
+      <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
+    </div>
+    <div class="content">
+      <video controls>
+        <source src="DJJd8m6PIQ0_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="content">
+      <div class="attractt-container" data-idx="1" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
+    </div>
+    <div class="content">
+      <video controls>
+        <source src="DJJeBjJvD7Y_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="content">
+      <div class="attractt-container" data-idx="2" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
+    </div>
+  </div>
 
   <script type="text/javascript">
     (function(d, s) {
@@ -85,6 +107,16 @@
       j.async = true;
       e.parentNode.insertBefore(j, e);
     })(document, "script");
+
+    // JavaScript for cycling content
+    const contents = document.querySelectorAll('.content');
+    let currentIndex = 0;
+
+    setInterval(() => {
+      contents[currentIndex].classList.remove('active');
+      currentIndex = (currentIndex + 1) % contents.length;
+      contents[currentIndex].classList.add('active');
+    }, 60000); // 60000ms = 1 minute
   </script>
 </body>
 </html>
