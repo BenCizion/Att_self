@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attractt & Video Switcher for SeintNine</title>
   <title>Attractt & Video Switcher for KKOTKEDANG</title>
   <style>
     body, html {
@@ -13,13 +14,23 @@
       overflow: hidden;
       background: black;
     }
-   .container {
-  width: 1280px; /* 비디오 너비 */
-  height: 720px; /* 비디오 높이 */
-}
+    .container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity 1s ease;
+      opacity: 0;
+      z-index: 1;
+    }
+    .container.active {
+      opacity: 1;
+      z-index: 2;
+    }
     iframe {
-      width: 1280px; /* 비디오 너비 */
-  height: 720px; /* 비디오 높이 */
+      width: 100%;
+      height: 100%;
       border: none;
     }
   </style>
