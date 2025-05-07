@@ -28,15 +28,18 @@
        justify-content: center;
      }
   .container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1280px; /* 너비를 1280px로 수정 */
-    height: 720px; /* 높이를 720px로 수정 */
-    transition: opacity 1s ease;
-    opacity: 0;
-    z-index: 1;
-  }
+  width: 1280px; /* 너비를 1280px로 설정 */
+  height: 720px; /* 높이를 720px로 설정 */
+  transition: opacity 1s ease;
+  opacity: 0;
+  z-index: 1;
+
+  /* 중앙 정렬을 위한 추가 스타일 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
   .container.active {
     opacity: 1;
     z-index: 2;
