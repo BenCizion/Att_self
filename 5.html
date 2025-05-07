@@ -1,122 +1,46 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_05.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    h1 {
-      color: #000;
-      font-size: 24px;
-      margin-bottom: 20px;
-      text-align: center;
-      background-color: rgba(255, 255, 255, 0.7); /* 배경이 흐릴 때 가독성용 */
-      padding: 10px 20px;
-      border-radius: 8px;
-    }
-
-    .display-container {
-      width: 1200px;
-      height: 675px;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 12px;
-      box-sizing: border-box;
-      position: relative;
-    }
-
-    .content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-    }
-
-    .content.active {
-      display: block;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-    }
-
-    @media screen and (max-width: 768px) {
-      .display-container, video {
-        width: 90%;
-        height: auto;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5.html</title>
+    <style>
+        #video, #attractt-container {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <h1>Attractt #꽃게당 #シンサコッケタン</h1>
-
-  <div class="display-container">
-    <div class="content active">
-      <video controls>
-        <source src="DJJd3EWv7LQ_video.mp4" type="video/mp4">
+    <video id="video" autoplay muted>
+        <source src="your-video-file.mp4" type="video/mp4">
         Your browser does not support the video tag.
-      </video>
+    </video>
+    <div id="attractt-container">
+        <p>Attractt container content here</p>
     </div>
-    <div class="content">
-      <div class="attractt-container" data-idx="0" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
-    </div>
-    <div class="content">
-      <video controls>
-        <source src="DJJd8m6PIQ0_video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="content">
-      <div class="attractt-container" data-idx="1" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
-    </div>
-    <div class="content">
-      <video controls>
-        <source src="DJJeBjJvD7Y_video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="content">
-      <div class="attractt-container" data-idx="2" data-code="ms2mgdw97VVAJ9r" data-board="slide"></div>
-    </div>
-  </div>
 
-  <script type="text/javascript">
-    (function(d, s) {
-      var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
-      if (typeof AttracttTower === "function" || e.src === h) { return; }
-      j = d.createElement(s);
-      j.src = h;
-      j.async = true;
-      e.parentNode.insertBefore(j, e);
-    })(document, "script");
+    <script>
+        const videoElement = document.getElementById('video');
+        const attracttContainer = document.getElementById('attractt-container');
 
-    // JavaScript for cycling content
-    const contents = document.querySelectorAll('.content');
-    let currentIndex = 0;
+        let isVideoVisible = true;
 
-    setInterval(() => {
-      contents[currentIndex].classList.remove('active');
-      currentIndex = (currentIndex + 1) % contents.length;
-      contents[currentIndex].classList.add('active');
-    }, 60000); // 60000ms = 1 minute
-  </script>
+        function toggleVisibility() {
+            if (isVideoVisible) {
+                videoElement.style.display = 'none';
+                attracttContainer.style.display = 'block';
+            } else {
+                videoElement.style.display = 'block';
+                attracttContainer.style.display = 'none';
+            }
+            isVideoVisible = !isVideoVisible;
+        }
+
+        // 초기 설정: 비디오를 먼저 표시
+        videoElement.style.display = 'block';
+
+        // 10초마다 toggleVisibility 함수 실행
+        setInterval(toggleVisibility, 10000);
+    </script>
 </body>
 </html>
