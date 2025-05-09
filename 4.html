@@ -105,7 +105,34 @@
 
     // 어트랙트 슬라이드 버튼 자동 클릭 (버튼을 인식 못하여 버튼 발견 우선 작업)
     
- // 어트랙트 슬라이드 우측 중앙에 마우스 호버
+// 어트랙트 보드 컨테이너 우측 중앙에 마우스 우클릭 트리거
+function triggerRightClickAtCenter() {
+  try {
+    const rect = attracttContainer.getBoundingClientRect();
+    const centerX = rect.right - rect.width / 4; // 우측 중앙 x 좌표
+    const centerY = rect.top + rect.height / 2; // 중앙 y 좌표
+
+    const rightClickEvent = new MouseEvent('contextmenu', {
+      bubbles: true,
+      cancelable: true,
+      clientX: centerX,
+      clientY: centerY,
+      button: 2 // 우클릭 버튼
+    });
+
+    attracttContainer.dispatchEvent(rightClickEvent);
+  } catch (err) {
+    console.error('Right click trigger error:', err);
+  }
+}
+
+// 어트랙트 보드 활성화 시 트리거 실행
+attracttContainer.addEventListener('transitionend', () => {
+  if (attracttContainer.classList.contains('active')) {
+    triggerRightClickAtCenter();
+  }
+});
+    
 
     
     // 초기 설정
