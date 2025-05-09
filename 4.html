@@ -106,28 +106,7 @@
     // 어트랙트 슬라이드 버튼 자동 클릭 (버튼을 인식 못하여 버튼 발견 우선 작업)
     
  // 어트랙트 슬라이드 우측 중앙에 마우스 호버
-function triggerAttracttSlides() {
-  const interval = setInterval(() => {
-    if (currentPage !== 'attractt') {
-      clearInterval(interval);
-      return;
-    }
-    try {
-      // 우측 중앙 위치에 마우스 호버 이벤트 발생
-      const hoverEvent = new MouseEvent('mousemove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: window.innerWidth - 100, // 화면 우측 중앙 근처로 설정
-        clientY: window.innerHeight / 2, // 화면 중앙 높이 설정
-        view: window
-      });
-      attracttIframe.contentWindow.document.dispatchEvent(hoverEvent);
-      console.log('Mouse hover triggered at', new Date());
-    } catch (err) {
-      console.error('Slide hover error:', err);
-    }
-  }, 5000); // 5초마다 이벤트 발생
-}
+
     
     // 초기 설정
     attracttContainer.classList.add('active');
