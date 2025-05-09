@@ -103,28 +103,34 @@
       }
     }
 
-    // 어트랙트 슬라이드 버튼 자동 클릭
-    function triggerAttracttSlides() {
-      const interval = setInterval(() => {
-        if (currentPage !== 'attractt') {
-          clearInterval(interval);
-          return;
-        }
-        try {
-          const nextButton = attracttIframe.contentWindow.document.querySelector('#next-button');
-          if (nextButton) {
-            nextButton.dispatchEvent(new MouseEvent('mouseover'));
-            nextButton.click();
-            console.log('Next slide triggered at', new Date());
-          } else {
-            console.warn('Next button not found');
-          }
-        } catch (err) {
-          console.error('Slide trigger error:', err);
-        }
-      }, 5000); // 5초마다 슬라이드 이동
+    // 어트랙트 슬라이드 버튼 자동 클릭 (버튼을 인식 못하여 버튼 발견 우선 작업)
+    
+  // 어트랙트 슬라이드 우측 중앙에 마우스 호버
+function triggerAttracttSlides() {
+  const interval = setInterval(() => {
+    if (currentPage !== 'attractt') {
+      clearInterval(interval);
+      return;
     }
-
+    try {
+      const nextButton = attracttIframe.contentWindow.document.querySelector('#next-button');
+      if (nextButton) {
+        const hoverEvent = new MouseEvent('mouseover', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        });
+        nextButton.dispatchEvent(hoverEvent);
+        console.log('Mouse hover triggered at', new Date());
+      } else {
+        console.warn('Next button not found');
+      }
+    } catch (err) {
+      console.error('Slide hover error:', err);
+    }
+  }, 5000); // 5초마다 슬라이드 이동
+}
+    
     // 초기 설정
     attracttContainer.classList.add('active');
     setInterval(switchPage, 20000); // 20초마다 페이지 전환
