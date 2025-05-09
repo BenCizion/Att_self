@@ -122,12 +122,12 @@
         } catch (err) {
           console.error('Slide trigger error:', err);
         }
-      }, 10000); // 10초마다 슬라이드 이동
+      }, 5000); // 5초마다 슬라이드 이동
     }
 
     // 초기 설정
     attracttContainer.classList.add('active');
-    setInterval(switchPage, 190000); // 190초마다 페이지 전환
+    setInterval(switchPage, 20000); // 20초마다 페이지 전환
 
     // iframe 로드 후 슬라이드 트리거 시작
     attracttIframe.addEventListener('load', triggerAttracttSlides);
