@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attractt & Video Switcher for KKotKeDang</title>
   <style>
-     body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: url('꽃게당 배경 패턴(용량)_6.webp') no-repeat center center fixed; /* 배경 이미지 설정 */
-    background-size: cover; /* 배경 이미지 크기 조정 */
-  }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: url('꽃게당 배경 패턴(용량)_6.webp') no-repeat center center fixed;
+      background-size: cover;
+    }
     .container {
       position: absolute;
       top: 0;
@@ -51,6 +51,7 @@
     const attracttIframe = attracttContainer.querySelector('iframe');
     const videosIframe = videosContainer.querySelector('iframe');
     let currentPage = 'attractt'; // 시작은 어트랙트 보드
+    let intervalId;
 
     // 페이지 전환 함수
     function switchPage() {
@@ -77,7 +78,7 @@
           video.play().catch(err => console.error('Video play error:', err));
         });
       } catch (err) {
-      //  console.error('Video resume error:', err);
+        console.error('Video resume error:', err);
       }
     }
 
@@ -87,7 +88,7 @@
         const videos = videosIframe.contentWindow.document.querySelectorAll('video');
         videos.forEach(video => video.pause());
       } catch (err) {
-      //  console.error('Video pause error:', err);
+        console.error('Video pause error:', err);
       }
     }
 
@@ -96,63 +97,69 @@
       try {
         attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
           if (attracttIframe.contentWindow.document.body.innerText.includes('Premium')) {
-          //  console.warn('Premium restriction detected');
+            console.warn('Premium restriction detected');
           }
         });
       } catch (err) {
-     //   console.error('Premium check error:', err);
+        console.error('Premium check error:', err);
       }
     }
 
     // 어트랙트 슬라이드 버튼 자동 클릭
     function triggerAttracttSlides() {
-    //  console.log("Triggering attractt slides...");
-      // 슬라이드 관련 추가 코드가 필요한 경우 작성
+      try {
+        const slides = attracttIframe.contentWindow.document.querySelectorAll('.slide');
+        let activeSlide = attracttIframe.contentWindow.document.querySelector('.slide.active');
+        if (!activeSlide) {
+          console.warn("No active slide found!");
+          return;
+        }
+
+        // 현재 슬라이드 비활성화
+        activeSlide.classList.remove('active');
+
+        // 다음 슬라이드 활성화 (순환 구조)
+        let nextSlide = activeSlide.nextElementSibling || slides[0];
+        nextSlide.classList.add('active');
+        console.log("Slide switched to:", nextSlide);
+      } catch (err) {
+        console.error("Error triggering slides:", err);
+      }
     }
 
-    
-   // 슬라이드 작동 함수
-function triggerAttracttSlides() {
-  try {
-    // 슬라이드 전환 로직 작성
-    const slides = attracttIframe.contentWindow.document.querySelectorAll('.slide'); // 슬라이드 요소들
-    let activeSlide = attracttIframe.contentWindow.document.querySelector('.slide.active'); // 현재 활성 슬라이드
-    if (!activeSlide) {
-     // console.warn("No active slide found!");
-      return;
+    // 어트랙트 보드 컨테이너 우측 클릭 이벤트 핸들러
+    function handleClickEvent(event) {
+      const rect = attracttContainer.getBoundingClientRect();
+      const clickX = event.clientX;
+
+      // 클릭 위치가 컨테이너의 우측 2% 영역인지 확인
+      if (clickX > rect.left + (rect.width * 0.98)) {
+        console.log("Right 2% of the container clicked.");
+        triggerAttracttSlides(); // 슬라이드 트리거
+      }
     }
-
-    // 현재 슬라이드 비활성화
-    activeSlide.classList.remove('active');
-
-    // 다음 슬라이드 활성화 (순환 구조)
-    let nextSlide = activeSlide.nextElementSibling || slides[0];
-    nextSlide.classList.add('active');
-   // console.log("Slide switched to:", nextSlide);
-  } catch (err) {
-  //  console.error("Error triggering slides:", err);
-  }
-}
-
-// 어트랙트 보드 컨테이너 우측 클릭 이벤트 핸들러
-attracttContainer.addEventListener('click', (event) => {
-  const rect = attracttContainer.getBoundingClientRect();
-  const clickX = event.clientX;
-
-  // 클릭 위치가 컨테이너의 우측 2% 영역인지 확인
-  if (clickX > rect.left + (rect.width * 0.98)) {
-   // console.log("Right 2% of the container clicked.");
-    triggerAttracttSlides(); // 슬라이드 트리거
-  }
-});
-    
 
     // 초기 설정
-    attracttContainer.classList.add('active');
-    setInterval(switchPage, 20000); // 20초마다 페이지 전환
+    function initialize() {
+      attracttContainer.classList.add('active');
+      intervalId = setInterval(switchPage, 20000); // 20초마다 페이지 전환
+      attracttIframe.addEventListener('load', triggerAttracttSlides);
+      attracttContainer.addEventListener('click', handleClickEvent);
 
-    // iframe 로드 후 슬라이드 트리거 시작
-    attracttIframe.addEventListener('load', triggerAttracttSlides);
+      // 페이지 언로드 시 리소스 정리
+      window.addEventListener('beforeunload', cleanUp);
+    }
+
+    // 리소스 정리
+    function cleanUp() {
+      clearInterval(intervalId);
+      attracttIframe.removeEventListener('load', triggerAttracttSlides);
+      attracttContainer.removeEventListener('click', handleClickEvent);
+      console.log("Cleaned up resources to prevent memory leaks.");
+    }
+
+    // 초기화 실행
+    initialize();
   </script>
 </body>
 </html>
