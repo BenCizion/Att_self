@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bepublic Landing Page Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans KR', sans-serif; }
+    .tooltip:hover .tooltip-text { display: block; }
+    .tooltip-text { display: none; position: absolute; background: #FFF; border: 1px solid #1E90FF; padding: 8px; font-size: 12px; }
+  </style>
+</head>
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useEffect, useRef } = React;
+
+    const pollData = {
+      poll_id: 123,
+      title: "2025년 경제 정책 투표",
+      desc: "2025년 정부의 경제 정책 방향에 대한 의견을 투표하세요. 여러분의 참여가 중요합니다!",
+      category: "경제",
+      status: "진행 중",
+      created_at: "2025-05-01",
+      ends_at: "2025-05-07",
+      creator: "CIZION 설문",
+      answers: [
+        { answer_id: 1, answer_text: "찬성", image_url: "" },
+        { answer_id: 2, answer_text: "반대", image_url: "" },
+        { answer_id: 3, answer_text: "중립", image_url: "" },
+        { answer_id: 4, answer_text: "기권", image_url: "" },
+        { answer_id: 5, answer_text: "기타", image_url: "" }
+      ]
+    };
+
+    const chartData = {
+      labels: ["2025-05-01", "2025-05-02", "2025-05-03", "2025-05-04", "2025-05-05", "2025-05-06", "2025-05-07"],
+      datasets: [
+        { label: "찬성", data: [25, 24, 26, 27, 28, 29, 30], vote_counts: [50, 60, 65, 81, 84, 87, 120], backgroundColor: "#1E90FF", borderColor: "#1E90FF" },
+        { label: "반대", data: [30, 28, 27, 26, 25, 24, 25], vote_counts: [60, 70, 68, 78, 75, 72, 100], backgroundColor: "#FF4500", borderColor: "#FF4500" },
+        { label: "중립", data: [20, 20, 20, 20, 20, 20, 20], vote_counts: [40, 50, 50, 60, 60, 60, 80], backgroundColor: "#808080", borderColor: "#808080" },
+        { label: "기권", data: [15, 16, 15, 15, 15, 15, 15], vote_counts: [30, 40, 38, 45, 45, 45, 60], backgroundColor: "#32CD32", borderColor: "#32CD32" },
+        { label: "기타", data: [10, 12, 12, 12, 12, 12, 10], vote_counts: [20, 30, 30, 36, 36, 36, 40], backgroundColor: "#FFD700", borderColor: "#FFD700" }
+      ]
+    };
+
+    const App = () => {
+      const stackedChartRef = useRef(null);
+      const lineChartRef = useRef(null);
+
+      useEffect(() => {
+        // Stacked Area Chart
+        const stackedCtx = stackedChartRef.current.getContext("2d");
+        new Chart(stackedCtx, {
+          type: "line",
+          data: {
+            labels: chartData.labels,
+            datasets: chartData.datasets.map(ds => ({
+              label: ds.label,
+              data: ds.data,
+              backgroundColor: ds.backgroundColor,
+              borderColor: ds.borderColor,
+              fill: true
+            }))
+          },
+          options: {
+            plugins: { legend: { position: "top" } },
+            scales: {
+              y: { stacked: true, max: 100, title: { display: true, text: "투표율 (%)" } },
+              x: { title: { display: true, text: "일자" } }
+            }
+          }
+        });
+
+        // Line Chart
+        const lineCtx = lineChartRef.current.getContext("2d");
+        new Chart(lineCtx, {
+          type: "line",
+          data: {
+            labels: chartData.labels,
+            datasets: chartData.datasets.map(ds => ({
+              label: ds.label,
+              data: ds.data,
+              borderColor: ds.borderColor,
+              fill: false
+            }))
+          },
+          options: {
+            plugins: { legend: { position: "top" } },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: "투표수 비율 (%)" } },
+              x: { title: { display: true, text: "일자" } }
+            }
+          }
+        });
+      }, []);
+
+      return (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <header className="flex justify-between items-center py-4 border-b">
+            <img src="https://via.placeholder.com/100x30?text=Bepublic" alt="Bepublic Logo" className="h-8" />
+            <nav className="hidden md:flex space-x-4">
+              <a href="/" className="text-blue-600 hover:underline">홈</a>
+              <a href="/polls" className="text-blue-600 hover:underline">투표 목록</a>
+              <a href="/my-votes" className="text-blue-600 hover:underline">내 투표</a>
+            </nav>
+            <div className="flex space-x-2">
+              <button className="p-2"><img src="https://via.placeholder.com/40?text=Kakao" alt="Kakao Login" className="h-6" /></button>
+              <button className="p-2"><img src="https://via.placeholder.com/40?text=Google" alt="Google Login" className="h-6" /></button>
+            </div>
+          </header>
+
+          {/* Poll Info */}
+          <section className="py-8">
+            <h1 className="text-2xl font-bold">{pollData.title}</h1>
+            <p className="text-sm text-gray-600 mt-2">비퍼블릭 제공</p>
+            <p className="text-sm text-gray-700 mt-4">{pollData.desc.substring(0, 100)}... <a href="#" className="text-blue-600">더 보기</a></p>
+            <div className="mt-4 text-sm text-gray-600">
+              <p>상태: {pollData.status}</p>
+              <p>기간: {pollData.created_at} ~ {pollData.ends_at}</p>
+              <p>분류: {pollData.category}</p>
+              <p>생성자: {pollData.creator}</p>
+            </div>
+          </section>
+
+          {/* Poll Results */}
+          <section className="py-8">
+            <h2 className="text-xl font-bold">투표 결과</h2>
+            <div className="flex flex-col md:flex-row gap-8 mt-4">
+              <div className="w-full md:w-1/2">
+                <canvas ref={stackedChartRef} aria-label="일자별 투표율 차트"></canvas>
+              </div>
+              <div className="w-full md:w-1/2">
+                <canvas ref={lineChartRef} aria-label="일자별 투표수 비율 차트"></canvas>
+              </div>
+            </div>
+            <div className="mt-4 flex space-x-4">
+              <select className="border border-blue-600 text-sm p-2 rounded">
+                <option>지역 전체</option>
+                <option>서울</option>
+                <option>싱가포르</option>
+              </select>
+              <select className="border border-blue-600 text-sm p-2 rounded">
+                <option>연령대 전체</option>
+                <option>20대</option>
+                <option>30대</option>
+              </select>
+            </div>
+            <div className="mt-4 flex space-x-2">
+              <button className="p-2"><img src="https://via.placeholder.com/40?text=KakaoTalk" alt="KakaoTalk Share" className="h-6" /></button>
+              <button className="p-2"><img src="https://via.placeholder.com/40?text=Twitter" alt="Twitter Share" className="h-6" /></button>
+            </div>
+            <div className="mt-4">
+              <iframe src="https://via.placeholder.com/600x300?text=LiveRe+Comments" className="w-full h-64"></iframe>
+            </div>
+          </section>
+
+          {/* Tags & Related Polls */}
+          <section className="py-8">
+            <h2 className="text-xl font-bold">태그 및 관련 투표</h2>
+            <div className="flex flex-wrap gap-2 mt-4">
+              <a href="/polls?category=economy" className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm hover:bg-blue-200">#경제</a>
+              <a href="/polls?category=politics" className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm hover:bg-blue-200">#정치</a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div className="border rounded-lg p-4">
+                <img src="https://via.placeholder.com/300x200" alt="Related Poll" className="w-full h-32 object-cover" />
+                <h3 className="text-sm font-bold mt-2">환경 정책 투표</h3>
+                <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">투표 참여</button>
+              </div>
+              <div className="border rounded-lg p-4">
+                <img src="https://via.placeholder.com/300x200" alt="Related Poll" className="w-full h-32 object-cover" />
+                <h3 className="text-sm font-bold mt-2">교육 개혁 투표</h3>
+                <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">투표 참여</button>
+              </div>
+              <div className="border rounded-lg p-4">
+                <img src="https://via.placeholder.com/300x200" alt="Related Poll" className="w-full h-32 object-cover" />
+                <h3 className="text-sm font-bold mt-2">기술 혁신 투표</h3>
+                <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded text-sm">투표 참여</button>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="py-4 border-t text-center text-sm text-gray-600">
+            <p>Powered by Bepublic, a CIZION company</p>
+            <div className="flex justify-center space-x-4 mt-2">
+              <a href="/terms" className="text-blue-600 hover:underline">이용약관</a>
+              <a href="/privacy" className="text-blue-600 hover:underline">개인정보 처리방침</a>
+            </div>
+            <p className="mt-2">support@bepublic.cizion.com | 02-1234-5678</p>
+            <p>서울, 싱가포르, 상하이, 어바인</p>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+</html>
