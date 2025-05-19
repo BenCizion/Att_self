@@ -50,7 +50,7 @@
     const videosContainer = document.getElementById('videos');
     const attracttIframe = attracttContainer.querySelector('iframe');
     const videosIframe = videosContainer.querySelector('iframe');
-    let currentPage = 'attractt'; // 시작은 어트랙트 보드
+    let currentPage = 'videos'; // 시작은 어트랙트 보드
     let intervalId;
 
     // 페이지 전환 함수
@@ -141,14 +141,13 @@
 
     // 초기 설정
     function initialize() {
-      attracttContainer.classList.add('active');
-      intervalId = setInterval(switchPage, 20000); // 20초마다 페이지 전환
-      attracttIframe.addEventListener('load', triggerAttracttSlides);
-      attracttContainer.addEventListener('click', handleClickEvent);
+  videosContainer.classList.add('active'); // videos에서 시작
+  intervalId = setInterval(switchPage, 20000); // 20초마다 페이지 전환
+  attracttIframe.addEventListener('load', triggerAttracttSlides);
+  attracttContainer.addEventListener('click', handleClickEvent);
 
-      // 페이지 언로드 시 리소스 정리
-      window.addEventListener('beforeunload', cleanUp);
-    }
+  window.addEventListener('beforeunload', cleanUp);
+}
 
     // 리소스 정리
     function cleanUp() {
