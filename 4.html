@@ -16,154 +16,87 @@
     }
     .container {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       transition: opacity 1s ease;
-      opacity: 0;
-      z-index: 1;
+      opacity: 0; z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.2);
     }
     .container.active {
-      opacity: 1;
-      z-index: 2;
+      opacity: 1; z-index: 2;
+    }
+    video {
+      width: 80vw;
+      height: 80vh;
+      background: #000;
     }
     iframe {
-      width: 100%;
-      height: 100%;
+      width: 80vw;
+      height: 80vh;
       border: none;
+      background: #fff;
     }
   </style>
 </head>
 <body>
   <!-- 어트랙트 보드 컨테이너 -->
   <div id="attractt" class="container">
-    <iframe src="https://bencizion.github.io/Att_self/1.html" loading="lazy"></iframe>
+    <iframe src="https://bencizion.github.io/Att_self/1.html" loading="lazy" id="attracttFrame"></iframe>
   </div>
-  <!-- 영상 루프 컨테이너 -->
-  <div id="videos" class="container">
-    <iframe src="https://bencizion.github.io/Att_self/7.html" loading="lazy" id="videoFrame"></iframe>
+  <!-- 영상 컨테이너 -->
+  <div id="videos" class="container active">
+    <video id="videoPlayer" controls autoplay></video>
   </div>
 
   <script>
+    // 영상 파일 목록
+    const videosList = [
+      "DJJd3EWv7LQ_video.mp4",
+      "DJJd8m6PIQ0_video.mp4",
+      "DJJeBjJvD7Y_video.mp4"
+    ];
+    let currentVideoIndex = 0;
+
     const attracttContainer = document.getElementById('attractt');
     const videosContainer = document.getElementById('videos');
-    const attracttIframe = attracttContainer.querySelector('iframe');
-    const videosIframe = document.getElementById('videoFrame');
-    let currentPage = 'videos';
+    const videoPlayer = document.getElementById('videoPlayer');
     let attracttTimer = null;
 
-    // 어트랙트로 전환
-    function switchToAttractt() {
+    // 영상 재생 함수
+    function playVideo(index) {
+      videoPlayer.src = videosList[index];
+      videoPlayer.currentTime = 0;
+      videoPlayer.play();
+      videosContainer.classList.add('active');
+      attracttContainer.classList.remove('active');
+    }
+
+    // 영상 종료 시 이벤트
+    videoPlayer.onended = function() {
+      // 영상이 끝나면 어트랙트 보드 보여주기
       videosContainer.classList.remove('active');
       attracttContainer.classList.add('active');
-      currentPage = 'attractt';
-      pauseVideos();
-      checkAttracttPremium();
-      triggerAttracttSlides();
-
-      // 어트랙트 보드 2분 후 영상으로 복귀
-      clearTimeout(attracttTimer);
+      // 2분 후 다음 영상 재생
       attracttTimer = setTimeout(() => {
-        switchToVideos();
-      }, 120000);
-    }
+        currentVideoIndex = (currentVideoIndex + 1) % videosList.length;
+        playVideo(currentVideoIndex);
+      }, 120000); // 2분 = 120,000ms
+    };
 
-    // 영상으로 전환
-    function switchToVideos() {
-      attracttContainer.classList.remove('active');
-      videosContainer.classList.add('active');
-      currentPage = 'videos';
-      resumeVideos();
+    // 어트랙트 보드를 클릭하면 즉시 다음 영상 재생 (선택 기능, 필요 없다면 삭제 가능)
+    attracttContainer.addEventListener('click', function() {
       clearTimeout(attracttTimer);
-    }
-
-    // 영상 재생
-    function resumeVideos() {
-      try {
-        videosIframe.contentWindow.postMessage('play-video', '*');
-      } catch (err) {
-        console.error('Video resume error:', err);
-      }
-    }
-
-    // 영상 일시정지
-    function pauseVideos() {
-      try {
-        videosIframe.contentWindow.postMessage('pause-video', '*');
-      } catch (err) {
-        console.error('Video pause error:', err);
-      }
-    }
-
-    // 어트랙트 프리미엄 체크(기존 코드 유지)
-    function checkAttracttPremium() {
-      try {
-        attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
-          if (attracttIframe.contentWindow.document.body.innerText.includes('Premium')) {
-            console.warn('Premium restriction detected');
-          }
-        });
-      } catch (err) {
-        console.error('Premium check error:', err);
-      }
-    }
-
-    // 어트랙트 슬라이드 자동 클릭(기존 코드 유지)
-    function triggerAttracttSlides() {
-      try {
-        const slides = attracttIframe.contentWindow.document.querySelectorAll('.slide');
-        let activeSlide = attracttIframe.contentWindow.document.querySelector('.slide.active');
-        if (!activeSlide) {
-          console.warn("No active slide found!");
-          return;
-        }
-        activeSlide.classList.remove('active');
-        let nextSlide = activeSlide.nextElementSibling || slides[0];
-        nextSlide.classList.add('active');
-        console.log("Slide switched to:", nextSlide);
-      } catch (err) {
-        console.error("Error triggering slides:", err);
-      }
-    }
-
-    // 어트랙트 보드 우측 클릭 이벤트(기존 코드 유지)
-    function handleClickEvent(event) {
-      const rect = attracttContainer.getBoundingClientRect();
-      const clickX = event.clientX;
-      if (clickX > rect.left + (rect.width * 0.98)) {
-        console.log("Right 2% of the container clicked.");
-        triggerAttracttSlides();
-      }
-    }
-
-    // 영상이 끝나면 어트랙트로 전환
-    window.addEventListener('message', function(event) {
-      if (event.data === 'video-ended') {
-        if (currentPage !== 'attractt') {
-          switchToAttractt();
-        }
-      }
+      currentVideoIndex = (currentVideoIndex + 1) % videosList.length;
+      playVideo(currentVideoIndex);
     });
 
-    // 초기화
-    function initialize() {
-      videosContainer.classList.add('active'); // 영상 페이지에서 시작
-      attracttIframe.addEventListener('load', triggerAttracttSlides);
-      attracttContainer.addEventListener('click', handleClickEvent);
-      window.addEventListener('beforeunload', cleanUp);
-    }
-
-    // 리소스 정리
-    function cleanUp() {
-      clearTimeout(attracttTimer);
-      attracttIframe.removeEventListener('load', triggerAttracttSlides);
-      attracttContainer.removeEventListener('click', handleClickEvent);
-      console.log("Cleaned up resources to prevent memory leaks.");
-    }
-
-    // 실행
-    initialize();
+    // 페이지 로드 시 첫 영상 재생
+    window.onload = function() {
+      playVideo(currentVideoIndex);
+    };
   </script>
 </body>
 </html>
