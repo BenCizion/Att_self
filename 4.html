@@ -50,27 +50,35 @@
     const videosContainer = document.getElementById('videos');
     const attracttIframe = attracttContainer.querySelector('iframe');
     const videosIframe = videosContainer.querySelector('iframe');
-    let currentPage = 'videos'; // 시작: videos
-    let intervalId;
+    let currentPage = 'videos';
+    let attracttTimer = null;
 
-    // 페이지 전환 함수
-    function switchPage() {
-      if (currentPage === 'attractt') {
-        attracttContainer.classList.remove('active');
-        videosContainer.classList.add('active');
-        currentPage = 'videos';
-        resumeVideos();
-      } else {
-        videosContainer.classList.remove('active');
-        attracttContainer.classList.add('active');
-        currentPage = 'attractt';
-        pauseVideos();
-        checkAttracttPremium();
-        triggerAttracttSlides();
-      }
+    // 어트랙트로 전환
+    function switchToAttractt() {
+      videosContainer.classList.remove('active');
+      attracttContainer.classList.add('active');
+      currentPage = 'attractt';
+      pauseVideos();
+      checkAttracttPremium();
+      triggerAttracttSlides();
+
+      // 어트랙트 보드 2분 후 영상으로 복귀
+      clearTimeout(attracttTimer);
+      attracttTimer = setTimeout(() => {
+        switchToVideos();
+      }, 120000);
     }
 
-    // 영상 재생 제어
+    // 영상으로 전환
+    function switchToVideos() {
+      attracttContainer.classList.remove('active');
+      videosContainer.classList.add('active');
+      currentPage = 'videos';
+      resumeVideos();
+      clearTimeout(attracttTimer);
+    }
+
+    // 영상 재생
     function resumeVideos() {
       try {
         const videos = videosIframe.contentWindow.document.querySelectorAll('video');
@@ -82,7 +90,7 @@
       }
     }
 
-    // 영상 일시 정지
+    // 영상 일시정지
     function pauseVideos() {
       try {
         const videos = videosIframe.contentWindow.document.querySelectorAll('video');
@@ -92,7 +100,7 @@
       }
     }
 
-    // 어트랙트 Premium 제한 확인
+    // 어트랙트 프리미엄 체크(기존 코드 유지)
     function checkAttracttPremium() {
       try {
         attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
@@ -105,7 +113,7 @@
       }
     }
 
-    // 어트랙트 슬라이드 버튼 자동 클릭
+    // 어트랙트 슬라이드 자동 클릭(기존 코드 유지)
     function triggerAttracttSlides() {
       try {
         const slides = attracttIframe.contentWindow.document.querySelectorAll('.slide');
@@ -114,11 +122,7 @@
           console.warn("No active slide found!");
           return;
         }
-
-        // 현재 슬라이드 비활성화
         activeSlide.classList.remove('active');
-
-        // 다음 슬라이드 활성화 (순환 구조)
         let nextSlide = activeSlide.nextElementSibling || slides[0];
         nextSlide.classList.add('active');
         console.log("Slide switched to:", nextSlide);
@@ -127,46 +131,42 @@
       }
     }
 
-    // 어트랙트 보드 컨테이너 우측 클릭 이벤트 핸들러
+    // 어트랙트 보드 우측 클릭 이벤트(기존 코드 유지)
     function handleClickEvent(event) {
       const rect = attracttContainer.getBoundingClientRect();
       const clickX = event.clientX;
-
-      // 클릭 위치가 컨테이너의 우측 2% 영역인지 확인
       if (clickX > rect.left + (rect.width * 0.98)) {
         console.log("Right 2% of the container clicked.");
-        triggerAttracttSlides(); // 슬라이드 트리거
+        triggerAttracttSlides();
       }
     }
 
-    // 영상이 끝났다는 메시지를 받으면 어트랙트로 전환
+    // 영상이 끝나면 어트랙트로 전환
     window.addEventListener('message', function(event) {
       if (event.data === 'video-ended') {
         if (currentPage !== 'attractt') {
-          switchPage();
+          switchToAttractt();
         }
       }
     });
 
-    // 초기 설정
+    // 초기화
     function initialize() {
-      videosContainer.classList.add('active'); // videos에서 시작
-      intervalId = setInterval(switchPage, 120000); // 2분마다 페이지 전환
+      videosContainer.classList.add('active'); // 영상 페이지에서 시작
       attracttIframe.addEventListener('load', triggerAttracttSlides);
       attracttContainer.addEventListener('click', handleClickEvent);
-
       window.addEventListener('beforeunload', cleanUp);
     }
 
     // 리소스 정리
     function cleanUp() {
-      clearInterval(intervalId);
+      clearTimeout(attracttTimer);
       attracttIframe.removeEventListener('load', triggerAttracttSlides);
       attracttContainer.removeEventListener('click', handleClickEvent);
       console.log("Cleaned up resources to prevent memory leaks.");
     }
 
-    // 초기화 실행
+    // 실행
     initialize();
   </script>
 </body>
