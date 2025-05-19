@@ -42,14 +42,14 @@
   </div>
   <!-- 영상 루프 컨테이너 -->
   <div id="videos" class="container">
-    <iframe src="https://bencizion.github.io/Att_self/6.html" loading="lazy"></iframe>
+    <iframe src="https://bencizion.github.io/Att_self/6.html" loading="lazy" id="videoFrame"></iframe>
   </div>
 
   <script>
     const attracttContainer = document.getElementById('attractt');
     const videosContainer = document.getElementById('videos');
     const attracttIframe = attracttContainer.querySelector('iframe');
-    const videosIframe = videosContainer.querySelector('iframe');
+    const videosIframe = document.getElementById('videoFrame');
     let currentPage = 'videos';
     let attracttTimer = null;
 
@@ -81,10 +81,7 @@
     // 영상 재생
     function resumeVideos() {
       try {
-        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
-        videos.forEach(video => {
-          video.play().catch(err => console.error('Video play error:', err));
-        });
+        videosIframe.contentWindow.postMessage('play-video', '*');
       } catch (err) {
         console.error('Video resume error:', err);
       }
@@ -93,8 +90,7 @@
     // 영상 일시정지
     function pauseVideos() {
       try {
-        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
-        videos.forEach(video => video.pause());
+        videosIframe.contentWindow.postMessage('pause-video', '*');
       } catch (err) {
         console.error('Video pause error:', err);
       }
