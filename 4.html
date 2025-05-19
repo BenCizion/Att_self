@@ -50,7 +50,7 @@
     const videosContainer = document.getElementById('videos');
     const attracttIframe = attracttContainer.querySelector('iframe');
     const videosIframe = videosContainer.querySelector('iframe');
-    let currentPage = 'videos'; // 시작 선택(어트랙트 보드 or 영상)
+    let currentPage = 'videos'; // 시작: videos
     let intervalId;
 
     // 페이지 전환 함수
@@ -139,15 +139,24 @@
       }
     }
 
+    // 영상이 끝났다는 메시지를 받으면 어트랙트로 전환
+    window.addEventListener('message', function(event) {
+      if (event.data === 'video-ended') {
+        if (currentPage !== 'attractt') {
+          switchPage();
+        }
+      }
+    });
+
     // 초기 설정
     function initialize() {
-  videosContainer.classList.add('active'); // videos에서 시작
-  intervalId = setInterval(switchPage, 20000); // 20초마다 페이지 전환
-  attracttIframe.addEventListener('load', triggerAttracttSlides);
-  attracttContainer.addEventListener('click', handleClickEvent);
+      videosContainer.classList.add('active'); // videos에서 시작
+      intervalId = setInterval(switchPage, 120000); // 2분마다 페이지 전환
+      attracttIframe.addEventListener('load', triggerAttracttSlides);
+      attracttContainer.addEventListener('click', handleClickEvent);
 
-  window.addEventListener('beforeunload', cleanUp);
-}
+      window.addEventListener('beforeunload', cleanUp);
+    }
 
     // 리소스 정리
     function cleanUp() {
