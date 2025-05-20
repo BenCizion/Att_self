@@ -50,12 +50,18 @@
                           <span>비퍼블릭 운영팀</span>
                       </div>
                       <div class="meta-item">
-                        <img src="http://bencizion.github.io/Att_self/pub/img/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer;" onclick="copyUrl()" aria-label="현재 페이지 URL 공유">
+                        <img src="http://bencizion.github.io/Att_self/pub/img/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer; pointer-events:auto;" onclick="requestCopyUrl()" aria-label="캠페인 URL 공유">
                         <script>
                           // 부모 페이지로 특정 URL 복사 요청
                           function requestCopyUrl() {
-                            window.parent.postMessage({ action: 'copy-specific-url' }, 'https://www.bepublic.ai/35');
-                            console.log('특정 URL 복사 요청 전송');
+                            console.log('공유 버튼 클릭됨');
+                            try {
+                              window.parent.postMessage({ action: 'copy-specific-url' }, 'https://www.bepublic.ai/35');
+                              console.log('postMessage 전송: copy-specific-url to https://www.bepublic.ai/35');
+                            } catch (err) {
+                              console.error('postMessage 실패:', err);
+                              alert('URL 복사 요청 실패');
+                            }
                           }
                         </script>
                       </div>
