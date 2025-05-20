@@ -1,0 +1,47 @@
+
+body {
+  margin: 0 auto;
+  line-height: normal;
+}
+
+
+:root {
+  
+  /* Fonts */
+  --font-pretendard: Pretendard;
+  --font-noto-sans-kr: 'Noto Sans KR';
+  
+  /* font sizes */
+  --font-size-2xs: 11px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-9xl: 28px;
+  
+  /* Colors */
+  --color-darkorchid: #9b51e0;
+  --color-dimgray: #666;
+  --color-mediumseagreen: #27ae60;
+  --color-royalblue: #366fff;
+  --color-tomato: #ff5952;
+  --color-white: #fff;
+  
+  /* Gaps */
+  --gap-9xs: 4px;
+  --gap-6xs: 7px;
+  --gap-21xl: 40px;
+  
+  /* Border radiuses */
+  --br-9xs: 4px;
+  --br-8xs: 5px;
+  --br-5xs: 8px;
+  
+  /* Figma Variables */
+  
+  /* Color Variables */
+  --black: #000;
+  --gray-point: #828282;
+  --line: #e0e0e0;
+  --maincolor: #f3ba2f;
+  
+}
