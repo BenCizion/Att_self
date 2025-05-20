@@ -51,7 +51,14 @@
                           <span>비퍼블릭 운영팀</span>
                       </div>
                       <div class="share">
-                        <img src="./img/share.svg" alt="">
+                        <img src="./img/share.svg" alt="주소 공유하기">
+                        <script>
+                          function copyUrl() {
+                            navigator.clipboard.writeText(window.location.href)
+                              .then(() => alert("URL이 복사되었습니다!"))
+                              .catch(() => alert("URL 복사 실패"));
+                          }
+                        </script>
                       </div>
                   </div>
               </div>
