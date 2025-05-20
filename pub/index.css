@@ -366,7 +366,7 @@ body {
 .results-section {
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  padding: 40px 0;
+  padding: 20px 0;
 }
 
 .results-header {
