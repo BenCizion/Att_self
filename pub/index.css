@@ -412,7 +412,7 @@ body {
 .vote-option {
   display: flex;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background-color: var(--bg-white);
   border-bottom: 1px solid var(--border-color);
   transition: all 0.2s;
