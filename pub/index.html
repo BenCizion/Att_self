@@ -1,171 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<meta charset="utf-8">
-  	<meta name="viewport" content="initial-scale=1, width=device-width">
-  	
-  	<link rel="stylesheet" href="./global.css" />
-  	<link rel="stylesheet"  href="./index.css" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" />
-  	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400&display=swap" />
-  	  	
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, width=device-width">
+  <link rel="stylesheet" href="./global.css" />
+  <link rel="stylesheet" href="./index.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400&display=swap" />
 </head>
 <body>
-
   <main class="main-content">
-      <div class="container">
-          <!-- 투표 헤더 -->
-          <section class="poll-header">
-              <div class="poll-icon">
-                  <img src="http://bencizion.github.io/Att_self/pub/img/thum.jpg" alt="투표 썸네일">
+    <div class="container">
+      <!-- 투표 헤더 -->
+      <section class="poll-header">
+        <div class="poll-icon">
+          <img src="https://bencizion.github.io/Att_self/pub/img/thum.jpg" alt="투표 썸네일">
+        </div>
+        <div class="poll-title">
+          <h1>유권자 입장에서 대통령의 어떤 특징이 가장 중요하다고 생각하시나요?</h1>
+          <div class="poll-description">
+            제 21대 대통령 선거! 대선 후보에 대한 투표는 항상 다양한 기준으로 이루어집니다. 여러 기준 중, 이번 투표에서 당신의 '선택'을 좌우하는 가장 중요한 기준을 하나만 골라주세요.
+          </div>
+        </div>
+      </section>
+
+      <!-- 메타 정보 -->
+      <section class="poll-meta-section">
+        <div class="poll-meta-inline">
+          <div class="meta-items">
+            <div class="meta-item">
+              <div class="meta-icon">
+                <img src="https://bencizion.github.io/Att_self/pub/img/parti_icon.svg" alt="참여자 아이콘">
               </div>
-              <div class="poll-title">
-                  <h1>유권자 입장에서 대통령의 어떤 특징이 가장 중요하다고 생각하시나요?</h1>
-                  <div class="poll-description">
-                    제 21대 대통령 선거! 대선 후보에 대한 투표는 항상 다양한 기준으로 이루어집니다. 여러 기준 중, 이번 투표에서 당신의 '선택'을 좌우하는 가장 중요한 기준을 하나만 골라주세요.
-                  </div>
-             </div>
-          </section>
-
-          <!-- 메타 정보 -->
-          <section class="poll-meta-section">
-              <div class="poll-meta-inline">
-                  <div class="meta-items">
-                      <div class="meta-item">
-                          <div class="meta-icon">
-                              <img src="http://bencizion.github.io/Att_self/pub/img/parti_icon.svg" alt="참여자 아이콘">
-                          </div>
-                          <span>0명</span>
-                      </div>
-                      <div class="meta-item">
-                          <div class="meta-icon">
-                              <img src="http://bencizion.github.io/Att_self/pub/img/cal_icon.svg" alt="달력 아이콘">
-                          </div>
-                          <span>2025년 5월 22일부터, 2025년 7월 12일까지</span>
-                      </div>
-                      <div class="meta-item">
-                          <div class="meta-icon">
-                              <img src="http://bencizion.github.io/Att_self/pub/img/nick_icon.svg" alt="차트 아이콘">
-                          </div>
-                          <span>비퍼블릭 운영팀</span>
-                      </div>
-                      <div class="meta-item">
-                       <img src="http://bencizion.github.io/Att_self/pub/img/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer; pointer-events:auto;" onclick="copyContent()" aria-label="캠페인 공유">
-                      </div>
-                        <script>
-                          function copyContent() {
-                            // 특정 URL 또는 문구 설정 (필요한 옵션 선택)
-                            const CONTENT_TO_COPY = 'https://www.bepublic.ai/35'; // 옵션 1: URL
-                            console.log('공유 버튼 클릭됨');
-                            if (window.location.protocol !== 'https:') {
-                              console.error('비HTTPS 환경:', window.location.href);
-                              alert('복사는 HTTPS 환경에서만 가능합니다.');
-                              return;
-                            }
-                            navigator.clipboard.writeText(CONTENT_TO_COPY)
-                              .then(() => {
-                                console.log('복사 성공:', CONTENT_TO_COPY);
-                                alert('복사되었습니다: ' + CONTENT_TO_COPY);
-                              })
-                              .catch(err => {
-                                console.error('복사 실패:', err);
-                                alert('복사에 실패했습니다.');
-                              });
-                          }
-                        </script>
-                  </div>
-                      </div>
-                  </div>
+              <span>0명</span>
+            </div>
+            <div class="meta-item">
+              <div class="meta-icon">
+                <img src="https://bencizion.github.io/Att_self/pub/img/cal_icon.svg" alt="달력 아이콘">
               </div>
-          </section>
-
-          <!-- 투표 결과 섹션 -->
-          <section class="results-section">
-              <div class="results-header">
-                  <h2>
-                      <div class="results-title-icon">
-                          <img src="./img/title_icon2.svg" alt="투표 결과 아이콘">
-                      </div>
-                      투표 상세 결과
-                  </h2>
-                  <span class="results-note">(매일 업데이트 됩니다.)</span>
+              <span>2025년 5월 22일부터, 2025년 7월 12일까지</span>
+            </div>
+            <div class="meta-item">
+              <div class="meta-icon">
+                <img src="https://bencizion.github.io/Att_self/pub/img/nick_icon.svg" alt="차트 아이콘">
               </div>
+              <span>비퍼블릭 운영팀</span>
+            </div>
+            <div class="meta-item">
+              <img src="/files/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer; pointer-events:auto;" onclick="copyContent()" aria-label="캠페인 공유">
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 공유 버튼 스크립트 -->
+      <script>
+        function copyContent() {
+          const CONTENT_TO_COPY = 'https://www.bepublic.ai/35';
+          console.log('공유 버튼 클릭됨');
+          if (window.location.protocol !== 'https:') {
+            console.error('비HTTPS 환경:', window.location.href);
+            alert('복사는 HTTPS 환경에서만 가능합니다.');
+            return;
+          }
+          navigator.clipboard.writeText(CONTENT_TO_COPY)
+            .then(() => {
+              console.log('복사 성공:', CONTENT_TO_COPY);
+              alert('복사되었습니다: ' + CONTENT_TO_COPY);
+            })
+            .catch(err => {
+              console.error('복사 실패:', err);
+              alert('복사에 실패했습니다.');
+            });
+        }
+      </script>
 
-              <div class="vote-options">
-                  <div class="vote-option">
-                      <div class="option-indicator blue"></div>
-                      <div class="option-content">
-                          <div class="option-text">범죄 이력/법적 문제 부재</div>
-                          <div class="option-stats">
-                              <img src="./img/참여수_icon.svg" alt=""><span>0명</span>
-                          </div>
-                      </div>
-                      <div class="option-percentage">0.0%</div>
-                  </div>
-
-                  <div class="vote-option">
-                      <div class="option-indicator red"></div>
-                      <div class="option-content">
-                          <div class="option-text">비리·사생활 등의 구설수 부재</div>
-                          <div class="option-stats">
-                            <img src="./img/참여수_icon.svg" alt=""><span>0명</span>
-                          </div>
-                      </div>
-                      <div class="option-percentage">0.0%</div>
-                  </div>
-
-                  <div class="vote-option">
-                      <div class="option-indicator purple"></div>
-                      <div class="option-content">
-                          <div class="option-text">감정조절 능력(분노,폭언 등)</div>
-                          <div class="option-stats">
-                            <img src="./img/참여수_icon.svg" alt=""><span>0명</span>
-                          </div>
-                      </div>
-                      <div class="option-percentage">0.0%</div>
-                  </div>
-
-                  <div class="vote-option">
-                      <div class="option-indicator green"></div>
-                      <div class="option-content">
-                          <div class="option-text">이념·정책 방향의 일관성</div>
-                          <div class="option-stats">
-                            <img src="./img/참여수_icon.svg" alt=""><span>0명</span>
-                          </div>
-                      </div>
-                      <div class="option-percentage">0.0%</div>
-                  </div>
-
-                  <div class="vote-option">
-                      <div class="option-indicator gray"></div>
-                      <div class="option-content">
-                          <div class="option-text">경험과 협치·포용 능력</div>
-                          <div class="option-stats">
-                            <img src="./img/참여수_icon.svg" alt=""><span>0명</span>
-                          </div>
-                      </div>
-                      <div class="option-percentage">0.0%</div>
-                  </div>
+      <!-- 투표 결과 섹션 -->
+      <section class="results-section">
+        <div class="results-header">
+          <h2>
+            <div class="results-title-icon">
+              <img src="/files/title_icon2.svg" alt="투표 결과 아이콘">
+            </div>
+            투표 상세 결과
+          </h2>
+          <span class="results-note">(매일 업데이트 됩니다.)</span>
+        </div>
+        <div class="vote-options">
+          <div class="vote-option">
+            <div class="option-indicator blue"></div>
+            <div class="option-content">
+              <div class="option-text">범죄 이력/법적 문제 부재</div>
+              <div class="option-stats">
+                <img src="/files/참여수_icon.svg" alt="참여자 수 아이콘"><span>0명</span>
               </div>
-
-
-          </section>
-      </div>
+            </div>
+            <div class="option-percentage">0.0%</div>
+            <button class="vote-button">투표하기</button>
+          </div>
+          <div class="vote-option">
+            <div class="option-indicator red"></div>
+            <div class="option-content">
+              <div class="option-text">비리·사생활 등의 구설수 부재</div>
+              <div class="option-stats">
+                <img src="/files/참여수_icon.svg" alt="참여자 수 아이콘"><span>0명</span>
+              </div>
+            </div>
+            <div class="option-percentage">0.0%</div>
+            <button class="vote-button">투표하기</button>
+          </div>
+          <div class="vote-option">
+            <div class="option-indicator purple"></div>
+            <div class="option-content">
+              <div class="option-text">감정조절 능력(분노,폭언 등)</div>
+              <div class="option-stats">
+                <img src="/files/참여수_icon.svg" alt="참여자 수 아이콘"><span>0명</span>
+              </div>
+            </div>
+            <div class="option-percentage">0.0%</div>
+            <button class="vote-button">투표하기</button>
+          </div>
+          <div class="vote-option">
+            <div class="option-indicator green"></div>
+            <div class="option-content">
+              <div class="option-text">이념·정책 방향의 일관성</div>
+              <div class="option-stats">
+                <img src="/files/참여수_icon.svg" alt="참여자 수 아이콘"><span>0명</span>
+              </div>
+            </div>
+            <div class="option-percentage">0.0%</div>
+            <button class="vote-button">투표하기</button>
+          </div>
+          <div class="vote-option">
+            <div class="option-indicator gray"></div>
+            <div class="option-content">
+              <div class="option-text">경험과 협치·포용 능력</div>
+              <div class="option-stats">
+                <img src="/files/참여수_icon.svg" alt="참여자 수 아이콘"><span>0명</span>
+              </div>
+            </div>
+            <div class="option-percentage">0.0%</div>
+            <button class="vote-button">투표하기</button>
+          </div>
+        </div>
+        <!-- 더 보기 버튼 -->
+        <div class="show-more" style="text-align:center; padding:16px; cursor:pointer;">더 보기</div>
+      </section>
+    </div>
   </main>
 
   <script>
-      // 투표 버튼 기능
-      document.querySelectorAll('.vote-button').forEach(button => {
-          button.addEventListener('click', function() {
-              alert('투표 기능은 데모용입니다!');
-          });
+    // 투표 버튼 기능
+    document.querySelectorAll('.vote-button').forEach(button => {
+      button.addEventListener('click', function() {
+        alert('투표 기능은 데모용입니다!');
       });
-
-      // 더 보기 버튼
-      document.querySelector('.show-more').addEventListener('click', function() {
-          alert('상세 설명이 여기에 표시됩니다!');
-      });
+    });
+    // 더 보기 버튼
+    document.querySelector('.show-more').addEventListener('click', function() {
+      alert('상세 설명이 여기에 표시됩니다!');
+    });
   </script>
-
 </body>
 </html>
