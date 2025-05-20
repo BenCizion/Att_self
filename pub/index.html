@@ -51,11 +51,23 @@
                       </div>
                       <div class="meta-item">
                         <img src="./img/share.svg" alt="주소 공유하기">
+                        <img src="/img/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer;" onclick="copyUrl()" aria-label="현재 페이지 URL 공유">
                         <script>
                           function copyUrl() {
+                            if (window.location.protocol !== 'https:') {
+                              alert('URL 복사는 HTTPS 환경에서만 가능합니다.');
+                              console.error('비HTTPS 환경:', window.location.href);
+                              return;
+                            }
                             navigator.clipboard.writeText(window.location.href)
-                              .then(() => alert("URL이 복사되었습니다!"))
-                              .catch(() => alert("URL 복사 실패"));
+                              .then(() => {
+                                alert('URL이 복사되었습니다!');
+                                console.log('복사된 URL:', window.location.href);
+                              })
+                              .catch(err => {
+                                alert('URL 복사에 실패했습니다.');
+                                console.error('복사 실패:', err);
+                              });
                           }
                         </script>
                       </div>
