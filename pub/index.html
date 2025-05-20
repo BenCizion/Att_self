@@ -35,7 +35,7 @@
                           <div class="meta-icon">
                               <img src="http://bencizion.github.io/Att_self/pub/img/parti_icon.svg" alt="참여자 아이콘">
                           </div>
-                          <span>236,120명</span>
+                          <span>0명</span>
                       </div>
                       <div class="meta-item">
                           <div class="meta-icon">
@@ -52,21 +52,10 @@
                       <div class="meta-item">
                         <img src="http://bencizion.github.io/Att_self/pub/img/share.svg" alt="주소 공유하기" style="width:24px; height:24px; cursor:pointer;" onclick="copyUrl()" aria-label="현재 페이지 URL 공유">
                         <script>
-                          function copyUrl() {
-                            if (window.location.protocol !== 'https:') {
-                              alert('URL 복사는 HTTPS 환경에서만 가능합니다.');
-                              console.error('비HTTPS 환경:', window.location.href);
-                              return;
-                            }
-                            navigator.clipboard.writeText(window.location.href)
-                              .then(() => {
-                                alert('URL이 복사되었습니다!');
-                                console.log('복사된 URL:', window.location.href);
-                              })
-                              .catch(err => {
-                                alert('URL 복사에 실패했습니다.');
-                                console.error('복사 실패:', err);
-                              });
+                          // 부모 페이지로 특정 URL 복사 요청
+                          function requestCopyUrl() {
+                            window.parent.postMessage({ action: 'copy-specific-url' }, 'https://www.bepublic.ai/35');
+                            console.log('특정 URL 복사 요청 전송');
                           }
                         </script>
                       </div>
