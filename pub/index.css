@@ -79,8 +79,8 @@ body {
 .poll-header {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: 25px;
+  margin-bottom: 20px;
 }
 
 .poll-icon {
@@ -150,7 +150,7 @@ body {
 
 .poll-meta-inline .meta-items {
   display: flex;
-  gap: 40px;
+  gap: 25px;
   align-items: center;
   flex-wrap: wrap;
 }
