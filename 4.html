@@ -51,7 +51,7 @@
     const videosContainer = document.getElementById('videos');
     const attracttIframe = attracttContainer.querySelector('iframe');
     const videosIframe = videosContainer.querySelector('iframe');
-    let currentPage = 'videos'; // 시작은 어트랙트 보드 or 영상(attractt or videos)
+    let currentPage = 'videos'; // 시작은 어트랙트 보드 or 영상(attractt or videos) 어트랙트 보드로 시작시 로딩이 필요하여 영상으로 시작
 
     // 페이지 전환 함수
     function switchPage() {
@@ -66,7 +66,6 @@
         currentPage = 'attractt';
         pauseVideos();
         checkAttracttPremium();
-       // triggerAttracttSlides();
       }
     }
 
@@ -79,7 +78,6 @@
         });
       } catch (err) {
         console.error('Video resume error:', err);
-      //  console.error('Video resume error:', err);
       }
     }
 
@@ -90,7 +88,6 @@
         videos.forEach(video => video.pause());
       } catch (err) {
         console.error('Video pause error:', err);
-      //  console.error('Video pause error:', err);
       }
     }
 
@@ -100,24 +97,18 @@
         attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
           if (attracttIframe.contentWindow.document.body.innerText.includes('Premium')) {
             console.warn('Premium restriction detected');
-          //  console.warn('Premium restriction detected');
           }
         });
       } catch (err) {
         console.error('Premium check error:', err);
-     //   console.error('Premium check error:', err);
       }
     }
-
-
 
     // 초기 설정 (어트랙트 보드 or 영상) 어트랙트 보드를 초기 설정시 로딩이 있음
     //attracttContainer.classList.add('active');
     videosContainer.classList.add('active');
     setInterval(switchPage, 150000); //  페이지 전환 시간
 
-    // iframe 로드 후 슬라이드 트리거 시작
-   // attracttIframe.addEventListener('load', triggerAttracttSlides);
   </script>
 </body>
 </html>
