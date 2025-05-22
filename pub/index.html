@@ -68,6 +68,7 @@
               </div>
             </div>
             <div class="option-percentage">22.0%</div>
+            <button class="vote-button">투표하기</button>
           </div>
           <div class="vote-option">
             <div class="option-indicator red"></div>
@@ -78,6 +79,7 @@
               </div>
             </div>
             <div class="option-percentage">22.0%</div>
+            <button class="vote-button">투표하기</button>
           </div>
           <div class="vote-option">
             <div class="option-indicator purple"></div>
@@ -88,6 +90,7 @@
               </div>
             </div>
             <div class="option-percentage">22.0%</div>
+            <button class="vote-button">투표하기</button>
           </div>
           <div class="vote-option">
             <div class="option-indicator green"></div>
@@ -98,6 +101,7 @@
               </div>
             </div>
             <div class="option-percentage">22.0%</div>
+            <button class="vote-button">투표하기</button>
           </div>
           <div class="vote-option">
             <div class="option-indicator gray"></div>
@@ -108,11 +112,25 @@
               </div>
             </div>
             <div class="option-percentage">11.0%</div>
+            <button class="vote-button">투표하기</button>
           </div>
         </div>
       </section>
     </div>
   </main>
-
+    <script>
+        // 투표 버튼 기능
+        document.querySelectorAll('.vote-button').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('현재 투표 버튼은 데모용으로, 아래 댓글창에서의 투표 모듈을 대신 이용해주세요.');
+            });
+        });
+  
+        // 더 보기 버튼
+        document.querySelector('.show-more').addEventListener('click', function() {
+            alert('상세 설명이 여기에 표시됩니다!');
+        });
+    </script>
+          
 </body>
 </html>
