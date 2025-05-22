@@ -530,6 +530,11 @@ body {
   transition: all 0.2s;
 }
 
+.vote-button:hover {
+  background-color: #E8A91A;
+  transform: scale(1.05);
+}
+
 
 
 /* 투표 옵션 목록 */
