@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>주소 복사 테스트</title>
+  <style>
+    .share-button {
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .copied-msg {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 공유 버튼 -->
+  <button class="share-button" aria-label="공유하기">
+    <img src="https://bencizion.github.io/bepublic/img/share.svg" alt="공유 아이콘" />
+  </button>
+
+  <!-- 복사 완료 메시지 -->
+  <div class="copied-msg">주소가 복사되었습니다!</div>
+
+  <!-- 스크립트: DOM 완전히 로드된 후 실행 -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const shareButton = document.querySelector('.share-button');
+      const msg = document.querySelector('.copied-msg');
+
+      if (shareButton) {
+        shareButton.addEventListener('click', () => {
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+              msg.style.display = 'block';
+              setTimeout(() => {
+                msg.style.display = 'none';
+              }, 2000);
+            })
+            .catch(err => {
+              alert('복사 실패: ' + err);
+            });
+        });
+      } else {
+        console.warn('공유 버튼을 찾을 수 없습니다.');
+      }
+    });
+  </script>
+</body>
+</html>
