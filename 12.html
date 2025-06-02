@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intro + Board Grid</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Intro + Board Loop</title>
   <style>
     * {
       margin: 0;
@@ -18,26 +18,20 @@
     }
 
     #intro, #board {
+      width: 100%;
+      height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
     }
 
     #intro {
-      z-index: 10;
       background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 1s ease;
-    }
-
-    #intro.hidden {
-      opacity: 0;
-      pointer-events: none;
+      z-index: 10;
     }
 
     h1 {
@@ -45,7 +39,7 @@
       font-size: 24px;
       margin-bottom: 20px;
       padding: 10px 20px;
-      background-color: rgba(0,0,0,0.6);
+      background-color: rgba(0, 0, 0, 0.6);
       border-radius: 8px;
     }
 
@@ -74,6 +68,7 @@
   </style>
 </head>
 <body>
+
   <!-- 인트로 영역 -->
   <div id="intro">
     <h1>Attractt #꽃게당 #シンサコッケタン</h1>
@@ -93,37 +88,45 @@
   </div>
 
   <script>
+    const intro = document.getElementById("intro");
+    const board = document.getElementById("board");
+    const player = document.getElementById("videoPlayer");
+
     const videos = [
       "DJJd3EWv7LQ_video.mp4",
       "DJJd8m6PIQ0_video.mp4",
       "DJJeBjJvD7Y_video.mp4"
     ];
 
-    const player = document.getElementById("videoPlayer");
-    const intro = document.getElementById("intro");
-    const board = document.getElementById("board");
-
     let current = 0;
 
-    function playNext() {
+    function playIntroVideos() {
+      intro.style.display = "flex";
+      board.style.display = "none";
+      current = 0;
+      player.src = videos[current];
+      player.play();
+    }
+
+    player.addEventListener("ended", () => {
+      current++;
       if (current < videos.length) {
         player.src = videos[current];
         player.play();
-        current++;
       } else {
-        // 페이드아웃 효과
-        intro.classList.add("hidden");
+        // 인트로 끝나고 보드 표시
+        intro.style.display = "none";
+        board.style.display = "grid";
+
+        // 30초 후 인트로 다시 시작
         setTimeout(() => {
-          intro.style.display = "none";
-          board.style.display = "grid";
-        }, 1000);
+          playIntroVideos();
+        }, 30000);
       }
-    }
+    });
 
-    player.addEventListener("ended", playNext);
-    player.addEventListener("error", playNext); // 에러 시에도 다음 재생
-
-    playNext(); // 첫 영상 재생 시작
+    // 초기 실행
+    playIntroVideos();
   </script>
 </body>
 </html>
