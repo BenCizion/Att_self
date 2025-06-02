@@ -11,10 +11,10 @@
       box-sizing: border-box;
     }
 
-    body, html {
+    html, body {
       width: 100%;
       height: 100%;
-      background-color: #000;
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당%20배경%20패턴(용량)_6.webp') center/cover no-repeat;
       overflow: hidden;
     }
 
@@ -28,12 +28,12 @@
     }
 
     #intro {
-      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 10;
+      background: transparent;
     }
 
     h1 {
@@ -72,7 +72,7 @@
 <body>
   <!-- 인트로 영역 -->
   <div id="intro">
-    <h1>#꽃게당 #シンサコッケタン INSTAGRAM REVIEW</h1>
+    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
     <video id="videoPlayer" autoplay muted playsinline></video>
   </div>
 
@@ -89,7 +89,6 @@
   </div>
 
   <script>
-    // 영상 파일들과 개별 재생 시간 (초)
     const videos = [
       { file: "DJJd3EWv7LQ_video.mp4", duration: 8 },
       { file: "DJJd8m6PIQ0_video.mp4", duration: 10 },
@@ -114,7 +113,7 @@
         intro.style.display = "none";
         board.style.display = "grid";
 
-        // 30초 후 다시 인트로 루프
+        // 30초 후 다시 인트로
         setTimeout(() => {
           board.style.display = "none";
           intro.style.display = "flex";
@@ -124,13 +123,13 @@
       }
     }
 
-    // 최초 재생 시작
+    // 첫 재생
     playNextVideo();
 
-    // 6시간마다 페이지 자동 리로딩
+    // 6시간 후 자동 새로고침
     setTimeout(() => {
       location.reload();
-    }, 6 * 60 * 60 * 1000); // 6시간 = 21600000ms
+    }, 6 * 60 * 60 * 1000); // 21600000 ms
   </script>
 </body>
 </html>
