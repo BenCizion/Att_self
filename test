@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      color: #000;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    .video-board {
+      width: 1280px;
+      height: 720px;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
+      padding: 20px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .slide.active {
+      display: flex;
+    }
+    .slide iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+    .prev, .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      border: none;
+      font-size: 2rem;
+      padding: 10px 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .prev { left: 20px; }
+    .next { right: 20px; }
+
+    @media screen and (max-width: 768px) {
+      .video-board {
+        width: 90%;
+        height: auto;
+      }
+      .slide iframe {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Attractt #꽃게당 #シンサコッケタン</h1>
+
+  <div class="video-board">
+    <button class="prev">&#8592;</button>
+    <div class="slide active">
+      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+    </div>
+    <div class="slide">
+      <iframe src="https://www.youtube.com/embed/ysz5S6PUM-U" allowfullscreen></iframe>
+    </div>
+    <div class="slide">
+      <iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" allowfullscreen></iframe>
+    </div>
+    <button class="next">&#8594;</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function showSlide(idx) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === idx);
+      });
+    }
+
+    document.querySelector('.prev').onclick = () => {
+      current = (current - 1 + slides.length) % slides.length;
+      showSlide(current);
+    };
+
+    document.querySelector('.next').onclick = () => {
+      current = (current + 1) % slides.length;
+      showSlide(current);
+    };
+
+    // Optional: swipe support for mobile
+    let startX = 0;
+    document.querySelector('.video-board').addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+    document.querySelector('.video-board').addEventListener('touchend', (e) => {
+      let endX = e.changedTouches[0].clientX;
+      if (endX - startX > 50) document.querySelector('.prev').click();
+      else if (startX - endX > 50) document.querySelector('.next').click();
+    });
+  </script>
+</body>
+</html>
