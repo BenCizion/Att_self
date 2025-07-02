@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>꽃게당 인스타그램 TV</title>
+  <title>  <title>\u꽃게당 인스타그램 TV  <title>\u꽃게당 인스타그램 TV\u</title>
   <style>
     * {
       margin: 0;
@@ -16,18 +16,19 @@
       height: 100%;
       background-color: #000;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
 
     #intro {
       width: 100%;
-      height: 100%;
-      background: url('https://BenCizion.github.io/Att_self/bg_img_06.png') center/cover no-repeat;
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 40px 0;
     }
 
     h1 {
@@ -71,48 +72,71 @@
       object-fit: cover;
       background: #000;
     }
+
+    .player-area.reels-quad {
+      width: 1280px;
+      height: 720px;
+      display: none;
+      gap: 4px;
+      background: #000;
+      justify-content: space-between;
+    }
+
+    .player-area.reels-quad video {
+      width: 25%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+    }
   </style>
 </head>
 <body>
   <div id="intro">
-    <h1>Instagram #꽃게당 #シンサコッケタン</h1>
+    <h1>Instagram #    <h1>Instagram #\u꽃게당 #KkotGeDang #しんさコッケタン</h1>
 
-    <div class="player-area">
+    <div class="player-area" id="mainPlayerArea">
       <video id="videoPlayer" autoplay muted playsinline></video>
 
       <div id="board">
+        <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none"></video>
-        <img src="https://cdn.attractt.com/contents/2025/05/29/DJjASC7vj-j_image.jpg" />
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJtPCkyPgIM_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJBSiePvBJK_video.mp4" autoplay muted loop playsinline preload="none"></video>
       </div>
     </div>
+
+    <div class="player-area reels-quad" id="reelsQuad">
+      <video src="a.mp4" autoplay muted loop playsinline></video>
+      <video src="b.mp4" autoplay muted loop playsinline></video>
+      <video src="c.mp4" autoplay muted loop playsinline></video>
+      <video src="d.mp4" autoplay muted loop playsinline></video>
+    </div>
   </div>
 
   <script>
     const videos = [
-      { src: "DJJd3EWv7LQ_video.mp4", duration: 17000 },  // 17초
-      { src: "DJJd8m6PIQ0_video.mp4", duration: 17000 },  // 17초
-      { src: "files/2025_promotion_video.mp4", duration: 15000 }   // 15초
+      { src: "files/2024_Influencer_Mukbang_01.mp4", duration: 17000 },
+      { src: "files/2024_Influencer_Mukbang_02.mp4", duration: 17000 },
+      { src: "files/2025_promotion_video.mp4", duration: 58000 }
     ];
 
     const player = document.getElementById("videoPlayer");
     const board = document.getElementById("board");
+    const reelsQuad = document.getElementById("reelsQuad");
+    const mainPlayerArea = document.getElementById("mainPlayerArea");
 
     let current = 0;
-    let timeoutId = null;
 
     function playNextVideo() {
       if (current < videos.length) {
         player.src = videos[current].src;
         player.play();
 
-        // 재생 시간 동안 기다렸다가 다음 영상 재생
-        timeoutId = setTimeout(() => {
+        setTimeout(() => {
           current++;
           playNextVideo();
         }, videos[current].duration);
@@ -127,13 +151,20 @@
 
       setTimeout(() => {
         board.style.display = "none";
+        reelsQuad.style.display = "flex";
+        showReelsQuad();
+      }, 30000);
+    }
+
+    function showReelsQuad() {
+      setTimeout(() => {
+        reelsQuad.style.display = "none";
         player.style.display = "block";
         current = 0;
         playNextVideo();
-      }, 30000); // 30초간 보드 보여줌
+      }, 30000);
     }
 
-    // 페이지 시작 시 첫 영상 재생
     playNextVideo();
   </script>
 </body>
