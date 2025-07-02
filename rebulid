@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attractt & Video Switcher for KKotKeDang</title>
+  <!-- 캐시 최적화 메타 태그 및 헤더 -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
+  <meta http-equiv="Expires" content="Wed, 31 Dec 2099 23:55:55 GMT">
+  <link rel="preload" as="image" href="꽃게당 배경 패턴(용량)_6.webp">
+  <link rel="preload" as="image" href="bg_img_06.png">
+  <link rel="preconnect" href="https://bencizion.github.io">
+  <style>
+     body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: url('bg_img_06.png') no-repeat center center fixed; /* 배경 이미지 설정 */
+    background: url('꽃게당 배경 패턴(용량)_6.webp') no-repeat center center fixed; /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지 크기 조정 */
+  }
+    .container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transition: opacity 1s ease;
+      opacity: 0;
+      z-index: 1;
+    }
+    .container.active {
+      opacity: 1;
+      z-index: 2;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+  <script>
+    // Service Worker 등록 (캐싱 최적화)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw-cache.js').catch(function(error) {
+          // 등록 실패 시 콘솔에 출력
+          console.warn('ServiceWorker registration failed:', error);
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+  <!-- 어트랙트 보드 컨테이너 -->
+  <div id="attractt" class="container">
+    <iframe src="https://bencizion.github.io/Att_self/2.html" loading="lazy"></iframe>
+  </div>
+  <!-- 영상 루프 컨테이너 -->
+  <div id="videos" class="container">
+    <iframe src="https://bencizion.github.io/Att_self/4.html" loading="lazy"></iframe>
+  </div>
+
+  <script>
+    const attracttContainer = document.getElementById('attractt');
+    const videosContainer = document.getElementById('videos');
+    const attracttIframe = attracttContainer.querySelector('iframe');
+    const videosIframe = videosContainer.querySelector('iframe');
+    let currentPage = 'videos'; // 시작은 어트랙트 보드 or 영상(attractt or videos) 어트랙트 보드로 시작시 로딩이 필요하여 영상으로 시작
+
+    // 페이지 전환 함수
+    function switchPage() {
+      if (currentPage === 'attractt') {
+        attracttContainer.classList.remove('active');
+        videosContainer.classList.add('active');
+        currentPage = 'videos';
+        resumeVideos();
+      } else {
+        videosContainer.classList.remove('active');
+        attracttContainer.classList.add('active');
+        currentPage = 'attractt';
+        pauseVideos();
+        checkAttracttPremium();
+      }
+    }
+
+    // 영상 재생 제어
+    function resumeVideos() {
+      try {
+        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
+        videos.forEach(video => {
+          video.play().catch(err => console.error('Video play error:', err));
+        });
+      } catch (err) {
+        console.error('Video resume error:', err);
+      }
+    }
+
+    // 영상 일시 정지
+    function pauseVideos() {
+      try {
+        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
+        videos.forEach(video => video.pause());
+      }
+    }
+
+    // 어트랙트 Premium 제한 확인
+    function checkAttracttPremium() {
+      try {
+        attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
+          if (attracttIframe.contentWindow.document.body.innerText.includes('Premium')) {
+            console.warn('Premium restriction detected');
+          }
+        });
+      } 
+    }
+
+    // 초기 설정 (어트랙트 보드 or 영상) 어트랙트 보드를 초기 설정시 로딩이 있음
+    //attracttContainer.classList.add('active');
+    videosContainer.classList.add('active');
+    setInterval(switchPage, 150000); //  페이지 전환 시간 1000당 1초
+
+  </script>
+</body>
+</html>
