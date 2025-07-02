@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>꽃게당 인스타그램 TV</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
       height: 100%;
@@ -19,7 +14,6 @@
       justify-content: center;
       align-items: center;
     }
-
     #intro {
       width: 100%;
       height: 100%;
@@ -29,7 +23,6 @@
       align-items: center;
       justify-content: center;
     }
-
     h1 {
       color: #fff;
       font-size: 24px;
@@ -38,36 +31,38 @@
       background-color: rgba(0,0,0,0.6);
       border-radius: 8px;
     }
-
     .player-area {
       width: 1280px;
       height: 720px;
       position: relative;
       background: #000;
     }
-
     #videoPlayer {
       width: 100%;
       height: 100%;
     }
-
-    #board {
+    #transitionImg {
+      display: none;
       position: absolute;
-      top: 0;
       left: 0;
+      top: 0;
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      z-index: 10;
+    }
+    #board {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       display: none;
       padding: 4px;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(2, 1fr);
       gap: 4px;
     }
-
-    #board video,
-    #board img {
-      width: 100%;
-      height: 100%;
+    #board video, #board img {
+      width: 100%; height: 100%;
       object-fit: cover;
       background: #000;
     }
@@ -76,10 +71,9 @@
 <body>
   <div id="intro">
     <h1>Instagram #꽃게당 #シンサコッケタン</h1>
-
     <div class="player-area">
       <video id="videoPlayer" autoplay muted playsinline></video>
-
+      <img id="transitionImg" src="7월이벤트이미지.jpg" alt="이벤트 이미지" />
       <div id="board">
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
         <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
@@ -92,49 +86,37 @@
       </div>
     </div>
   </div>
-
   <script>
     const videos = [
-      { src: "DJJd3EWv7LQ_video.mp4", duration: 10000 },  // 10초
-      { src: "DJJd8m6PIQ0_video.mp4", duration: 10000 },  // 10초
-      { src: "DJJeBjJvD7Y_video.mp4", duration: 10000 }   // 10초
+      "DJJd3EWv7LQ_video.mp4",
+      "DJJd8m6PIQ0_video.mp4",
+      "DJJeBjJvD7Y_video.mp4"
     ];
-
-    const player = document.getElementById("videoPlayer");
-    const board = document.getElementById("board");
-
-    let current = 0;
-    let timeoutId = null;
+    const videoPlayer = document.getElementById("videoPlayer");
+    const transitionImg = document.getElementById("transitionImg");
+    let currentVideoIndex = 0;
 
     function playNextVideo() {
-      if (current < videos.length) {
-        player.src = videos[current].src;
-        player.play();
-
-        // 재생 시간 동안 기다렸다가 다음 영상 재생
-        timeoutId = setTimeout(() => {
-          current++;
-          playNextVideo();
-        }, videos[current].duration);
+      // 첫 번째 비디오 이후 전환 시에만 이미지 노출
+      if (currentVideoIndex !== 0) {
+        transitionImg.style.display = "block";
+        videoPlayer.style.display = "none";
+        setTimeout(() => {
+          transitionImg.style.display = "none";
+          videoPlayer.style.display = "block";
+          videoPlayer.src = videos[currentVideoIndex];
+          videoPlayer.play();
+          currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+        }, 2000); // 2초간 이미지 노출
       } else {
-        showBoard();
+        videoPlayer.src = videos[currentVideoIndex];
+        videoPlayer.play();
+        currentVideoIndex = (currentVideoIndex + 1) % videos.length;
       }
     }
 
-    function showBoard() {
-      player.style.display = "none";
-      board.style.display = "grid";
-
-      setTimeout(() => {
-        board.style.display = "none";
-        player.style.display = "block";
-        current = 0;
-        playNextVideo();
-      }, 20000); // 20초간 보드 보여줌
-    }
-
-    // 페이지 시작 시 첫 영상 재생
-    playNextVideo();
+    videoPlayer.addEventListener("ended", playNextVideo);
+    playNextVideo(); // 첫 번째 비디오 재생 시작
   </script>
 </body>
 </html>
