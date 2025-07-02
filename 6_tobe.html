@@ -16,19 +16,18 @@
       height: 100%;
       background-color: #000;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
 
     #intro {
       width: 100%;
+      height: 100%;
       background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 0;
     }
 
     h1 {
@@ -72,8 +71,7 @@
       object-fit: cover;
       background: #000;
     }
-
-    .player-area.reels-quad {
+        .player-area.reels-quad {
       width: 1280px;
       height: 720px;
       display: none;
@@ -109,19 +107,20 @@
       </div>
     </div>
 
-    <div class="player-area reels-quad" id="reelsQuad">
-      <video src="a.mp4" autoplay muted loop playsinline></video>
-      <video src="b.mp4" autoplay muted loop playsinline></video>
-      <video src="c.mp4" autoplay muted loop playsinline></video>
-      <video src="d.mp4" autoplay muted loop playsinline></video>
+        <div class="player-area reels-quad" id="reelsQuad">
+      <video src="https://cdn.attractt.com/contents/2025/07/02/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
+      <video src="https://cdn.attractt.com/contents/2025/07/02/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
+      <video src="https://cdn.attractt.com/contents/2025/07/02/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
+      <video src="https://cdn.attractt.com/contents/2025/07/02/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
     </div>
+
   </div>
 
   <script>
     const videos = [
-      { src: "files/2024_Influencer_Mukbang_01.mp4", duration: 17000 },
-      { src: "files/2024_Influencer_Mukbang_02.mp4", duration: 17000 },
-      { src: "files/2025_promotion_video.mp4", duration: 58000 }
+      { src: "files/2024_Influencer_Mukbang_01.mp4", duration: 17000 },  // 17초
+      { src: "files/2024_Influencer_Mukbang_02.mp4", duration: 17000 },  // 17초
+      { src: "files/2025_promotion_video.mp4", duration: 58000 }   // 58초
     ];
 
     const player = document.getElementById("videoPlayer");
@@ -130,13 +129,14 @@
     const mainPlayerArea = document.getElementById("mainPlayerArea");
 
     let current = 0;
-
+ 
     function playNextVideo() {
       if (current < videos.length) {
         player.src = videos[current].src;
         player.play();
 
-        setTimeout(() => {
+        // 재생 시간 동안 기다렸다가 다음 영상 재생
+        timeoutId = setTimeout(() => {
           current++;
           playNextVideo();
         }, videos[current].duration);
@@ -145,26 +145,27 @@
       }
     }
 
-    function showBoard() {
-      player.style.display = "none";
-      board.style.display = "grid";
+      function showBoard() {
+        player.style.display = "none";
+        board.style.display = "grid";
 
-      setTimeout(() => {
-        board.style.display = "none";
-        reelsQuad.style.display = "flex";
-        showReelsQuad();
-      }, 30000);
-    }
+        setTimeout(() => {
+          board.style.display = "none";
+          reelsQuad.style.display = "flex";  // 릴스 표시
+          showReelsQuad();                   // 릴스 화면 보여줌
+        }, 30000); // 30초간 보드 보여줌
+      }
 
-    function showReelsQuad() {
-      setTimeout(() => {
-        reelsQuad.style.display = "none";
-        player.style.display = "block";
-        current = 0;
-        playNextVideo();
-      }, 30000);
-    }
+      function showReelsQuad() {
+        setTimeout(() => {
+          reelsQuad.style.display = "none";
+          player.style.display = "block";
+          current = 0;
+          playNextVideo(); // 다시 영상 루프로
+        }, 30000); // 30초간 릴스 화면 보여줌
+      }
 
+    // 페이지 시작 시 첫 영상 재생
     playNextVideo();
   </script>
 </body>
