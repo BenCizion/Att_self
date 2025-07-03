@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>꽃게당 인스타그램 TV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #intro {
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
+            background-size: cover; /* 배경 이미지가 전체를 덮도록 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* 전체 화면을 덮도록 */
+            top: 0;
+            left: 0;
+            z-index: 100; /* 다른 요소 위에 표시 */
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 8px;
+        }
+
+        #loadingMessage {
+            color: #fff;
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 8px;
+        }
+
+        .player-area {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background: #000;
+            /* mainPlayerArea는 JS에서 display: block으로 변경될 것 */
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* board01: 4x2 레이아웃 */
+        #board01 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* JavaScript에서 'grid'로 설정하여 표시 */
+            padding: 4px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 4px;
+        }
+
+        #board01 video,
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* board02: 4x1 레이아웃 (세로로 길게) */
+        #board02 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* JavaScript에서 'grid'로 설정하여 표시 */
+            padding: 4px; /* board01과 동일하게 padding 추가 */
+            grid-template-columns: repeat(4, 1fr); /* 4개의 열 */
+            grid-template-rows: 1fr; /* 1개의 행 - 각 셀이 세로로 길어짐 */
+            gap: 4px; /* board01과 동일하게 gap 추가 */
+        }
+
+        #board02 video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="intro">
+        <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
+        <p id="loadingMessage">영상을 불러오는 중입니다... 잠시만 기다려 주세요.</p>
+        <!-- 이 <p> 태그 대신 브랜드 로고 이미지를 넣으실 수 있습니다. 예: <img src="your_brand_logo.png" alt="Brand Logo" style="width: 150px; height: auto; margin-top: 20px;"> -->
+    </div>
+
+    <div class="player-area" id="mainPlayerArea" style="display: none;">
+        <video id="videoPlayer" autoplay muted playsinline preload="auto"></video>
+
+        <div id="board01">
+            <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJtPCkyPgIM_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJBSiePvBJK_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        </div>
+
+        <div id="board02">
+            <video src="https://cdn.attractt.com/contents/2025/07/02/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
+            <video src="https://cdn.attractt.com/contents/2025/07/02/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
+            <video src="https://cdn.attractt.com/contents/2025/07/02/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
+            <video src="https://cdn.attractt.com/contents/2025/07/02/C6C8OxVyIR6_video.mp4" autoplay muted loop playsinline></video>
+        </div>
+
+    </div>
+
+    <script>
+        const videos = [
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2024_Influencer_Mukbang_01.mp4", duration: 17000 },  // 17초
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2024_Influencer_Mukbang_02.mp4", duration: 17000 },  // 17초
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_promotion_video.mp4", duration: 58000 }    // 58초
+        ];
+
+        const player = document.getElementById("videoPlayer");
+        const board01 = document.getElementById("board01");
+        const board02 = document.getElementById("board02");
+        const mainPlayerArea = document.getElementById("mainPlayerArea");
+        const introScreen = document.getElementById("intro");
+
+        let current = 0;
+    
+        // 첫 번째 비디오가 재생 준비되면 로딩 화면 숨기기
+        player.addEventListener('canplaythrough', () => {
+            introScreen.style.display = 'none'; // 인트로 화면 숨기기
+            mainPlayerArea.style.display = 'block'; // 메인 플레이어 영역 보이기
+            player.play(); // 비디오 재생 시작
+        }, { once: true }); // 첫 번째 canplaythrough 이벤트만 수신
+
+        function playNextVideo() {
+            if (current < videos.length) {
+                player.src = videos[current].src;
+                // player.play()는 canplaythrough 이벤트 핸들러에서 호출됨
+            } else {
+                showBoard01();
+            }
+        }
+
+        function showBoard01() {
+            player.style.display = "none";
+            board01.style.display = "grid";
+
+            setTimeout(() => {
+                board01.style.display = "none";
+                showBoard02();
+            }, 30000); // 30초간 board01 보여줌
+        }
+
+        function showBoard02() {
+            board02.style.display = "grid";
+            // board02 내의 모든 비디오를 찾아서 재생 시작
+            const board02Videos = board02.querySelectorAll('video');
+            board02Videos.forEach(video => {
+                video.play().catch(error => {
+                    // 자동 재생 정책 등으로 인해 재생이 실패할 경우 콘솔에 오류 표시
+                    console.error("Error playing video in board02:", video.src, error, "Auto-play might be blocked.");
+                });
+            });
+
+            setTimeout(() => {
+                // board02 숨기기 전에 모든 비디오 일시 정지 및 시간 리셋
+                board02Videos.forEach(video => {
+                    video.pause();
+                    video.currentTime = 0; // 다음 재생을 위해 비디오 시작 지점으로 리셋
+                });
+                board02.style.display = "none";
+                player.style.display = "block";
+                current = 0;
+                playNextVideo(); // 다시 영상 루프로
+            }, 30000); // 30초간 board02 보여줌
+        }
+
+        // 페이지 시작 시 첫 영상 로딩 시작 (canplaythrough가 발생하면 화면 전환)
+        playNextVideo();
+    </script>
+</body>
+</html>
