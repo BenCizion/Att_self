@@ -8,18 +8,12 @@
     #videoPlayer { width: 100vw; height: 100vh; object-fit: cover; }
   </style>
   <script>
-    function showBoard() {
-      document.getElementById('videoPlayer').style.display = 'none';
-      var boardFrame = document.getElementById('boardFrame');
-      boardFrame.style.display = '';
-      // board.html 로드 후 board01만 보이게 하려면 board.html이 CORS 허용되어야 하고 board01만 보이게 스크립트 필요
-      // board.html의 board01 위치로 바로 이동하려면 hash 사용
-      boardFrame.src = "https://bencizion.github.io/Att_self/board.html#board01";
-      setTimeout(function() {
-        // 15초 후 원하는 동작 추가 (예시: 다시 영상 보여주기, 멈춤 등)
-        // location.reload(); // 반복하고 싶으면 주석 해제
-      }, 15000);
-    }
+   function showBoard() {
+  document.getElementById('videoPlayer').style.display = 'none';
+  var boardFrame = document.getElementById('boardFrame');
+  boardFrame.style.display = 'block'; // display: '' 대신 'block'
+  boardFrame.src = "https://bencizion.github.io/Att_self/board.html#board01";
+}
 
     window.onload = function() {
       var video = document.getElementById('videoPlayer');
@@ -30,7 +24,7 @@
   </script>
 </head>
 <body>
-  <video id="videoPlayer" src="DJJd3EWv7LQ_video.mp4" autoplay muted></video>
-  <iframe id="boardFrame"></iframe>
+ <video id="videoPlayer" src="DJJd3EWv7LQ_video.mp4" autoplay muted></video>
+<iframe id="boardFrame" style="display:block; width:100vw; height:100vh; border:none;" src="https://bencizion.github.io/Att_self/board.html#board01"></iframe>
 </body>
 </html>
