@@ -2,42 +2,67 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1280, initial-scale=1.0" />
-    <title>꽃게당 비디오</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>꽃게당 인스타그램 TV</title>
     <style>
-        html, body {
-            width: 100vw;
-            height: 100vh;
-            background: #000;
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .videos-wrapper {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: 1fr;
-            gap: 4px;
-            width: 1280px;
-            height: 720px;
-        }
-        video {
+
+        #intro {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 8px;
+        }
+
+        .player-area {
+            width: 1280px;
+            height: 720px;
+            position: relative;
             background: #000;
         }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+        }
+
     </style>
 </head>
+
 <body>
-    <div class="videos-wrapper">
-        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
-        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
-        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
-        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C6C8OxVyIR6_video.mp4" autoplay muted loop playsinline></video>
-    </div>
+    <script>
+        const videos = [
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2024_Influencer_Mukbang_01.mp4", duration: 20000 },  // 20초
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2024_Influencer_Mukbang_02.mp4", duration: 20000 },  // 20초
+            { src: "https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_promotion_video.mp4", duration: 30000 }    // 30초
+        ];
+        
+        let current = 0;
+    </script>
 </body>
 </html>
