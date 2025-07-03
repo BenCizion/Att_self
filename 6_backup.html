@@ -1,114 +1,140 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attractt & Video Switcher for KKotKeDang</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>꽃게당 인스타그램 TV</title>
   <style>
-     body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: url('bg_img_06.png') no-repeat center center fixed; /* 배경 이미지 설정 */
-    background: url('꽃게당 배경 패턴(용량)_6.webp') no-repeat center center fixed; /* 배경 이미지 설정 */
-    background-size: cover; /* 배경 이미지 크기 조정 */
-  }
-    .container {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #intro {
+      width: 100%;
+      height: 100%;
+      background: url('https://BenCizion.github.io/Att_self/bg_img_06.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 8px;
+    }
+
+    .player-area {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      background: #000;
+    }
+
+    #videoPlayer {
+      width: 100%;
+      height: 100%;
+    }
+
+    #board {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      transition: opacity 1s ease;
-      opacity: 0;
-      z-index: 1;
+      display: none;
+      padding: 4px;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 4px;
     }
-    .container.active {
-      opacity: 1;
-      z-index: 2;
-    }
-    iframe {
+
+    #board video,
+    #board img {
       width: 100%;
       height: 100%;
-      border: none;
+      object-fit: cover;
+      background: #000;
     }
   </style>
 </head>
 <body>
-  <!-- 어트랙트 보드 컨테이너 -->
-  <div id="attractt" class="container">
-    <iframe src="https://bencizion.github.io/Att_self/2.html" loading="lazy"></iframe>
-  </div>
-  <!-- 영상 루프 컨테이너 -->
-  <div id="videos" class="container">
-    <iframe src="https://bencizion.github.io/Att_self/4.html" loading="lazy"></iframe>
+  <div id="intro">
+    <h1>Instagram #꽃게당 #シンサコッケタン</h1>
+
+    <div class="player-area">
+      <video id="videoPlayer" autoplay muted playsinline></video>
+
+      <div id="board">
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <img src="https://cdn.attractt.com/contents/2025/05/29/DJjASC7vj-j_image.jpg" />
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJtPCkyPgIM_video.mp4" autoplay muted loop playsinline preload="none"></video>
+        <video src="https://cdn.attractt.com/contents/2025/06/02/DJBSiePvBJK_video.mp4" autoplay muted loop playsinline preload="none"></video>
+      </div>
+    </div>
   </div>
 
   <script>
-    const attracttContainer = document.getElementById('attractt');
-    const videosContainer = document.getElementById('videos');
-    const attracttIframe = attracttContainer.querySelector('iframe');
-    const videosIframe = videosContainer.querySelector('iframe');
-    let currentPage = 'videos'; // 시작은 어트랙트 보드 or 영상(attractt or videos) 어트랙트 보드로 시작시 로딩이 필요하여 영상으로 시작
+    const videos = [
+      { src: "DJJd3EWv7LQ_video.mp4", duration: 17000 },  // 17초
+      { src: "DJJd8m6PIQ0_video.mp4", duration: 17000 },  // 17초
+      { src: "DJJeBjJvD7Y_video.mp4", duration: 15000 }   // 15초
+    ];
 
-    // 페이지 전환 함수
-    function switchPage() {
-      if (currentPage === 'attractt') {
-        attracttContainer.classList.remove('active');
-        videosContainer.classList.add('active');
-        currentPage = 'videos';
-        resumeVideos();
+    const player = document.getElementById("videoPlayer");
+    const board = document.getElementById("board");
+
+    let current = 0;
+    let timeoutId = null;
+
+    function playNextVideo() {
+      if (current < videos.length) {
+        player.src = videos[current].src;
+        player.play();
+
+        // 재생 시간 동안 기다렸다가 다음 영상 재생
+        timeoutId = setTimeout(() => {
+          current++;
+          playNextVideo();
+        }, videos[current].duration);
       } else {
-        videosContainer.classList.remove('active');
-        attracttContainer.classList.add('active');
-        currentPage = 'attractt';
-        pauseVideos();
-        checkAttracttPremium();
+        showBoard();
       }
     }
 
-    // 영상 재생 제어
-    function resumeVideos() {
-      try {
-        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
-        videos.forEach(video => {
-          video.play().catch(err => console.error('Video play error:', err));
-        });
-      } catch (err) {
-        console.error('Video resume error:', err);
-      }
+    function showBoard() {
+      player.style.display = "none";
+      board.style.display = "grid";
+
+      setTimeout(() => {
+        board.style.display = "none";
+        player.style.display = "block";
+        current = 0;
+        playNextVideo();
+      }, 30000); // 30초간 보드 보여줌
     }
 
-    // 영상 일시 정지
-    function pauseVideos() {
-      try {
-        const videos = videosIframe.contentWindow.document.querySelectorAll('video');
-        videos.forEach(video => video.pause());
-      } catch (err) {
-        console.error('Video pause error:', err);
-      }
-    }
-
-    // 어트랙트 Premium 제한 확인
-    function checkAttracttPremium() {
-      try {
-        attracttIframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
-          if (attracttIframe.contentWindow.document.body.innerText.includes('Premium')) {
-            console.warn('Premium restriction detected');
-          }
-        });
-      } catch (err) {
-        console.error('Premium check error:', err);
-      }
-    }
-
-    // 초기 설정 (어트랙트 보드 or 영상) 어트랙트 보드를 초기 설정시 로딩이 있음
-    //attracttContainer.classList.add('active');
-    videosContainer.classList.add('active');
-    setInterval(switchPage, 150000); //  페이지 전환 시간 1000당 1초
-
+    // 페이지 시작 시 첫 영상 재생
+    playNextVideo();
   </script>
 </body>
 </html>
