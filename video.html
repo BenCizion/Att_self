@@ -3,43 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Only</title>
+  <title>Intro + Board Grid</title>
   <style>
-    html, body {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
       width: 100%;
       height: 100%;
-      margin: 0;
-      background: #000;
-      overflow: hidden;
+      background-color: #000;
     }
+
+    #intro, #board {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #intro {
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 8px;
+    }
+
     #videoPlayer {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-      object-fit: contain;
+      width: 1280px;
+      height: 720px;
       background: #000;
     }
+
   </style>
 </head>
 <body>
-  <video id="videoPlayer" autoplay muted playsinline></video>
+  <!-- 인트로 영역 -->
+  <div id="intro">
+    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
+    <video id="videoPlayer" autoplay muted playsinline></video>
+  </div>
+
   <script>
-    // 영상 파일명 목록 (videos 폴더 기준)
     const videos = [
-      "videos/DJJd3EWv7LQ_video.mp4",
-      "videos/DJJd8m6PIQ0_video.mp4",
-      "videos/DJJeBjJvD7Y_video.mp4"
+      "DJJd3EWv7LQ_video.mp4",
+      "DJJd8m6PIQ0_video.mp4",
+      "DJJeBjJvD7Y_video.mp4"
     ];
+
     const player = document.getElementById("videoPlayer");
+
     let current = 0;
 
     function playNext() {
-      player.src = videos[current];
-      player.play();
-      current = (current + 1) % videos.length; // 마지막 영상 뒤엔 처음으로 반복
+      if (current < videos.length) {
+        player.src = videos[current];
+        player.play();
+        current++;
+      } else {
+        intro.style.display = "none";
+        board.style.display = "grid";
+      }
     }
+
     player.addEventListener("ended", playNext);
-    playNext(); // 첫 영상 재생
+    playNext(); // 첫 번째 재생
   </script>
 </body>
 </html>
