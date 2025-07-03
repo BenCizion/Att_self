@@ -1,18 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Video Loop</title>
-  <script>
-    // 10초 동영상 재생 후 board1.html로 이동
-    window.onload = function() {
-      setTimeout(() => {
-        window.location.href = "board1.html";
-      }, 10000); // 10초
-    };
-  </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, initial-scale=1.0" />
+    <title>꽃게당 비디오</title>
+    <style>
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .videos-wrapper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 1fr;
+            gap: 4px;
+            width: 1280px;
+            height: 720px;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+    </style>
 </head>
-<body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:black;">
-  <video src="your_video.mp4" width="1280" height="720" autoplay muted></video>
+<body>
+    <div class="videos-wrapper">
+        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
+        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
+        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
+        <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C6C8OxVyIR6_video.mp4" autoplay muted loop playsinline></video>
+    </div>
 </body>
 </html>
