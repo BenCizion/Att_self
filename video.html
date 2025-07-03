@@ -1,69 +1,18 @@
-<!DOCTYPE html> 
- <html lang="ko">
- <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <style>
-     body {
-       margin: 0;
-       padding: 0;
-       height: 100vh;
-       background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png');
-       background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
-       background-size: cover;
-       background-position: center;
-       background-repeat: no-repeat;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       justify-content: center;
-     }
-
-     h1 {
-       color: #000;
-       font-size: 24px;
-       margin-bottom: 20px;
-       text-align: center;
-       background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png');
-       background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
-       padding: 10px 20px;
-       border-radius: 8px;
-     }
-
-    video {
-            width: 1280px; /* 비디오 너비 */
-            height: 720px; /* 비디오 높이 */
-        }
-
-     }
-   </style>
- </head>
- <body>
-   <h1>Attractt #꽃게당 #シンサコッケタン</h1>
-
-   <video id="videoPlayer" autoplay muted></video>
-
-    <script>
-        const videos = [
-            "DJJd3EWv7LQ_video.mp4",
-            "DJJd8m6PIQ0_video.mp4",
-            "DJJeBjJvD7Y_video.mp4"
-        ];
-
-        const videoPlayer = document.getElementById("videoPlayer");
-        let currentVideoIndex = 0;
-
-        function playNextVideo() {
-            videoPlayer.src = videos[currentVideoIndex];
-            videoPlayer.play();
-            currentVideoIndex = (currentVideoIndex + 1) % videos.length; // 인덱스 순환More actions
-        }
-
-        videoPlayer.addEventListener("ended", playNextVideo);
-
-        // 첫 번째 비디오 재생 시작
-        playNextVideo();
-    </script>
-
- </body>
- </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Loop</title>
+  <script>
+    // 10초 동영상 재생 후 board1.html로 이동
+    window.onload = function() {
+      setTimeout(() => {
+        window.location.href = "board1.html";
+      }, 10000); // 10초
+    };
+  </script>
+</head>
+<body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:black;">
+  <video src="your_video.mp4" width="1280" height="720" autoplay muted></video>
+</body>
+</html>
