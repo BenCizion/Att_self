@@ -1,19 +1,103 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Board 1</title>
-  <script>
-    // 15초 후 board2.html로 이동
-    window.onload = function() {
-      setTimeout(() => {
-        window.location.href = "board2.html";
-      }, 15000); // 15초
-    };
-  </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>꽃게당 인스타그램 TV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #intro {
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 8px;
+        }
+
+        .player-area {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background: #000;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* board01: 4x2 레이아웃 */
+        #board01 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* JavaScript에서 'grid'로 설정하여 표시 */
+            padding: 4px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 4px;
+        }
+
+        #board01 video,
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+    </style>
 </head>
-<body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:white;">
-  <!-- board1 컨텐츠 -->
-  <img src="board1.png" width="1280" height="720" alt="Board 1">
+
+<body>
+    <div id="intro">
+        <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
+
+        <div class="player-area" id="mainPlayerArea">
+            <video id="videoPlayer" autoplay muted playsinline></video>
+
+            <div id="board01">
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJtPCkyPgIM_video.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://cdn.attractt.com/contents/2025/06/02/DJBSiePvBJK_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            </div>
+
+        </div>
+
+    </div>
+
+    </script>
 </body>
 </html>
