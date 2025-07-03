@@ -88,18 +88,15 @@
             background: #000;
         }
 
-        /* board02: 4x1 레이아웃 (세로로 길게) */
+        /* board02: 단일 영상 노출 */
         #board02 {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: none; /* JavaScript에서 'grid'로 설정하여 표시 */
-            padding: 4px; /* board01과 동일하게 padding 추가 */
-            grid-template-columns: repeat(4, 1fr); /* 4개의 열 */
-            grid-template-rows: 1fr; /* 1개의 행 - 각 셀이 세로로 길어짐 */
-            gap: 4px; /* board01과 동일하게 gap 추가 */
+            display: none; /* JavaScript에서 'block'으로 설정하여 표시 */
+            padding: 4px; /* board01과 동일하게 padding 유지 */
         }
 
         #board02 video {
@@ -124,7 +121,7 @@
         <div id="board01">
             <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
             <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
-            <video src="https://attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
+            <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none"></video>
@@ -133,10 +130,8 @@
         </div>
 
         <div id="board02">
-            <video src="https://cdn.attractt.com/contents/2025/07/02/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
-            <video src="https://cdn.attractt.com/contents/2025/07/02/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
-            <video src="https://cdn.attractt.com/contents/2025/07/02/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
-            <video src="https://cdn.attractt.com/contents/2025/07/02/C6C8OxVyIR6_video.mp4" autoplay muted loop playsinline></video>
+            <!-- board02 콘텐츠를 단일 영상으로 변경 -->
+            <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_07_compilation.mp4" autoplay muted loop playsinline></video>
         </div>
 
     </div>
@@ -154,60 +149,101 @@
         const mainPlayerArea = document.getElementById("mainPlayerArea");
         const introScreen = document.getElementById("intro");
 
-        let current = 0;
-    
-        // 첫 번째 비디오가 재생 준비되면 로딩 화면 숨기기
-        player.addEventListener('canplaythrough', () => {
-            introScreen.style.display = 'none'; // 인트로 화면 숨기기
-            mainPlayerArea.style.display = 'block'; // 메인 플레이어 영역 보이기
-            player.play(); // 비디오 재생 시작
-        }, { once: true }); // 첫 번째 canplaythrough 이벤트만 수신
+        let currentVideoIndex = 0; // 'videos' 배열의 현재 인덱스 추적
+        let currentBoard01Videos = []; // board01 내 비디오 요소 참조
+        let currentBoard02Videos = []; // board02 내 비디오 요소 참조 (이제 하나만 있을 것)
 
-        function playNextVideo() {
-            if (current < videos.length) {
-                player.src = videos[current].src;
-                // player.play()는 canplaythrough 이벤트 핸들러에서 호출됨
+        // HTML 문서 로드 완료 후 비디오 요소 참조
+        document.addEventListener('DOMContentLoaded', () => {
+            currentBoard01Videos = board01.querySelectorAll('video');
+            currentBoard02Videos = board02.querySelectorAll('video'); // 이제 하나의 비디오만 참조
+
+            // 첫 번째 메인 비디오가 재생 준비되면 로딩 화면 숨기기
+            player.addEventListener('canplaythrough', () => {
+                introScreen.style.display = 'none'; // 인트로 화면 숨기기
+                mainPlayerArea.style.display = 'block'; // 메인 플레이어 영역 보이기
+                player.play(); // 비디오 재생 시작
+            }, { once: true }); // 첫 번째 canplaythrough 이벤트만 수신
+
+            // 페이지 시작 시 첫 영상 로딩 시작 (canplaythrough가 발생하면 화면 전환)
+            playMainVideos();
+        });
+
+        // 메인 비디오 (videos 배열) 재생 관리
+        function playMainVideos() {
+            // board01과 board02가 혹시라도 표시되어 있다면 숨김
+            board01.style.display = "none";
+            board02.style.display = "none";
+            player.style.display = "block"; // 메인 플레이어 보이기
+
+            if (currentVideoIndex < videos.length) {
+                player.src = videos[currentVideoIndex].src;
+                // 첫 비디오는 canplaythrough에서 play() 호출, 이후 비디오는 여기서 play() 호출
+                if (currentVideoIndex > 0) {
+                    player.play();
+                }
+
+                setTimeout(() => {
+                    currentVideoIndex++;
+                    playMainVideos(); // 다음 메인 비디오 재생
+                }, videos[currentVideoIndex].duration);
             } else {
+                // 모든 메인 비디오 재생 완료, board01로 전환
                 showBoard01();
             }
         }
 
+        // board01 표시 및 관리
         function showBoard01() {
-            player.style.display = "none";
-            board01.style.display = "grid";
+            player.style.display = "none"; // 메인 플레이어 숨김
+            board01.style.display = "grid"; // board01 표시
+
+            // board01 내 비디오 재생 시작 (순차적으로 지연 재생)
+            currentBoard01Videos.forEach((video, index) => {
+                setTimeout(() => { // 각 비디오 재생에 지연 추가
+                    video.play().catch(error => {
+                        console.error("Error playing video in board01:", video.src, error, "Auto-play might be blocked.");
+                    });
+                }, index * 200); // 200ms 간격으로 재생 시작
+            });
 
             setTimeout(() => {
-                board01.style.display = "none";
-                showBoard02();
+                // board01 숨기기 전에 모든 비디오 일시 정지 및 시간 리셋
+                currentBoard01Videos.forEach(video => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+                board01.style.display = "none"; // board01 숨김
+                showBoard02(); // board02로 전환
             }, 30000); // 30초간 board01 보여줌
         }
 
+        // board02 표시 및 관리
         function showBoard02() {
-            board02.style.display = "grid";
-            // board02 내의 모든 비디오를 찾아서 재생 시작
-            const board02Videos = board02.querySelectorAll('video');
-            board02Videos.forEach(video => {
-                video.play().catch(error => {
-                    // 자동 재생 정책 등으로 인해 재생이 실패할 경우 콘솔에 오류 표시
-                    console.error("Error playing video in board02:", video.src, error, "Auto-play might be blocked.");
-                });
+            player.style.display = "none"; // 메인 플레이어 숨김 (혹시 모를 경우를 대비)
+            board02.style.display = "block"; // board02를 블록 요소로 표시
+
+            // board02 내 비디오 재생 시작 (이제 하나만 있을 것)
+            currentBoard02Videos.forEach((video, index) => { // 여전히 forEach 사용 가능 (단일 요소)
+                setTimeout(() => { 
+                    video.play().catch(error => {
+                        console.error("Error playing video in board02:", video.src, error, "Auto-play might be blocked.");
+                    });
+                }, index * 200); // 단일 요소이므로 index * 200은 0ms 지연
             });
 
             setTimeout(() => {
                 // board02 숨기기 전에 모든 비디오 일시 정지 및 시간 리셋
-                board02Videos.forEach(video => {
+                currentBoard02Videos.forEach(video => {
                     video.pause();
-                    video.currentTime = 0; // 다음 재생을 위해 비디오 시작 지점으로 리셋
+                    video.currentTime = 0;
                 });
-                board02.style.display = "none";
-                player.style.display = "block";
-                current = 0;
-                playNextVideo(); // 다시 영상 루프로
-            }, 30000); // 30초간 board02 보여줌
+                board02.style.display = "none"; // board02 숨김
+                player.style.display = "block"; // 메인 플레이어 다시 보이기
+                currentVideoIndex = 0; // 메인 비디오 인덱스 리셋
+                playMainVideos(); // 다시 메인 비디오 루프로
+            }, 20000); // 20초간 board02 보여줌 (수정됨)
         }
-
-        // 페이지 시작 시 첫 영상 로딩 시작 (canplaythrough가 발생하면 화면 전환)
-        playNextVideo();
     </script>
 </body>
 </html>
