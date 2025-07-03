@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>꽃게당 인스타그램 TV</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%;
+            background-color: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #intro {
+            width: 100%; height: 100%;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 {
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+        }
+        .player-area {
+            width: 1280px; height: 720px; position: relative; background: #000;
+        }
+    
+        /* board02: 4x1 */
+        #board02 {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none;
+            padding: 4px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 1fr;
+            gap: 4px;
+        }
+        #board02 video {
+            width: 100%; height: 100%; object-fit: cover; background: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン (v.0703)</h1>
+        <div class="player-area" id="mainPlayerArea">
+            <div id="board02">
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/CxYI733J18n_video.mp4" autoplay muted loop playsinline></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C86jJespbJf_video.mp4" autoplay muted loop playsinline></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/DAF7Az_yli__video.mp4" autoplay muted loop playsinline></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/C6C8OxVyIR6_video.mp4" autoplay muted loop playsinline></video>
+            </div>
+        </div>
+    </div>
+    <script>
+        // board02 자동 전환만 남김
+        const board02 = document.getElementById("board02");
+
+        function showBoard02() {
+            board01.style.display = "none";
+            board02.style.display = "grid";
+            setTimeout(showBoard01, 15000); // 시간 세팅 15초
+        }
+
+        // 최초 시작
+        showBoard02();
+    </script>
+</body>
+</html>
