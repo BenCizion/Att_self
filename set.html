@@ -2,31 +2,96 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Video to Board 전환</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    #boardFrame { display: none; width: 100vw; height: 100vh; border: none; }
-    #videoPlayer { width: 100vw; height: 100vh; object-fit: cover; }
-  </style>
-  <script>
-   function showBoard() {
-  document.getElementById('videoPlayer').style.display = 'none';
-  var boardFrame = document.getElementById('boardFrame');
-  boardFrame.style.display = 'block'; // display: '' 대신 'block'
-  boardFrame.src = "https://bencizion.github.io/Att_self/board1.html#board01";
-  boardFrame.src = "https://bencizion.github.io/Att_self/board2.html#board02";
-}
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-    window.onload = function() {
-      var video = document.getElementById('videoPlayer');
-      video.currentTime = 0; // 처음부터 재생
-      video.play();
-      setTimeout(showBoard, 10000); // 10초 후 board 페이지로 전환
-    };
-  </script>
+    h1 {
+      color: #000;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-image: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp');
+      padding: 10px 20px;
+      border-radius: 8px;
+    }
+
+    #videoPlayer, #board1, #board2 {
+      width: 1280px;
+      height: 720px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
- <video id="videoPlayer" src="DJJd3EWv7LQ_video.mp4" autoplay muted></video>
-<iframe id="boardFrame" style="display:block; width:100vw; height:100vh; border:none;" src="https://bencizion.github.io/Att_self/board1.html#board01"></iframe>
-<iframe id="boardFrame" style="display:block; width:100vw; height:100vh; border:none;" src="https://bencizion.github.io/Att_self/board2.html#board02"></iframe>
+  <h1>Attractt #꽃게당 #シンサコッケタン</h1>
+
+  <video id="videoPlayer" autoplay muted></video>
+  <img id="board1" src="board1.png" alt="Board 1">
+  <img id="board2" src="board2.png" alt="Board 2">
+
+  <script>
+    // 비디오 파일과 보드 이미지 순서 및 시간 설정
+    const steps = [
+      { type: "video", duration: 10000 }, // 10초
+      { type: "board1", duration: 15000 }, // 15초
+      { type: "board2", duration: 15000 }, // 15초
+    ];
+
+    const videos = [
+      "DJJd3EWv7LQ_video.mp4",
+      "DJJd8m6PIQ0_video.mp4",
+      "DJJeBjJvD7Y_video.mp4"
+    ];
+
+    let currentStep = 0;
+    let currentVideoIndex = 0;
+
+    const videoPlayer = document.getElementById("videoPlayer");
+    const board1 = document.getElementById("board1");
+    const board2 = document.getElementById("board2");
+
+    function showStep() {
+      // 모두 숨기기
+      videoPlayer.style.display = "none";
+      board1.style.display = "none";
+      board2.style.display = "none";
+
+      const step = steps[currentStep];
+
+      if (step.type === "video") {
+        videoPlayer.src = videos[currentVideoIndex];
+        videoPlayer.style.display = "block";
+        videoPlayer.play();
+        currentVideoIndex = (currentVideoIndex + 1) % videos.length;
+      } else if (step.type === "board1") {
+        board1.style.display = "block";
+      } else if (step.type === "board2") {
+        board2.style.display = "block";
+      }
+
+      setTimeout(() => {
+        currentStep = (currentStep + 1) % steps.length;
+        showStep();
+      }, step.duration);
+    }
+
+    // 자동재생 정책 대응 (최초 클릭 필요시)
+    window.onload = () => {
+      showStep();
+    };
+  </script>
 </body>
 </html>
