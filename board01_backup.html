@@ -71,11 +71,12 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 8px - 4px); /* 100% - (top padding + bottom padding) - (gap between rows) */
+            height: 100%; /* box-sizing: border-box; 에 따라 패딩 포함 720px */
             display: grid;
             padding: 4px;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            /* 각 행의 높이를 전체 높이의 50%에서 패딩과 갭의 절반을 빼서 정확히 계산 */
+            grid-template-rows: repeat(2, calc(50% - 6px)); /* (상하 패딩 8px + 갭 4px) / 2 = 6px */
             gap: 4px;
         }
 
@@ -88,7 +89,6 @@
         }
 
         /* board02: 단일 영상 노출 (높이 계산 일관성 유지) */
-        /* 이 섹션은 현재 제공된 HTML에는 없지만, 완전성을 위해 포함합니다. */
         #board02 {
             position: absolute;
             top: 0;
