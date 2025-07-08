@@ -24,30 +24,16 @@
             width: 100%;
             height: 100%;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
-            background-size: cover; /* 배경 이미지가 전체를 덮도록 */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: absolute; /* 전체 화면을 덮도록 */
-            top: 0;
-            left: 0;
-            z-index: 100; /* 다른 요소 위에 표시 */
         }
 
         h1 {
             color: #fff;
             font-size: 24px;
             margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: rgba(0,0,0,0.6);
-            border-radius: 8px;
-        }
-
-        #loadingMessage {
-            color: #fff;
-            font-size: 18px;
-            margin-top: 20px;
             padding: 10px 20px;
             background-color: rgba(0,0,0,0.6);
             border-radius: 8px;
@@ -60,24 +46,16 @@
             background: #000;
         }
 
-        #videoPlayer {
-            width: 100%;
-            height: 100%;
-        }
-
         /* board01: 4x2 레이아웃 */
         #board01 {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%; /* box-sizing: border-box; 에 따라 패딩 포함 720px */
             height: 100%;
             display: grid;
             padding: 4px;
             grid-template-columns: repeat(4, 1fr);
-            /* 각 행의 높이를 전체 높이의 50%에서 패딩과 갭의 절반을 빼서 정확히 계산 */
-            grid-template-rows: repeat(2, calc(50% - 6px)); /* (상하 패딩 8px + 갭 4px) / 2 = 6px */
             grid-template-rows: repeat(2, 1fr);
             gap: 4px;
         }
@@ -89,35 +67,13 @@
             object-fit: cover;
             background: #000;
         }
-
-        /* board02: 단일 영상 노출 (높이 계산 일관성 유지) */
-        #board02 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 8px); /* 100% - (top padding + bottom padding) */
-            display: none; /* JavaScript에서 'block'으로 설정하여 표시 */
-            padding: 4px;
-        }
-
-        #board02 video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: #000;
-        }
     </style>
 </head>
-
 <body>
     <div id="intro">
         <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
-        <p id="loadingMessage">영상을 불러오는 중입니다... 잠시만 기다려 주세요.</p>
-    </div>
-
-    <div class="player-area" id="mainPlayerArea">
-        <div id="board01">
+        <div class="player-area" id="mainPlayerArea">
+            <div id="board01">
             <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
             <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none"></video>
@@ -126,16 +82,6 @@
             <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250704_103531691.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250704_103529798.mp4" autoplay muted loop playsinline preload="none"></video>
             <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250704_103528470.mp4" autoplay muted loop playsinline preload="none"></video>
-        <div class="player-area" id="mainPlayerArea">
-            <div id="board01">
-                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
-                <video src="files/KakaoTalk_20250704_103528470.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_20250704_103529798.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_20250704_103531691.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_20250704_103533780.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_20250704_103536228.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_Video_2025-07-08-14-01-45.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video src="files/KakaoTalk_Video_2025-07-08-14-01-58.mp4" autoplay muted loop playsinline preload="none"></video>
             </div>
         </div>
     </div>
