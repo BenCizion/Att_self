@@ -11,16 +11,17 @@
             box-sizing: border-box;
         }
         html, body {
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100vh;
             background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         #intro {
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
             display: flex;
             flex-direction: column;
@@ -38,27 +39,28 @@
         .player-area {
             width: 1280px;
             height: 720px;
+            max-width: 90vw;
+            max-height: 70vw;
             position: relative;
             background: #000;
+            overflow: hidden;
+            display: flex;
         }
-        /* board01: 4x2 그리드 */
         #board01 {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             display: grid;
-            padding: 4px;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 4px;
+            overflow: hidden;
         }
         #board01 video,
         #board01 img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
             background: #000;
         }
     </style>
