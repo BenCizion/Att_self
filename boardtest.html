@@ -2,43 +2,64 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1280, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>꽃게당 인스타그램 TV</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
-        #intro { width: 100%; height: 100%; background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        h1 { color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px; background: rgba(0,0,0,0.6); border-radius: 8px; }
-        .player-area { width: 1280px; height: 720px; position: relative; background: #000; }
-        #board01 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: grid; padding: 4px; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; }
-        #board01 video, #board01 img { width: 100%; height: 100%; object-fit: cover; background: #000; }
+        html, body {
+            width: 100vw; height: 100vh; min-height: 100vh;
+            background-color: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #intro {
+            width: 100vw; height: 100vh;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 {
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+        }
+        .player-area {
+            width: 1280px; height: 720px;
+            max-width: 90vw; max-height: 70vw;
+            position: relative; background: #000; overflow: hidden; display: flex;
+        }
+        #board01 {
+            width: 100%; height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            overflow: hidden;
+        }
+        #board01 video,
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+            /* 아래 줄 추가! */
+            aspect-ratio: 16/9;
+        }
     </style>
 </head>
 <body>
     <div id="intro">
-        <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
+        <h1>Instagram #꽃게당 #KkotGeDang #シンサ코ッケタン</h1>
         <div class="player-area" id="mainPlayerArea">
             <div id="board01">
-                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" loading="eager"/>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJ1DC_uPZ6c_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJi_VeOPKOn_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJtLVSIvl4o_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DIlFOJQPHp2_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJyTJKuvasB_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJtPCkyPgIM_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
-                <video src="https://cdn.attractt.com/contents/2025/06/02/DJBSiePvBJK_video.mp4" autoplay muted loop playsinline preload="none" loading="eager"></video>
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-45.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-58.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-15-15-03.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-15-15-15.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-15-15-23.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-15-15-31.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-15-15-41.mp4" autoplay muted loop playsinline preload="none"></video>
             </div>
         </div>
     </div>
-    <script>
-    // 페이지 이탈 시 모든 비디오 정지 및 src 해제 (메모리 누수 방지)
-    window.addEventListener('beforeunload', () => {
-      document.querySelectorAll('#board01 video').forEach(v => {
-        v.pause();
-        v.removeAttribute('src');
-        v.load();
-      });
-    });
-    </script>
 </body>
 </html>
