@@ -49,10 +49,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border-radius: 12px;
         }
 
+        /* board01: 4x2 레이아웃 */
         #board01 {
             position: absolute;
             top: 0;
@@ -61,18 +60,22 @@
             height: 100%;
             display: grid;
             padding: 4px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
             gap: 4px;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            grid-auto-rows: minmax(180px, auto);
         }
 
+        /* #board01 img 이미지 제외하고 비디오만 맞춤 */
+        #board01 video
+        /* #board01 img 이미지 추가 제거 */
         #board01 video,
-        #board01 img {
+         #board01 img 
+       {
             width: 100%;
             height: 100%;
             max-width: 100%;
             max-height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             background: #000;
             display: block;
             border-radius: 6px;
@@ -85,5 +88,15 @@
         <div class="player-area" id="mainPlayerArea">
             <div id="board01">
                 <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" />
-                <video src="files/KakaoTalk_20250704_103528470.mp4" autoplay muted loop playsinline*
-
+                <video src="files/KakaoTalk_20250704_103528470.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_20250704_103529798.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_20250704_103531691.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_20250704_103533780.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_20250704_103536228.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_Video_2025-07-08-14-01-45.mp4" autoplay muted loop playsinline preload="none"></video>
+                <video src="files/KakaoTalk_Video_2025-07-08-14-01-58.mp4" autoplay muted loop playsinline preload="none"></video>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
