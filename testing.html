@@ -5,53 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>꽃게당 인스타그램 TV</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
-            width: 100vw;
-            height: 100vh;
-            min-height: 100vh;
+            width: 100vw; height: 100vh; min-height: 100vh;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
         }
         #intro {
-            width: 100vw;
-            height: 100vh;
+            width: 100vw; height: 100vh;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/bg_img_06.png') center/cover no-repeat;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         h1 {
-            color: #fff;
-            font-size: 24px;
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: rgba(0,0,0,0.6);
-            border-radius: 8px;
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
         }
         .player-area {
-            width: 1280px;
-            height: 720px;
-            max-width: 90vw;
-            max-height: 70vw;
-            position: relative;
-            background: #000;
-            overflow: hidden;
-            display: flex;
+            width: 1280px; height: 720px;
+            max-width: 90vw; max-height: 70vw;
+            position: relative; background: #000; overflow: hidden; display: flex;
         }
         #board01 {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-rows: 1fr 1fr;
             gap: 4px;
             overflow: hidden;
         }
@@ -62,6 +40,8 @@
             object-fit: cover;
             display: block;
             background: #000;
+            /* 아래 줄 추가! */
+            aspect-ratio: 16/9;
         }
     </style>
 </head>
