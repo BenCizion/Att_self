@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intro +  Board Grid</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+    }
+
+    #intro, #board {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #intro {
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 8px;
+    }
+
+    #videoPlayer {
+      width: 1280px;
+      height: 720px;
+      background: #000;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- 인트로 영역 -->
+  <div id="intro">
+    <h1>Attractt #꽃게당 #シンサコッケタン</h1>
+    <video id="videoPlayer" autoplay muted playsinline></video>
+  </div>
+
+  <script>
+    const videos = [
+      "files/2024_Influencer_Mukbang_01.mp4"
+    ];
+
+    const player = document.getElementById("videoPlayer");
+
+    let current = 0;
+
+    function playNext() {
+      if (current < videos.length) {
+        player.src = videos[current];
+        player.play();
+        current++;
+      } else {
+        intro.style.display = "none";
+        board.style.display = "grid";
+      }
+    }
+
+    player.addEventListener("ended", playNext);
+    playNext(); // 첫 번째 재생
+  </script>
+</body>
+</html>
