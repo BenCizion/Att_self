@@ -35,8 +35,8 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(2, 1fr);
-        gap: 4px;
-        overflow: hidden; /* 추가 */
+        gap: 0; /* gap을 0으로 변경 */
+        overflow: hidden;
         align-content: center;
         background-color: #222;
     }
@@ -49,6 +49,8 @@
         display: block;
         background: #000;
         aspect-ratio: 1/1;
+        border: none; /* border가 있으면 제거 */
+        border-radius: 0; /* 둥근 모서리 제거 */
     }
 </style>
 </head>
