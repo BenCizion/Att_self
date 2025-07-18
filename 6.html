@@ -15,17 +15,22 @@
 </head>
 <body>
   <iframe id="viewer" src="board1.html"></iframe>
-  <script>
-    const pages = ["board1.html", "board2.html", "video.html", "promo.html"];
-    let current = 0;
-    const viewer = document.getElementById("viewer");
+<script>
+  const pages = ["board1.html", "board2.html", "board3.html", "video.html", "promo.html"];
+  const intervals = [30000, 30000, 10000, 50000, 40000]; // 각 페이지별 interval(ms) 값
+  let current = 0;
+  let intervalId = null;
+  const viewer = document.getElementById("viewer");
 
-    function nextPage() {
-      current = (current + 1) % pages.length;
-      viewer.src = pages[current];
-    }
+  function nextPage() {
+    current = (current + 1) % pages.length;
+    viewer.src = pages[current];
+    clearInterval(intervalId);
+    intervalId = setInterval(nextPage, intervals[current]);
+  }
 
-    setInterval(nextPage, 38000); // 38초마다 전환
-  </script>
+  // 최초 interval 설정
+  intervalId = setInterval(nextPage, intervals[current]);
+</script>
 </body>
 </html>
