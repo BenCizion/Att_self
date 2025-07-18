@@ -15,17 +15,23 @@
 </head>
 <body>
   <iframe id="viewer" src="board1.html"></iframe>
-  <script>
-    const pages = ["board1.html", "board2.html", "video.html", "promo.html"];
-    let current = 0;
-    const viewer = document.getElementById("viewer");
+<script>
+  const pages = ["board1.html", "board2.html", "video.html", "promo.html"];
+  // 각 페이지별 interval(ms) 값
+  const intervals = [10000, 5000, 15000, 8000]; // 순서: board1, board2, video, promo 10 5 15 8
+  let current = 0;
+  let intervalId = null;
+  const viewer = document.getElementById("viewer");
 
-    function nextPage() {
-      current = (current + 1) % pages.length;
-      viewer.src = pages[current];
-    }
+  function nextPage() {
+    current = (current + 1) % pages.length;
+    viewer.src = pages[current];
+    clearInterval(intervalId);
+    intervalId = setInterval(nextPage, intervals[current]);
+  }
 
-    setInterval(nextPage, 10000); // 10초마다 전환
-  </script>
+  // 최초 interval 설정
+  intervalId = setInterval(nextPage, intervals[current]);
+</script>
 </body>
 </html>
