@@ -75,10 +75,11 @@
         player.play();
         current++;
       } else {
-        intro.style.display = "none";
-        board.style.display = "grid";
-      }
+      // 모든 영상이 끝나면 current를 0으로 초기화 후 다시 첫 번째 영상부터 재생
+      current = 0;
+      playNext();
     }
+  }
 
     player.addEventListener("ended", playNext);
     playNext(); // 첫 번째 재생
