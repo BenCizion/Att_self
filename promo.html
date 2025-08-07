@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intro +  Board Grid</title>
+  <title>Intro + Board Grid</title>
   <style>
     * {
       margin: 0;
@@ -48,7 +48,6 @@
       height: 720px;
       background: #000;
     }
-
   </style>
 </head>
 <body>
@@ -65,17 +64,9 @@
 
     const player = document.getElementById("videoPlayer");
 
-    let current = 0;
-
     function playNext() {
-      if (current < videos.length) {
-        player.src = videos[current];
-        player.play();
-        current++;
-      } else {
-        intro.style.display = "none";
-        board.style.display = "grid";
-      }
+      player.src = videos[0];
+      player.play();
     }
 
     player.addEventListener("ended", playNext);
