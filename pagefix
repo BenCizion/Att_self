@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>꽃게당 인스타그램 TV</title>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100vw; height: 100vh;}
+    #viewer {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+      opacity: 1;
+      transition: opacity 0.6s;
+    }
+    #viewer.fadeout {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="viewer" src="board1.html"></iframe>
+<script>
+  const pages = ["board1.html", "board2.html", "board3.html", "video.html", "promo.html"];
+  const intervals = [30000, 30000, 10000, 50000, 40000];
+  let current = 0;
+  let timeoutId = null;
+  const viewer = document.getElementById("viewer");
+
+  // 이미지 프리로드 함수
+  function preloadNext(idx) {
+    let link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = pages[idx];
+    // 페이지에 따라 as를 바꿀 수 있음 (image, document 등)
+    link.as = 'document';
+    document.head.appendChild(link);
+  }
+  
+  function nextPage() {
+    // fade out
+    viewer.classList.add('fadeout');
+
+    // 0.5초 후에 페이지 전환
+    setTimeout(() => {
+      current = (current + 1) % pages.length;
+      viewer.src = pages[current];
+      // 다음 페이지 프리로드
+      let nextIdx = (current + 1) % pages.length;
+      preloadNext(nextIdx);
+    }, 600); // transition 시간과 맞춤
+  }
+
+  // iframe 로드 완료 시 fade in 및 다음 타이머 설정
+  viewer.onload = function() {
+    viewer.classList.remove('fadeout');
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(nextPage, intervals[current]);
+  };
+
+  // 첫 프리로드
+  preloadNext(1);
+
+  // 최초 타이머 설정
+  timeoutId = setTimeout(nextPage, intervals[current]);
+</script>
+</body>
+</html>
