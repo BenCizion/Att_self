@@ -49,40 +49,17 @@
         <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
         <div class="player-area" id="mainPlayerArea">
             <div id="board01">
-                <img data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" alt="" />
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-45.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-58.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155153142.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155159021.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155201289.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250717_151614042.mp4" autoplay muted loop playsinline preload="none"></video>
-                <video data-src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250717_151616605.mp4" autoplay muted loop playsinline preload="none"></video>
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/2025_7event.jpg" alt="" />
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-45.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-07-08-14-01-58.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155153142.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155159021.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250711_155201289.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250717_151614042.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250717_151616605.mp4" autoplay muted loop playsinline preload="auto"></video>
             </div>
         </div>
     </div>
-    <script>
-        // 이미지, 비디오 lazyload
-        const lazyLoadObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    if (el.tagName === 'IMG' && el.dataset.src) {
-                        el.src = el.dataset.src;
-                        el.removeAttribute('data-src');
-                    }
-                    if (el.tagName === 'VIDEO' && el.dataset.src) {
-                        el.src = el.dataset.src;
-                        el.load();
-                        el.removeAttribute('data-src');
-                    }
-                    observer.unobserve(el);
-                }
-            });
-        }, { rootMargin: "100px" });
-
-        document.querySelectorAll('#board01 img[data-src], #board01 video[data-src]').forEach(el => {
-            lazyLoadObserver.observe(el);
-        });
-    </script>
+    <!-- lazyload 관련 script 완전히 제거 -->
 </body>
 </html>
