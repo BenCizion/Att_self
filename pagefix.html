@@ -22,47 +22,65 @@
   <iframe id="viewer" src="board1.html"></iframe>
 <script>
   const pages = ["board1.html", "board2.html", "board3.html", "video.html", "promo.html"];
-  const intervals = [3000, 3000, 3000, 5000, 4000]; // 이전 값 30000, 30000, 10000, 50000, 40000
+  const intervals = [3000, 3000, 3000, 5000, 4000]; // 각 페이지별 interval(ms)
   let current = 0;
   let timeoutId = null;
   const viewer = document.getElementById("viewer");
 
-  // 이미지 프리로드 함수
+  // 다음 페이지 프리로드
   function preloadNext(idx) {
     let link = document.createElement('link');
     link.rel = 'preload';
     link.href = pages[idx];
-    // 페이지에 따라 as를 바꿀 수 있음 (image, document 등)
     link.as = 'document';
     document.head.appendChild(link);
   }
-  
-  function nextPage() {
-    // fade out
-    viewer.classList.add('fadeout');
 
-    // 0.5초 후에 페이지 전환
+  // 다음 페이지로 전환
+  function nextPage() {
+    viewer.classList.add('fadeout');
     setTimeout(() => {
       current = (current + 1) % pages.length;
       viewer.src = pages[current];
-      // 다음 페이지 프리로드
       let nextIdx = (current + 1) % pages.length;
       preloadNext(nextIdx);
-    }, 600); // transition 시간과 맞춤
+    }, 600); // fade out 시간과 맞춤
   }
 
-  // iframe 로드 완료 시 fade in 및 다음 타이머 설정
-  viewer.onload = function() {
-    viewer.classList.remove('fadeout');
+  // interval 시작
+  function startInterval() {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(nextPage, intervals[current]);
+  }
+
+  // interval 정지
+  function stopInterval() {
+    clearTimeout(timeoutId);
+  }
+
+  // iframe 로드 완료 시
+  viewer.onload = function() {
+    viewer.classList.remove('fadeout');
+    startInterval();
   };
 
-  // 첫 프리로드
-  preloadNext(1);
+  // 페이지가 숨겨지면 interval 정지, 보이면 재개
+  document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+      stopInterval();
+    } else {
+      startInterval();
+    }
+  });
 
-  // 최초 타이머 설정
-  timeoutId = setTimeout(nextPage, intervals[current]);
+  // window unload 시 interval 정리 (메모리 누수 방지)
+  window.addEventListener("beforeunload", stopInterval);
+
+  // 초기 시작: 첫번째 프리로드와 interval 시작
+  window.onload = function() {
+    preloadNext(1); // 두 번째 페이지 프리로드
+    startInterval();
+  };
 </script>
 </body>
 </html>
