@@ -11,7 +11,7 @@
       border: none;
       display: block;
       opacity: 1;
-      transition: opacity 0.6s;
+      transition: opacity 0.9s;
     }
     #viewer.fadeout {
       opacity: 0;
@@ -57,7 +57,7 @@
       viewer.src = pages[current];
       // 다음 PRELOAD_RANGE개 페이지 프리로드
       preloadNextPages(current);
-    }, 600); // fade out 시간과 맞춤
+    }, 900); // fade out 시간과 맞춤
   }
 
   // interval 시작
