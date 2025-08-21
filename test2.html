@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>꽃게당 인스타그램 TV</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw; height: 100vh; min-height: 100vh;
+            background-color: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #intro {
+            width: 100vw; height: 100vh;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 {
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+        }
+        .player-area {
+            width: 80vw;
+            aspect-ratio: 1280/642;
+            max-width: 1280px;
+            position: relative;
+            background-color: #222;
+            overflow: hidden;
+            display: flex;
+        }
+        #board01 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    gap: 6px;
+    border: 12px solid #222;   /* 바깥쪽 선 */
+    box-sizing: border-box;
+}
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+            display: block;
+            /* border 제거 */
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
+        <div class="player-area" id="mainPlayerArea">
+            <div id="board01">
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q1.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q2.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q3.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q4.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q5.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q6.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q7.webp" />
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/Q8.webp" />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
