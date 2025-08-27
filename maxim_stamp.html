@@ -17,64 +17,56 @@
             background-color: #f0f2f5;
         }
 
-        /* 1:1 비율을 유지하는 메인 컨테이너 */
+        /* 메인 컨테이너 */
         #attractt-container {
             width: 100%;
-            aspect-ratio: 1 / 1;
+            /* 전체 컨테이너의 1:1 비율은 유지합니다. */
+            aspect-ratio: 1 / 1; 
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             background-color: #ffffff;
         }
 
         /* 그리드 레이아웃 */
         #content-grid {
-            flex-grow: 1;
+            width: 100%;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 5px;
             padding: 5px;
-            overflow-y: auto;
         }
         
         /* ======================================= */
-        /* ## 핵심 수정사항 1 ## */
-        /* 그리드 각 아이템(칸)을 1:1 비율로 강제 */
+        /* ## 핵심 수정사항 (가장 확실한 방법) ## */
+        /* ======================================= */
+        
+        /* 1. 그리드 아이템(칸)을 1:1 비율로 강제 */
         .grid-item {
-            position: relative;
+            position: relative; /* 자식 요소(이미지/비디오)를 위한 기준점 */
             width: 100%;
-            aspect-ratio: 1 / 1; /* 이 속성으로 각 칸을 정사각형으로 만듭니다. */
+            height: 0; /* 높이를 0으로 설정 */
+            padding-bottom: 100%; /* 너비의 100%만큼 아래쪽 패딩을 주어 정사각형 생성 */
             overflow: hidden;
             border-radius: 8px;
             background-color: #e0e0e0;
         }
 
-        /* ======================================= */
-        /* ## 핵심 수정사항 2 ## */
-        /* 미디어가 부모(grid-item)를 가득 채우도록 설정 */
+        /* 2. 미디어가 부모(grid-item)를 가득 채우도록 설정 */
         .grid-item img,
         .grid-item video {
+            position: absolute; /* 부모(grid-item) 내부에 절대적으로 위치 */
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            /* object-fit: cover가 센터 포커싱 역할을 합니다. */
+            /* object-fit: cover가 센터 포커싱 및 채우기 역할 */
             object-fit: cover; 
-            display: block;
         }
-        /* ======================================= */
         
-        /* '더보기' 버튼 스타일 */
+        /* '더보기' 버튼 스타일 (현재는 사용되지 않음) */
         #load-more-btn {
             display: none;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            flex-shrink: 0;
         }
     </style>
 </head>
@@ -86,7 +78,7 @@
     </main>
 
     <script>
-        // JavaScript는 이전과 동일합니다. (변경 없음)
+        // JavaScript는 변경 없이 이전과 동일합니다.
         document.addEventListener('DOMContentLoaded', () => {
             const gridContainer = document.getElementById('content-grid');
             const loadMoreBtn = document.getElementById('load-more-btn');
@@ -132,15 +124,8 @@
                     addItemsToGrid(newItems);
                     currentPage++;
                 }
-
-                if (newItems.length === itemsPerLoad) {
-                    loadMoreBtn.style.display = 'block';
-                } else {
-                    loadMoreBtn.style.display = 'none';
-                }
             }
 
-            loadMoreBtn.addEventListener('click', loadContent);
             loadContent();
         });
     </script>
