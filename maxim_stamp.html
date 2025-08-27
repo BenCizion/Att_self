@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>콘텐츠 보드</title>
+    <style>
+        /* 기본 스타일 및 초기화 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f2f5;
+        }
+
+        /* 1:1 비율을 유지하는 메인 컨테이너 */
+        #attractt-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        /* 그리드 레이아웃 */
+        #content-grid {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            padding: 5px;
+            overflow-y: auto;
+        }
+        
+        /* 그리드 아이템 스타일 */
+        .grid-item {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #e0e0e0; /* 로딩 중 배경색 */
+        }
+
+        /* 이미지와 비디오 공통 스타일 */
+        .grid-item img,
+        .grid-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 콘텐츠가 아이템 영역을 꽉 채우도록 설정 */
+            display: block;
+        }
+        
+        /* '더보기' 버튼 스타일 */
+        #load-more-btn {
+            display: none; /* 기본적으로 숨김 */
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <main id="attractt-container">
+        <section id="content-grid"></section>
+        <button id="load-more-btn">더보기</button>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridContainer = document.getElementById('content-grid');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            
+            // 제공된 실제 콘텐츠 데이터
+            const initialContent = [
+                { type: 'video', url: 'files/DNUjSRKzl3y_video.mp4' },
+                { type: 'image', url: 'files/DNzdSs80tkd_image.jpg' }
+            ];
+
+            let currentPage = 0;
+            const itemsPerLoad = 8;
+
+            async function fetchData() {
+                // 첫 페이지(currentPage가 0)일 때만 실제 콘텐츠를 반환
+                if (currentPage === 0) {
+                    return initialContent;
+                }
+                // 이후 페이지에서는 빈 배열을 반환 (더 이상 콘텐츠 없음)
+                return [];
+            }
+
+            function addItemsToGrid(items) {
+                items.forEach(item => {
+                    const itemElement = document.createElement('figure');
+                    itemElement.className = 'grid-item';
+
+                    if (item.type === 'video') {
+                        // playsinline: iOS 전체화면 방지, muted/autoplay: 자동재생 정책 대응
+                        itemElement.innerHTML = `<video src="${item.url}" autoplay muted loop playsinline></video>`;
+                    } else { // 'image' 또는 기타
+                        itemElement.innerHTML = `<img src="${item.url}" alt="콘텐츠 이미지">`;
+                    }
+                    gridContainer.appendChild(itemElement);
+                });
+            }
+            
+            async function loadContent() {
+                const newItems = await fetchData();
+                
+                if (newItems.length > 0) {
+                    addItemsToGrid(newItems);
+                    currentPage++;
+                }
+
+                // 불러온 아이템 수가 한 번에 불러올 최대치와 같으면 '더보기' 버튼 표시
+                if (newItems.length === itemsPerLoad) {
+                    loadMoreBtn.style.display = 'block';
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+
+            loadMoreBtn.addEventListener('click', loadContent);
+
+            // 페이지 최초 진입 시 첫 콘텐츠 로드
+            loadContent();
+        });
+    </script>
+</body>
+</html>
