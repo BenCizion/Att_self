@@ -38,25 +38,30 @@
             overflow-y: auto;
         }
         
-        /* 그리드 아이템 스타일 */
+        /* ======================================= */
+        /* ## 핵심 수정사항 1 ## */
+        /* 그리드 각 아이템(칸)을 1:1 비율로 강제 */
         .grid-item {
+            position: relative;
             width: 100%;
-            height: 100%;
+            aspect-ratio: 1 / 1; /* 이 속성으로 각 칸을 정사각형으로 만듭니다. */
             overflow: hidden;
             border-radius: 8px;
             background-color: #e0e0e0;
         }
 
-        /* 이미지와 비디오 공통 스타일 */
+        /* ======================================= */
+        /* ## 핵심 수정사항 2 ## */
+        /* 미디어가 부모(grid-item)를 가득 채우도록 설정 */
         .grid-item img,
         .grid-item video {
             width: 100%;
             height: 100%;
-            /* 아래 2개 속성으로 1:1 비율 및 채우기 처리 */
-            object-fit: cover; /* 미디어가 컨테이너를 채우도록 함 (비율이 다르면 잘림) */
-            aspect-ratio: 1 / 1; /* 미디어 자체의 비율을 1:1로 강제 */
+            /* object-fit: cover가 센터 포커싱 역할을 합니다. */
+            object-fit: cover; 
             display: block;
         }
+        /* ======================================= */
         
         /* '더보기' 버튼 스타일 */
         #load-more-btn {
@@ -81,17 +86,16 @@
     </main>
 
     <script>
+        // JavaScript는 이전과 동일합니다. (변경 없음)
         document.addEventListener('DOMContentLoaded', () => {
             const gridContainer = document.getElementById('content-grid');
             const loadMoreBtn = document.getElementById('load-more-btn');
             
-            // 반복할 콘텐츠 패턴 정의
             const contentPattern = [
                 { type: 'video', url: 'files/DNUjSRKzl3y_video.mp4' },
                 { type: 'image', url: 'files/DNzdSs80tkd_image.jpg' }
             ];
 
-            // 패턴을 4번 반복하여 총 8개의 초기 콘텐츠 목록 생성
             const initialContent = [];
             for (let i = 0; i < 4; i++) {
                 initialContent.push(...contentPattern);
