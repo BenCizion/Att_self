@@ -1,1 +1,33 @@
-
+<VAST version="4.0">
+  <Ad id="1" sequence="1">
+    <InLine>
+      <AdSystem>티오더X시지온</AdSystem>
+      <AdTitle>티오더 인스타그램 홍보 영상</AdTitle>
+      <Impression><![CDATA[https://torder.co.kr/impression]]></Impression>
+      <Creatives>
+        <Creative id="1" sequence="1">
+          <Linear>
+            <Duration>00:00:30</Duration>
+            <MediaFiles>
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="1200" scalable="true" maintainAspectRatio="true">
+                <![CDATA[https://torder.co.kr/promo_video.mp4]]>
+              </MediaFile>
+            </MediaFiles>
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://torder.co.kr/]]></ClickThrough>
+              <ClickTracking><![CDATA[https://torder.co.kr/click]]></ClickTracking>
+            </VideoClicks>
+          </Linear>
+        </Creative>
+      </Creatives>
+      <Extensions>
+        <Extension type="Instagram">
+          <Tag>
+            <Link><![CDATA[https://www.instagram.com/explore/tags/티오더/]]></Link>
+            <Link><![CDATA[https://www.instagram.com/explore/tags/torder/]]></Link>
+          </Tag>
+        </Extension>
+      </Extensions>
+    </InLine>
+  </Ad>
+</VAST>
