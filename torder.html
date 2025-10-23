@@ -1,97 +1,62 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torder VAST Load Test (1280x800)</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Linear Video Ad Test (1280x720)</title>
 
-    <!-- Favicon -->
-    <link rel="icon" href="https://bencizion.github.io/Att_self/files/torder_bg.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.css" rel="stylesheet" crossorigin="anonymous" />
 
     <style>
         body {
-            margin: 0;
-            background-color: #333;
-            background-image: url('https://bencizion.github.io/Att_self/files/torder_bg.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            margin: 0; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-        .player-container {
-            width: 1280px;
-            height: 800px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-        #load-status {
-            color: #fff;
-            margin-top: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+        #ad-player {
+            width: 1280px; height: 720px;
         }
     </style>
-
-    <!-- 안정적인 CDN 경로들: jsDelivr (video.js, contrib-ads, videojs-ima) + Google IMA -->
-    <link href="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet" crossorigin="anonymous" />
-    <link href="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.css" rel="stylesheet" crossorigin="anonymous" />
 </head>
 <body>
 
-    <div id="load-status">VAST 로딩 및 이미지 표시 대기 중...</div>
+    <video id="ad-player" class="video-js vjs-default-skin" controls preload="auto" playsinline muted></video>
 
-    <div class="player-container">
-        <video id="ad-player" class="video-js vjs-default-skin" controls preload="auto" 
-               width="1280" height="800" playsinline muted>
-        </video>
-    </div>
-
-    <!-- 안정적인 CDN 스크립트들 -->
     <script src="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@7.2.1/dist/videojs-contrib-ads.min.js" crossorigin="anonymous"></script>
     <script src="https://imasdk.googleapis.com/js/sdkloader.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.min.js" crossorigin="anonymous"></script>
-    
+
     <script>
-        const MOCK_VAST_URL = "https://bencizion.github.io/Att_self/torder.xml";
-        
+        const VAST_LINEAR_URL = "https://yourdomain.com/path/to/linear_vast_ad.xml";
+
         const player = videojs('ad-player', {
             ima: {
-                adTagUrl: MOCK_VAST_URL,
-                nonLinearAdSlot: document.querySelector('.player-container'),
+                adTagUrl: VAST_LINEAR_URL
             },
-            loop: true,
+            autoplay: true,
             muted: true,
-            autoplay: true
+            controls: true
         }, function() {
-            const statusDisplay = document.getElementById('load-status');
-            console.log('[torder] player initialized');
+            console.log('Player initialized for Linear Ad.');
 
-            player.on('adsready', function() {
-                statusDisplay.textContent = "✅ 광고 준비 완료! (VAST XML 정상 호출됨)";
-                console.log('[torder] adsready');
+            player.on('adsready', () => {
+                console.log('Ads are ready.');
                 player.ima.requestAds();
             });
 
-            player.on('adstart', function() {
-                statusDisplay.textContent = "✅ 광고 재생 시작!";
-                console.log('[torder] adstart');
+            player.on('adstart', () => {
+                console.log('Ad started.');
             });
 
-            player.on('adplay', function() {
-                statusDisplay.textContent = "✅ 광고 재생 중! (1280x800 이미지 정상 노출됨)";
-                console.log('[torder] adplay');
+            player.on('adend', () => {
+                console.log('Ad ended.');
             });
 
-            player.on('aderror', function(e) {
-                statusDisplay.textContent = "❌ 오류 발생! (콘솔 확인 필요)";
-                console.error('[torder] VAST/IMA Error:', e);
+            player.on('aderror', (e) => {
+                console.error('Ad error:', e);
             });
         });
     </script>
+
 </body>
 </html>
