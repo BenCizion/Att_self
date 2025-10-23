@@ -53,36 +53,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.min.js"></script>
     
     <script>
-        // GitHub Pages에서 제공되는 VAST XML URL (대괄호 및 여분 공백 제거)
+        // GitHub Pages에서 제공되는 VAST XML URL
         const MOCK_VAST_URL = "https://bencizion.github.io/Att_self/torder.xml";
         
         const player = videojs('ad-player', {
             ima: {
                 adTagUrl: MOCK_VAST_URL, 
-                nonLinearAdSlot: document.getElementById('ad-player'),
+                // 비디오 요소 대신 플레이어 컨테이너(div)를 nonLinearAdSlot으로 전달
+                nonLinearAdSlot: document.querySelector('.player-container'),
             },
             loop: true, 
             muted: true,
             autoplay: true 
         }, function() {
             const statusDisplay = document.getElementById('load-status');
+            console.log('[torder] player initialized');
             
             // IMA SDK 로딩 성공 시
             player.on('adsready', function() {
                 statusDisplay.textContent = "✅ 광고 준비 완료! (VAST XML 정상 호출됨)";
+                console.log('[torder] adsready');
                 // 광고 요청 시작
                 player.ima.requestAds();
             });
 
             // 광고 재생 시작 시 (이미지 노출 확인)
+            player.on('adstart', function() {
+                statusDisplay.textContent = "✅ 광고 재생 시작!";
+                console.log('[torder] adstart');
+            });
+
             player.on('adplay', function() {
                 statusDisplay.textContent = "✅ 광고 재생 중! (1280x800 이미지 정상 노출됨)";
+                console.log('[torder] adplay');
             });
 
             // 오류 발생 시
             player.on('aderror', function(e) {
                 statusDisplay.textContent = "❌ 오류 발생! (콘솔 확인 필요)";
-                console.error("VAST/IMA Error:", e);
+                console.error('[torder] VAST/IMA Error:', e);
             });
         });
     </script>
