@@ -11,11 +11,24 @@
       <Creatives>
         <Creative id="UGC_Image_01">
           <NonLinearAds>
-            <NonLinear width="1280" height="800" expandedWidth="1280" expandedHeight="800" scalable="true" maintainAspectRatio="true">
-              <StaticResource creativeType="image/png"><![CDATA[https://bencizion.github.io/Att_self/files/torder_bg.png]]></StaticResource>
-              <NonLinearClickThrough><![CDATA[https://attractt.com/full_ugc_collection]]></NonLinearClickThrough>
-            </NonLinear>
-          </NonLinearAds>
+  <NonLinear 
+    width="1280" 
+    height="800" 
+    expandedWidth="1280" 
+    expandedHeight="800" 
+    scalable="true" 
+    maintainAspectRatio="true">
+    
+    <StaticResource creativeType="image/png">
+      <![CDATA[https://bencizion.github.io/Att_self/files/torder_bg.png](https://bencizion.github.io/Att_self/files/torder_bg.png)]>
+    </StaticResource>
+    
+    <NonLinearClickThrough>
+      <![CDATA[https://attractt.com/full_ugc_collection](https://attractt.com/full_ugc_collection)]>
+    </NonLinearClickThrough>
+  </NonLinear>
+</NonLinearAds>
+
         </Creative>
       </Creatives>
     </InLine>
