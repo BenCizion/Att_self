@@ -12,14 +12,14 @@
         <Creative id="UGC_Image_01">
           <Linear>
             <Duration>00:00:05</Duration> <VideoClicks>
-              <ClickThrough><![CDATA[ https://raw.githubusercontent.com/BenCizion/Att_self/main/files/torder_bg.png ]]></ClickThrough>
+              <ClickThrough><![CDATA[ https://attractt.com/full_ugc_collection ]]></ClickThrough>
             </VideoClicks>
 
             <MediaFiles>
-              <MediaFile id="1" delivery="progressive" type="image/jpeg" 
+              <MediaFile id="1" delivery="progressive" type="image/png" 
                           width="1280" height="800" bitrate="500">
                   <![CDATA[ 
-                    [여기에 1280x800 해상도의 latest_ugc.jpg 파일 절대 URL 삽입]
+                    [ https://raw.githubusercontent.com/BenCizion/Att_self/main/files/torder_bg.png ]
                   ]]>
               </MediaFile>
             </MediaFiles>
