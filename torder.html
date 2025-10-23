@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torder VAST Load Test (1280x800)</title>
 
-    <!-- Favicon: GitHub Pages에 있는 기존 이미지(png)를 임시 아이콘으로 사용 -->
+    <!-- Favicon -->
     <link rel="icon" href="https://bencizion.github.io/Att_self/files/torder_bg.png" type="image/png">
-    
+
     <style>
-        /* GitHub Pages에 호스팅된 배경 이미지(절대 URL) 사용 */
         body {
             margin: 0;
-            background-color: #333; /* 이미지 로드 실패 시 폴백 색상 */
+            background-color: #333;
             background-image: url('https://bencizion.github.io/Att_self/files/torder_bg.png');
             background-size: cover;
             background-repeat: no-repeat;
@@ -37,9 +36,9 @@
         }
     </style>
 
-    <!-- crossorigin 속성 추가 -->
-    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" crossorigin="anonymous" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.css" rel="stylesheet" crossorigin="anonymous" />
+    <!-- 대체 CDN: jsDelivr (crossorigin 유지) -->
+    <link href="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.css" rel="stylesheet" crossorigin="anonymous" />
 </head>
 <body>
 
@@ -51,14 +50,13 @@
         </video>
     </div>
 
-    <!-- crossorigin 속성 추가 -->
-    <script src="https://vjs.zencdn.net/8.6.1/video.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/7.2.1/videojs.ads.min.js" crossorigin="anonymous"></script>
+    <!-- 대체 CDN 스크립트들 (jsDelivr) + Google IMA sdkloader는 원래 자리 유지 -->
+    <script src="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@7.2.1/dist/videojs.ads.min.js" crossorigin="anonymous"></script>
     <script src="https://imasdk.googleapis.com/js/sdkloader.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.min.js" crossorigin="anonymous"></script>
     
     <script>
-        // GitHub Pages에서 제공되는 VAST XML URL
         const MOCK_VAST_URL = "https://bencizion.github.io/Att_self/torder.xml";
         
         const player = videojs('ad-player', {
