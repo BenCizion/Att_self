@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <VAST version="3.0">
-  <Ad id="Torder_Test_AD" sequence="1">
+  <Ad id="Linear_Ad_Example" sequence="1">
     <InLine>
       <AdSystem version="1.0">Attractt_Test</AdSystem>
-      <AdTitle>Kkotgedang_Image_Test_1280x800</AdTitle>
+      <AdTitle>Linear_Video_Ad_Test</AdTitle>
 
-      <Impression id="start_track"><![CDATA[https://track.attractt.com/start]]></Impression>
-      <Impression id="end_track"><![CDATA[https://track.attractt.com/end]]></Impression>
+      <Impression><![CDATA[https://track.attractt.com/start](https://track.attractt.com/start)]></Impression>
+      <Impression><![CDATA[https://track.attractt.com/end](https://track.attractt.com/end)]></Impression>
 
       <Creatives>
-        <Creative id="UGC_Image_01">
-          <NonLinearAds>
-  <NonLinear 
-    width="1280" 
-    height="800" 
-    expandedWidth="1280" 
-    expandedHeight="800" 
-    scalable="true" 
-    maintainAspectRatio="true">
-    
-    <StaticResource creativeType="image/png">
-      <![CDATA[https://bencizion.github.io/Att_self/files/torder_bg.png](https://bencizion.github.io/Att_self/files/torder_bg.png)]>
-    </StaticResource>
-    
-    <NonLinearClickThrough>
-      <![CDATA[https://attractt.com/full_ugc_collection](https://attractt.com/full_ugc_collection)]>
-    </NonLinearClickThrough>
-  </NonLinear>
-</NonLinearAds>
-
+        <Creative id="LinearCreative01" sequence="1" adId="1234">
+          <Linear>
+            <Duration>00:00:15</Duration>
+            <TrackingEvents>
+              <Tracking event="start"><![CDATA[https://track.attractt.com/start](https://track.attractt.com/start)]></Tracking>
+              <Tracking event="complete"><![CDATA[https://track.attractt.com/complete](https://track.attractt.com/complete)]></Tracking>
+            </TrackingEvents>
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://attractt.com/full_ugc_collection](https://attractt.com/full_ugc_collection)]></ClickThrough>
+            </VideoClicks>
+            <MediaFiles>
+              <MediaFile
+                delivery="progressive"
+                type="video/mp4"
+                width="1280"
+                height="720"
+                bitrate="500"
+                scalable="true"
+                maintainAspectRatio="true">
+                <![CDATA[https://yourdomain.com/path/to/1280x720_ad_video.mp4](https://yourdomain.com/path/to/1280x720_ad_video.mp4)]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
         </Creative>
       </Creatives>
     </InLine>
