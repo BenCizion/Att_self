@@ -1,80 +1,76 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1280, height=800, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>티오더X시지온</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torder VAST Load Test (1280x800)</title>
+    
     <style>
-        html, body {
-            width: 1280px; height: 800px; min-height: 800px; min-width: 1280px;
-            background-color: #000;
-            margin: 0; padding: 0;
-            overflow: hidden;
+        body { margin: 0; background-color: #333; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
+        .player-container {
+            width: 1280px;
+            height: 800px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* 잘 보이도록 흰색 테두리 */
         }
-        #container {
-            width: 1280px; height: 800px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            position: absolute; top: 0; left: 0;
-        }
-        #intro {
-            width: 100%; height: 100%;
-            background: url() center/cover no-repeat;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        h1 {
-            color: #fff; font-size: 2rem; margin-bottom: 32px; padding: 16px 40px;
-            background-color: rgba(0,0,0,0.6); border-radius: 12px;
-        }
-        .attractt-container {
-            width: 1000px;
-            max-width: 1000px;
-            height: 500px;
-            max-height: 500px;
-            margin: 0 auto;
-        }
-        .links {
-            margin-top: 40px;
-            display: flex;
-            gap: 32px;
-        }
-        .links a {
+        #load-status {
             color: #fff;
-            background: #111a;
-            border-radius: 8px;
-            padding: 16px 28px;
-            text-decoration: none;
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: background 0.2s;
-        }
-        .links a:hover {
-            background: #333c;
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
         }
     </style>
+
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="container">
-        <div id="intro">
-            <h1>Instagram #티오더 #TORDER</h1>
-            <script type="text/javascript">
-                (function(d, s) {
-                    var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
-                    if (typeof AttracttTower === "function" || e.src === h) { return; }
-                    j = d.createElement(s);
-                    j.src = h;
-                    j.async = true;
-                    e.parentNode.insertBefore(j, e);
-                })(document, "script");
-            </script>
-            <div class="attractt-container" data-idx="0" data-code="3SwYxPrHIjtMpYA" data-board="slide"></div>
-            <div class="links">
-                <a href="https://torder.co.kr/" target="_blank" rel="noopener">티오더 공식 사이트</a>
-                <a href="https://www.instagram.com/explore/tags/티오더/" target="_blank" rel="noopener">#티오더 인스타그램</a>
-                <a href="https://www.instagram.com/explore/tags/torder/" target="_blank" rel="noopener">#TORDER 인스타그램</a>
-            </div>
-        </div>
+
+    <div id="load-status">VAST 로딩 및 이미지 표시 대기 중...</div>
+
+    <div class="player-container">
+        <video id="ad-player" class="video-js vjs-default-skin" controls preload="auto" 
+               width="1280" height="800" playsinline muted>
+        </video>
     </div>
+
+    <script src="https://vjs.zencdn.net/8.6.1/video.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/7.2.1/videojs.ads.min.js"></script>
+    <script src="https://imasdk.googleapis.com/js/sdkloader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.min.js"></script>
+    
+    <script>
+        // Step 1에서 만든 mock_vast.xml 파일의 URL (절대 경로 또는 상대 경로)
+        const MOCK_VAST_URL = "[ https://bencizion.github.io/Att_self/torder.xml ]"; 
+        
+        const player = videojs('ad-player', {
+            ima: {
+                adTagUrl: MOCK_VAST_URL, 
+                nonLinearAdSlot: document.getElementById('ad-player'),
+            },
+            loop: true, 
+            muted: true,
+            autoplay: true 
+        }, function() {
+            const statusDisplay = document.getElementById('load-status');
+            
+            // IMA SDK 로딩 성공 시
+            player.on('adsready', function() {
+                statusDisplay.textContent = "✅ 광고 준비 완료! (VAST XML 정상 호출됨)";
+                // 광고 요청 시작
+                player.ima.requestAds();
+            });
+
+            // 광고 재생 시작 시 (이미지 노출 확인)
+            player.on('adplay', function() {
+                statusDisplay.textContent = "✅ 광고 재생 중! (1280x800 이미지 정상 노출됨)";
+            });
+
+            // 오류 발생 시
+            player.on('aderror', function(e) {
+                statusDisplay.textContent = "❌ 오류 발생! (콘솔 확인 필요)";
+                console.error("VAST/IMA Error:", e);
+            });
+        });
+    </script>
 </body>
 </html>
