@@ -36,7 +36,7 @@
         }
     </style>
 
-    <!-- 대체 CDN: jsDelivr (crossorigin 유지) -->
+    <!-- 안정적인 CDN 경로들: jsDelivr (video.js, contrib-ads, videojs-ima) + Google IMA -->
     <link href="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video-js.min.css" rel="stylesheet" crossorigin="anonymous" />
     <link href="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.css" rel="stylesheet" crossorigin="anonymous" />
 </head>
@@ -50,9 +50,9 @@
         </video>
     </div>
 
-    <!-- 대체 CDN 스크립트들 (jsDelivr) + Google IMA sdkloader는 원래 자리 유지 -->
+    <!-- 안정적인 CDN 스크립트들 -->
     <script src="https://cdn.jsdelivr.net/npm/video.js@8.6.1/dist/video.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@7.2.1/dist/videojs.ads.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-ads@7.2.1/dist/videojs-contrib-ads.min.js" crossorigin="anonymous"></script>
     <script src="https://imasdk.googleapis.com/js/sdkloader.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-ima@1.12.0/dist/videojs.ima.min.js" crossorigin="anonymous"></script>
     
@@ -61,16 +61,16 @@
         
         const player = videojs('ad-player', {
             ima: {
-                adTagUrl: MOCK_VAST_URL, 
+                adTagUrl: MOCK_VAST_URL,
                 nonLinearAdSlot: document.querySelector('.player-container'),
             },
-            loop: true, 
+            loop: true,
             muted: true,
-            autoplay: true 
+            autoplay: true
         }, function() {
             const statusDisplay = document.getElementById('load-status');
             console.log('[torder] player initialized');
-            
+
             player.on('adsready', function() {
                 statusDisplay.textContent = "✅ 광고 준비 완료! (VAST XML 정상 호출됨)";
                 console.log('[torder] adsready');
