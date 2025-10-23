@@ -6,7 +6,20 @@
     <title>Torder VAST Load Test (1280x800)</title>
     
     <style>
-        body { margin: 0; background-color: #333; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
+        /* GitHub Pages에 호스팅된 배경 이미지(절대 URL) 사용 */
+        body {
+            margin: 0;
+            background-color: #333; /* 이미지 로드 실패 시 폴백 색상 */
+            background-image: url('https://bencizion.github.io/Att_self/files/torder_bg.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
         .player-container {
             width: 1280px;
             height: 800px;
@@ -17,6 +30,7 @@
             margin-top: 20px;
             font-size: 24px;
             font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
         }
     </style>
 
@@ -39,8 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-ima/1.12.0/videojs.ima.min.js"></script>
     
     <script>
-        // Step 1에서 만든 mock_vast.xml 파일의 URL (절대 경로 또는 상대 경로)
-        const MOCK_VAST_URL = "[ https://bencizion.github.io/Att_self/torder.xml ]"; 
+        // GitHub Pages에서 제공되는 VAST XML URL (대괄호 및 여분 공백 제거)
+        const MOCK_VAST_URL = "https://bencizion.github.io/Att_self/torder.xml";
         
         const player = videojs('ad-player', {
             ima: {
