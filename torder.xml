@@ -28,7 +28,7 @@
                 bitrate="500"
                 scalable="true"
                 maintainAspectRatio="true">
-                <![CDATA[https://yourdomain.com/path/to/1280x720_ad_video.mp4](https://yourdomain.com/path/to/1280x720_ad_video.mp4)]>
+                <![CDATA[https://bencizion.github.io/Att_self/files/file_example_MP4_1280_10MG.mp4](https://bencizion.github.io/Att_self/files/file_example_MP4_1280_10MG.mp4)]>
               </MediaFile>
             </MediaFiles>
           </Linear>
