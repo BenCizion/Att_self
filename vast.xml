@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="3.0">
+  <Ad id="IMA_Player_Example" sequence="1">
+    <InLine>
+      <AdSystem version="1.0">Google IMA Sample</AdSystem>
+      <AdTitle>Pre-Roll Example Ad</AdTitle>
+      <Error><![CDATA[https://track.example.com/error?[ERRORCODE]]]></Error>
+      <Impression><![CDATA[https://track.example.com/impression](https://track.example.com/impression)]></Impression>
+
+      <Creatives>
+        <Creative id="Creative_01" sequence="1">
+          <Linear>
+            <Duration>00:00:15</Duration>
+            <TrackingEvents>
+              <Tracking event="creativeView"><![CDATA[https://track.example.com/creativeView](https://track.example.com/creativeView)]></Tracking>
+              <Tracking event="start"><![CDATA[https://track.example.com/start](https://track.example.com/start)]></Tracking>
+              <Tracking event="firstQuartile"><![CDATA[https://track.example.com/firstQuartile](https://track.example.com/firstQuartile)]></Tracking>
+              <Tracking event="midpoint"><![CDATA[https://track.example.com/midpoint](https://track.example.com/midpoint)]></Tracking>
+              <Tracking event="thirdQuartile"><![CDATA[https://track.example.com/thirdQuartile](https://track.example.com/thirdQuartile)]></Tracking>
+              <Tracking event="complete"><![CDATA[https://track.example.com/complete](https://track.example.com/complete)]></Tracking>
+              <Tracking event="error"><![CDATA[https://track.example.com/error](https://track.example.com/error)]></Tracking>
+            </TrackingEvents>
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://example.com/ad-clickthrough](https://example.com/ad-clickthrough)]></ClickThrough>
+              <ClickTracking><![CDATA[https://track.example.com/click](https://track.example.com/click)]></ClickTracking>
+            </VideoClicks>
+            <MediaFiles>
+              <MediaFile
+                delivery="progressive"
+                type="video/mp4"
+                width="1280"
+                height="720"
+                bitrate="500"
+                scalable="true"
+                maintainAspectRatio="true">
+                <![CDATA[https://glomex.github.io/vast-ima-player/big-buck-bunny.mp4](https://glomex.github.io/vast-ima-player/big-buck-bunny.mp4)]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+</VAST>
