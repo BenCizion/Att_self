@@ -4,8 +4,8 @@
     <InLine>
       <AdSystem version="1.0">Google IMA Sample</AdSystem>
       <AdTitle>Pre-Roll Example Ad</AdTitle>
-      <Error><![CDATA[https://track.example.com/error?]]></Error>
-      <Impression><![CDATA[https://track.example.com/impression]]></Impression>
+      <Error><![CDATA[https://track.example.com/error?](https://track.example.com/error?)]></Error>
+      <Impression><![CDATA[https://track.example.com/impression](https://track.example.com/impression)]></Impression>
 
       <Creatives>
         <Creative id="Creative_01" sequence="1">
