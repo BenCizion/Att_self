@@ -4,7 +4,7 @@
     <InLine>
       <AdSystem version="1.0">Google IMA Sample</AdSystem>
       <AdTitle>Pre-Roll Example Ad</AdTitle>
-      <Error><![CDATA[https://track.example.com/error?[ERRORCODE]]]></Error>
+      <Error><![CDATA[https://track.example.com/error?]]></Error>
       <Impression><![CDATA[https://track.example.com/impression]]></Impression>
 
       <Creatives>
@@ -18,7 +18,7 @@
               <Tracking event="midpoint"><![CDATA[https://track.example.com/midpoint](https://track.example.com/midpoint)]></Tracking>
               <Tracking event="thirdQuartile"><![CDATA[https://track.example.com/thirdQuartile](https://track.example.com/thirdQuartile)]></Tracking>
               <Tracking event="complete"><![CDATA[https://track.example.com/complete](https://track.example.com/complete)]></Tracking>
-              <Tracking event="error"><![CDATA[https://track.example.com/error](https://track.example.com/error)]></Tracking>
+              <Tracking event="progress" offset="00:00:10"><![CDATA[https://track.example.com/error](https://track.example.com/error)]></Tracking>
             </TrackingEvents>
             <VideoClicks>
               <ClickThrough><![CDATA[https://example.com/ad-clickthrough](https://example.com/ad-clickthrough)]></ClickThrough>
