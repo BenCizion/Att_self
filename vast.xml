@@ -32,11 +32,9 @@
                             <CustomClick>http://iabtechlab.com</CustomClick>
                         </VideoClicks>
 
-                        <MediaFiles>
-                            <MediaFile id="5241" delivery="progressive" type="video/mp4" bitrate="500" width="400" height="300" minBitrate="360" maxBitrate="1080" scalable="1" maintainAspectRatio="1" codec="0">
-                                <![CDATA[https://iab-publicfiles.s3.amazonaws.com/vast/VAST-4.0-Short-Intro.mp4]]>
-                            </MediaFile>
-                        </MediaFiles>
+                       <MediaFile id="5241" delivery="progressive" type="video/mp4" bitrate="500" width="1280" height="780" minBitrate="360" maxBitrate="1080" scalable="true" maintainAspectRatio="true">
+  <![CDATA[https://raw.githubusercontent.com/BenCizion/Att_self/main/files/file_example_MP4_1280_10MG.mp4](https://raw.githubusercontent.com/BenCizion/Att_self/main/files/file_example_MP4_1280_10MG.mp4)]>
+</MediaFile>
 
 
                     </Linear>
