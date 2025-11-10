@@ -1,1 +1,64 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>보아치과 인스타그램 TV</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw; height: 100vh; min-height: 100vh;
+            background-color: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #intro {
+            width: 100vw; height: 100vh;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/보아치과.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 {
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+        }
+        .player-area {
+            width: 1280px; height: 720px;
+            max-width: 90vw; max-height: 70vw;
+            position: relative; background: #000; overflow: hidden; display: flex;
+        }
+        #board01 {
+            width: 100%; height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            overflow: hidden;
+        }
+        #board01 video,
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+            aspect-ratio: 16/9;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Instagram #보아치과 #Boaclinic</h1>
+        <div class="player-area" id="mainPlayerArea">
+            <div id="board01">
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251029_182310409_04.webp" alt="" />             
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251031_175432012.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251031_175433056.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/kkd_25Y09M_2.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/kkd_25Y09M_1.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250904_140819902.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20250904_140822660.mp4" autoplay muted loop playsinline preload="auto"></video>
+                <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_Video_2025-08-14-10-07-41.mp4" autoplay muted loop playsinline preload="auto"></video>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
