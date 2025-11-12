@@ -15,32 +15,43 @@
             width: 100vw; height: 100vh;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/files/보아치과1.png') center/cover no-repeat;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px;
+            padding: 20px;
         }
         h1 {
-            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            color: #fff; font-size: 24px; margin-bottom: 0; padding: 10px 20px;
             background-color: rgba(0,0,0,0.6); border-radius: 8px;
         }
-        .player-area {
-            width: 1280px; height: 720px;
-            max-width: 90vw; max-height: 70vw;
-            position: relative; background: #000; overflow: hidden; display: flex;
-        }
-        #board01 {
-            width: 100%; height: 100%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: 1fr 1fr;
-            gap: 4px;
-            overflow: hidden;
-        }
-        #board01 video,
-        #board01 img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        /* attractt 컨테이너를 크게 보이도록 스타일 조정 */
+        .attractt-container {
+            /* 원하는 크기로 조정하세요: 현재는 뷰포트 기준으로 크게 설정 */
+            width: 90vw;
+            max-width: 1500px;
+            height: 80vh;
+            max-height: 1000px;
+
+            /* 중앙 정렬 및 시각적 안정성 */
             display: block;
-            background: #000;
-            aspect-ratio: 16/9;
+            background: transparent;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        /* 내부로 로드되는 iframe 등도 컨테이너에 맞게 채움 */
+        .attractt-container,
+        .attractt-container iframe,
+        .attractt-container embed,
+        .attractt-container > * {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* (선택) 작은 화면에서 더 잘 보이게 반응형 조정 */
+        @media (max-width: 600px) {
+            h1 { font-size: 18px; padding: 6px 12px; }
+            .attractt-container { width: 96vw; height: 60vh; max-width: none; max-height: none; }
         }
     </style>
 </head>
