@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rolling Viewer (prio preload for boaYoutube)</title>
+  <title>Rolling Viewer (resume YouTube)</title>
   <style>
     body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; }
     #viewer {
@@ -23,30 +23,55 @@
 <script>
   // 페이지 목록 (이미지 페이지, 비디오 페이지)
   const pages = ["boa1.html", "boaYoutube.html"];
-  // 각 페이지별 표시 시간(ms)
   const intervals = [10000, 10000];
   let current = 0;
   let timeoutId = null;
   const viewer = document.getElementById("viewer");
 
-  // 프리로드 범위(연속으로 미리 불러올 페이지 수)
+  // preload related
   const PRELOAD_RANGE = 2;
-
-  // 이미 프리로드한 링크 중복 방지
   const preloaded = new Set();
 
-  // 일반적인 preload (link rel=preload + rel=prefetch)
+  // 저장된 재생 위치 저장소 (페이지별)
+  const playbackTimes = {}; // e.g. playbackTimes['boaYoutube.html'] = seconds
+
+  // 보안용 origin (같은 호스트에서 제공하므로 location.origin 사용)
+  const PARENT_ORIGIN = location.origin;
+
+  // 메시지 수신: iframe(boaYoutube.html)에서 재생 시간/준비 신호 수신
+  window.addEventListener('message', (ev) => {
+    // 보안: 발신 origin이 같지 않으면 무시
+    if (ev.origin !== PARENT_ORIGIN) return;
+    const d = ev.data || {};
+    if (d && d.type === 'yt-time' && typeof d.time === 'number') {
+      // 주기적으로 또는 on-unload로 보낸 현재 시간 저장
+      playbackTimes['boaYoutube.html'] = d.time;
+      console.debug('[parent] received yt-time', d.time);
+    }
+    if (d && d.type === 'yt-ready') {
+      // 자식이 준비되면 저장된 위치가 있으면 seek 명령 전송
+      const t = playbackTimes['boaYoutube.html'];
+      if (typeof t === 'number' && !isNaN(t) && t > 0) {
+        // seek 명령 전송
+        try {
+          viewer.contentWindow.postMessage({ type: 'yt-seek', time: t, source: 'parent' }, PARENT_ORIGIN);
+          console.debug('[parent] sent yt-seek', t);
+        } catch (e) {
+          console.warn('[parent] postMessage yt-seek failed', e);
+        }
+      }
+    }
+  });
+
+  // PRELOAD helpers
   function addPreloadHint(href) {
     try {
-      // preload (higher priority)
       const linkP = document.createElement('link');
       linkP.rel = 'preload';
       linkP.href = href;
       linkP.as = 'document';
-      // for same-origin documents, crossorigin isn't necessary; left out intentionally
       document.head.appendChild(linkP);
 
-      // prefetch (lower priority fallback)
       const linkF = document.createElement('link');
       linkF.rel = 'prefetch';
       linkF.href = href;
@@ -57,11 +82,8 @@
     }
   }
 
-  // fetch로 콘텐츠를 미리 요청하여 브라우저 캐시를 워밍업
   async function warmFetch(href) {
     try {
-      // GET 요청을 보내서 HTML 리소스를 캐시에 넣습니다.
-      // 동일 출처이므로 정상 동작하고, 리소스가 캐시되면 iframe 로딩이 빨라집니다.
       await fetch(href, { method: 'GET', credentials: 'same-origin', cache: 'force-cache' });
       console.info('[warmFetch] fetched', href);
     } catch (e) {
@@ -69,25 +91,20 @@
     }
   }
 
-  // 우선순위 프리로드: 빠르게 가져오고 캐시 워밍업까지 시도
   function prioritizePreload(page) {
     if (preloaded.has(page)) return;
     preloaded.add(page);
     addPreloadHint(page);
-    // 비동기 fetch로 캐시 워밍업(백그라운드)
     warmFetch(page);
-    // 콘솔 안내
     console.info('[prioritizePreload] prioritized', page);
   }
 
-  // 여러 페이지 프리로드 (기존 로직을 유지)
   function preloadNextPages(startIdx) {
     for (let i = 1; i <= PRELOAD_RANGE; i++) {
       let idx = (startIdx + i) % pages.length;
       let page = pages[idx];
       if (!preloaded.has(page)) {
         addPreloadHint(page);
-        // 약한 캐시 워밍업: prefetch 수준으로 fetch 시도(비동기)
         warmFetch(page);
         preloaded.add(page);
         console.info('[preloadNextPages] preloaded', page);
@@ -95,18 +112,28 @@
     }
   }
 
-  // 다음 페이지로 전환
+  // next page
   function nextPage() {
+    // If current page is boaYoutube.html, ask iframe to send current time before switching.
+    if (pages[current] === 'boaYoutube.html') {
+      try {
+        viewer.contentWindow.postMessage({ type: 'yt-request-time' }, PARENT_ORIGIN);
+      } catch (e) {
+        console.warn('[parent] yt-request-time failed', e);
+      }
+      // give short time for iframe to respond with yt-time (it also sends periodically)
+    }
+
     viewer.classList.add('fadeout');
     setTimeout(() => {
       current = (current + 1) % pages.length;
       viewer.src = pages[current];
-      // 다음 PRELOAD_RANGE개 페이지 프리로드
+      // next pages preload
       preloadNextPages(current);
     }, 900);
   }
 
-  // interval 시작/정지
+  // interval control
   function startInterval() {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(nextPage, intervals[current]);
@@ -115,39 +142,40 @@
     clearTimeout(timeoutId);
   }
 
-  // iframe 로드 완료 시
+  // when iframe loaded: if it's boaYoutube, parent will wait for yt-ready from child and then send seek.
   viewer.onload = function() {
     viewer.classList.remove('fadeout');
     startInterval();
+
+    // If the newly loaded page is boaYoutube.html and we already have a stored time,
+    // we also attempt to send yt-seek after a short delay in case child is ready quickly.
+    if (pages[current] === 'boaYoutube.html') {
+      const t = playbackTimes['boaYoutube.html'];
+      if (typeof t === 'number' && t > 0) {
+        setTimeout(() => {
+          try {
+            viewer.contentWindow.postMessage({ type: 'yt-seek', time: t, source: 'parent' }, PARENT_ORIGIN);
+            console.debug('[parent] proactive yt-seek sent', t);
+          } catch (e) { /* ignore */ }
+        }, 500);
+      }
+    }
   };
 
-  // visibility 처리
   document.addEventListener("visibilitychange", function() {
-    if (document.hidden) {
-      stopInterval();
-    } else {
-      startInterval();
-    }
+    if (document.hidden) stopInterval();
+    else startInterval();
   });
 
   window.addEventListener("beforeunload", stopInterval);
 
-  // =====================
-  // 시작 시점: boaYoutube.html의 프리로드 우선순위를 높임
-  // =====================
-
+  // start: prioritize boaYoutube preload and kick things off
   window.addEventListener('load', function() {
-    // 1) 즉시 우선 프리로드 대상 지정 (boaYoutube가 느리므로 우선 캐시)
-    prioritizePreload('boaYoutube.html');
-
-    // 2) 기존 preloadNextPages 호출 (첫 화면 기준)
+    prioritizePreload('boaYoutube.html'); // raise priority for slow page
     preloadNextPages(0);
-
-    // 3) 일반 인터벌 시작
     startInterval();
   });
 
-  // 안전망: 만약 load가 이미 발생했으면 바로 실행
   if (document.readyState === 'complete') {
     prioritizePreload('boaYoutube.html');
     preloadNextPages(0);
