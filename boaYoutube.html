@@ -47,6 +47,7 @@
       width: 1280px;
       height: 720px;
       background: #000;
+      border: 0;
     }
 
   </style>
@@ -55,13 +56,14 @@
   <!-- 인트로 영역 -->
   <div id="intro">
     <h1>YouTube #보아치과 #BoaClinic</h1>
-    <video id="videoPlayer" autoplay muted playsinline></video>
+    <!-- YouTube 재생을 위해 video 대신 iframe 사용 -->
+    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
   </div>
 
   <script>
+    // YouTube 임베드 URL로 변경 (요청하신 동영상 ID: 14cXVjjEMeA)
     const videos = [
-      "files/2024_Influencer_Mukbang_01.mp4",
-      "files/2024_Influencer_Mukbang_02.mp4"
+      "https://www.youtube.com/embed/14cXVjjEMeA?autoplay=1&mute=1&playsinline=1"
     ];
 
     const player = document.getElementById("videoPlayer");
@@ -69,18 +71,11 @@
     let current = 0;
 
     function playNext() {
-      if (current < videos.length) {
-        player.src = videos[current];
-        player.play();
-        current++;
-      } else {
-      // 모든 영상이 끝나면 current를 0으로 초기화 후 다시 첫 번째 영상부터 재생
-      current = 0;
-      playNext();
+      // iframe에 임베드 URL 할당
+      player.src = videos[current];
+      // current = (current + 1) % videos.length 여러 영상을 넣고 순환 재생
     }
-  }
 
-    player.addEventListener("ended", playNext);
     playNext(); // 첫 번째 재생
   </script>
 </body>
