@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>보아치과 인스타그램 TV</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw; height: 100vh; min-height: 100vh;
+            background-color: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #intro {
+            width: 100vw; height: 100vh;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/files/보아치과1.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        h1 {
+            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+        }
+        .player-area {
+            width: 1280px; height: 720px;
+            max-width: 90vw; max-height: 70vw;
+            position: relative; background: #000; overflow: hidden; display: flex;
+        }
+        #board01 {
+            width: 100%; height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            overflow: hidden;
+        }
+        #board01 video,
+        #board01 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+            aspect-ratio: 16/9;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Instagram #보아치과 #BoaClinic</h1>
+        <script type="text/javascript">
+	(function(d, s) {
+		var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
+		if (typeof AttracttTower === "function" || e.src === h) { return; }
+		j = d.createElement(s);
+		j.src = h;
+		j.async = true;
+		e.parentNode.insertBefore(j, e);
+	})(document, "script");
+</script>
+<div class="attractt-container" data-idx="0" data-code="TwO8AB7iD5AxyrN" data-board="slide"></div>
+    </div>
+</body>
+</html>
