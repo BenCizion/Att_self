@@ -1,82 +1,161 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intro +  Board Grid</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Intro + Board Grid (YouTube embed with hardcoded origin & diagnostics)</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-    }
-
-    #intro, #board {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { width: 100%; height: 100%; background-color: #000; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: #fff; }
+    #intro, #board { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
     #intro {
       background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       z-index: 10;
+      padding: 20px;
     }
-
     h1 {
-      color: #fff;
-      font-size: 24px;
-      margin-bottom: 20px;
-      padding: 10px 20px;
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 8px;
+      color: #fff; font-size: 24px; margin-bottom: 12px;
+      padding: 10px 16px; background-color: rgba(0,0,0,0.6); border-radius: 8px;
     }
-
     #videoPlayer {
-      width: 1280px;
-      height: 720px;
-      background: #000;
-      border: 0;
+      width: min(1280px, 95%); height: calc(min(1280px, 95%) * 9 / 16);
+      background: #000; border: 0; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
     }
 
+    /* 진단 패널 */
+    #diag {
+      position: fixed; right: 12px; bottom: 12px; z-index: 9999;
+      background: rgba(0,0,0,0.7); color: #fff; padding: 12px; border-radius: 8px;
+      font-size: 13px; max-width: 360px; backdrop-filter: blur(4px);
+    }
+    #diag h3 { font-size: 13px; margin-bottom: 8px; }
+    #diag pre { white-space: pre-wrap; word-break: break-word; margin: 0; font-family: inherit; font-size: 12px; }
+    .adsbox { width: 1px; height: 1px; position: absolute; left: -9999px; }
   </style>
 </head>
 <body>
   <!-- 인트로 영역 -->
-  <div id="intro">
+  <div id="intro" role="main" aria-label="인트로 영역">
     <h1>YouTube #보아치과 #BoaClinic</h1>
-    <!-- YouTube 재생을 위해 video 대신 iframe 사용 -->
-    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    <!-- YouTube 재생을 위해 iframe 사용 -->
+    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+  </div>
+
+  <!-- 진단 패널 -->
+  <div id="diag" aria-live="polite" title="진단 정보">
+    <h3>환경 진단</h3>
+    <pre id="diagText">초기화 중...</pre>
   </div>
 
   <script>
-    // YouTube 임베드 URL로 변경 (요청하신 동영상 ID: 14cXVjjEMeA)
-    const videos = [
-      "https://www.youtube.com/embed/rSL_HbpbJzI?autoplay=1&mute=1&playsinline=1&enablejsapi=1"
-    ];
+    (function () {
+      // --- 변경된 부분: 배포 도메인(origin)를 하드코딩했습니다 ---
+      // 사용자가 제공한 실제 배포 도메인:
+      // https://bencizion.github.io/Att_self/boaYoutube
+      // origin 파라미터에는 protocol + host(+ :port if any) 만 들어가야 하므로 아래와 같이 설정합니다:
+      const HARDCODED_ORIGIN = 'https://bencizion.github.io';
 
-    const player = document.getElementById("videoPlayer");
+      // 재생할 YouTube 영상(필요시 ID 교체)
+      const videos = [
+        // 기본 예시(현재 mute + autoplay)
+        "https://www.youtube.com/embed/rSL_HbpbJzI?autoplay=1&mute=1&playsinline=1&enablejsapi=1"
+      ];
 
-    let current = 0;
+      const player = document.getElementById("videoPlayer");
+      let current = 0;
 
-    function playNext() {
-      // iframe에 임베드 URL 할당
-      player.src = videos[current];
-      // current = (current + 1) % videos.length 여러 영상을 넣고 순환 재생
-    }
+      function buildSrc(url) {
+        const sep = url.includes('?') ? '&' : '?';
+        // 하드코딩된 origin을 사용 (YouTube iFrame API와 일부 브라우저 정책에서 필요)
+        return url + sep + 'origin=' + encodeURIComponent(HARDCODED_ORIGIN) + '&modestbranding=1&rel=0';
+      }
 
-    playNext(); // 첫 번째 재생
+      function playNext() {
+        player.src = buildSrc(videos[current]);
+      }
+
+      // AdBlock 등 간단 진단 로직
+      function detectAdBlock() {
+        return new Promise((resolve) => {
+          const bait = document.createElement('div');
+          bait.className = 'adsbox ad-banner ad-top banner-ad advert';
+          bait.style.cssText = 'width:1px !important;height:1px !important;position:absolute !important;left:-9999px !important;';
+          document.body.appendChild(bait);
+          setTimeout(() => {
+            const blocked = (bait.offsetParent === null) || (bait.offsetHeight === 0) || (getComputedStyle(bait).display === 'none');
+            document.body.removeChild(bait);
+            resolve(!!blocked);
+          }, 60);
+        });
+      }
+
+      function canUseCookies() {
+        try {
+          document.cookie = 'cookie_test=1; SameSite=Lax';
+          const ok = document.cookie.indexOf('cookie_test=1') !== -1;
+          document.cookie = 'cookie_test=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          return ok;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function canUseLocalStorage() {
+        try {
+          const key = '__storage_test__';
+          localStorage.setItem(key, '1');
+          localStorage.removeItem(key);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      async function runDiagnostics() {
+        const adBlock = await detectAdBlock();
+        const cookies = canUseCookies();
+        const ls = canUseLocalStorage();
+        const ua = navigator.userAgent || 'unknown';
+
+        const diag = {
+          hardcoded_origin: HARDCODED_ORIGIN,
+          page_url: location.href,
+          cookiesEnabled: cookies,
+          localStorageAvailable: ls,
+          adBlockDetected: adBlock,
+          userAgent: ua
+        };
+
+        const diagTextEl = document.getElementById('diagText');
+        diagTextEl.textContent =
+          '하드코딩 origin: ' + diag.hardcoded_origin + '\n' +
+          '페이지 URL: ' + diag.page_url + '\n' +
+          '쿠키 사용 가능: ' + (diag.cookiesEnabled ? '예' : '아니오') + '\n' +
+          '로컬스토리지 사용 가능: ' + (diag.localStorageAvailable ? '예' : '아니오') + '\n' +
+          'AdBlock 추정: ' + (diag.adBlockDetected ? '감지됨' : '감지 안됨') + '\n' +
+          'User Agent: ' + diag.userAgent + '\n\n' +
+          '참고: AdBlock 감지는 확실한 진단이 아니며, 브라우저 확장/개인정보 설정/프라이빗 모드 등에서 임베드 동작이 달라질 수 있습니다.';
+
+        console.info('[진단 결과]', diag);
+
+        if (diag.adBlockDetected) {
+          diagTextEl.textContent += '\n권장: 광고 차단 확장(AdBlock/AdGuard 등)을 일시 중지하거나 예외 도메인에 현재 호스트를 추가해 보세요.';
+        }
+        if (!diag.cookiesEnabled) {
+          diagTextEl.textContent += '\n권장: 쿠키 비활성화는 임베드 작동에 영향을 줄 수 있습니다. 쿠키 허용을 확인하세요.';
+        }
+      }
+
+      // 실행
+      playNext();
+      runDiagnostics();
+
+      player.addEventListener('error', function (e) {
+        console.error('iframe error', e);
+      });
+
+    })();
   </script>
 </body>
 </html>
