@@ -1,87 +1,188 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Intro +  Board Grid</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BoaClinic YouTube (auto-retry)</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-    }
-
-    #intro, #board {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    #intro {
-      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-    }
-
-    h1 {
-      color: #fff;
-      font-size: 24px;
-      margin-bottom: 20px;
-      padding: 10px 20px;
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 8px;
-    }
-
-    #videoPlayer {
-      width: 1280px;
-      height: 720px;
-      background: #000;
-      border: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; background:#000; color:#fff; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial; }
+    #intro { width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat; padding:24px; }
+    h1 { background: rgba(0,0,0,0.6); padding:10px 16px; border-radius:8px; margin-bottom:12px; font-size:20px; }
+    #playerWrap { width:min(1280px,95%); aspect-ratio:16/9; background:#000; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.6); }
+    #diag { position: fixed; right:12px; bottom:12px; z-index:9999; background: rgba(0,0,0,0.75); padding:12px; border-radius:8px; max-width:420px; font-size:13px; }
+    #diag pre { white-space:pre-wrap; word-break:break-word; margin:0; font-family:inherit; font-size:12px; color:#ddd; }
+    #actions { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+    button { background:#111; color:#fff; border:1px solid #333; padding:6px 10px; border-radius:6px; cursor:pointer; }
+    button.secondary { background:transparent; border:1px solid #666; }
+    .note { margin-top:8px; font-size:12px; color:#cfcfcf; max-width:900px; text-align:center; }
   </style>
 </head>
 <body>
-  <!-- 인트로 영역 -->
-  <div id="intro">
+  <div id="intro" role="main" aria-label="인트로 영역">
     <h1>YouTube #보아치과 #BoaClinic</h1>
-    <!-- YouTube 재생을 위해 iframe 사용 -->
-    <iframe id="videoPlayer"
-      src=""
-      allow="autoplay; encrypted-media; picture-in-picture"
-      allowfullscreen
-      style="width:1280px;height:720px;border:0;">
-    </iframe>
+
+    <div id="playerWrap" aria-hidden="false">
+      <div id="player"></div>
+    </div>
+
+    <div id="actions">
+      <button id="btnReload">재시도 (reload)</button>
+      <button id="btnOpenInNew" class="secondary">YouTube에서 열기</button>
+    </div>
+
+    <div class="note">
+      자동 재시도는 페이지 로드 직후 1회만 실행됩니다. (브라우저 정책/광고는 여전히 YouTube가 제어)
+    </div>
+  </div>
+
+  <div id="diag" aria-live="polite" title="진단 정보">
+    <pre id="diagText">초기화 중...</pre>
   </div>
 
   <script>
-    // 요청하신 유튜브 영상으로 변경 (URL: https://www.youtube.com/watch?v=rSL_HbpbJzI)
-    // embed 형식으로 autoplay(1) 및 mute(1) 포함
-    const videos = [
-      "https://www.youtube.com/embed/rSL_HbpbJzI?autoplay=1&mute=1&playsinline=1&enablejsapi=1"
-    ];
+    // 배포 origin과 비디오 ID
+    const DEPLOY_ORIGIN = 'https://bencizion.github.io';
+    const VIDEO_ID = 'rSL_HbpbJzI';
 
-    const player = document.getElementById("videoPlayer");
-    let current = 0;
-
-    function playNext() {
-      player.src = videos[current];
-      // 여러 영상을 순환하려면 아래 주석을 해제하세요:
-      // current = (current + 1) % videos.length;
+    const diagEl = document.getElementById('diagText');
+    function setDiag(text) {
+      diagEl.textContent = text;
+      console.info('[diag]', text);
     }
 
-    playNext();
+    // 기본 진단
+    (function baseDiagnostics(){
+      const cookies = (function(){ try{ document.cookie = 'test=1; SameSite=Lax'; const ok = document.cookie.indexOf('test=1') !== -1; document.cookie = 'test=; expires=Thu,01 Jan 1970 00:00:00 GMT'; return ok;}catch(e){return false;} })();
+      const ls = (function(){ try{ localStorage.setItem('__test__','1'); localStorage.removeItem('__test__'); return true;}catch(e){return false;} })();
+      const ua = navigator.userAgent || 'unknown';
+      let text =
+        '하드코딩 origin: ' + DEPLOY_ORIGIN + '\n' +
+        '페이지 URL: ' + location.href + '\n' +
+        '쿠키 사용 가능: ' + (cookies ? '예' : '아니오') + '\n' +
+        '로컬스토리지: ' + (ls ? '예' : '아니오') + '\n' +
+        'User Agent: ' + ua + '\n\n' +
+        '자동 재시도는 페이지 로드 직후 1회 수행됩니다. 재시도 후에도 광고가 보이면 이는 YouTube측 광고입니다.';
+      setDiag(text);
+    })();
+
+    // YouTube IFrame API 로드
+    (function loadYouTubeAPI(){
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      document.head.appendChild(tag);
+    })();
+
+    // IFrame API 콜백 스텁(전역으로 호출됨)
+    let player;
+    function onYouTubeIframeAPIReady() {
+      const playerVars = {
+        autoplay: 1,
+        mute: 1,
+        playsinline: 1,
+        controls: 1,
+        modestbranding: 1,
+        rel: 0,
+        iv_load_policy: 3,
+        enablejsapi: 1,
+        origin: DEPLOY_ORIGIN
+      };
+
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: VIDEO_ID,
+        host: 'https://www.youtube-nocookie.com',
+        playerVars: playerVars,
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+          onError: onPlayerError
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      setDiag((diagEl.textContent || '') + '\n[IFrame API] onReady 호출. 재생 시도...');
+      try { event.target.playVideo(); } catch (e) { console.warn('playVideo 호출 실패', e); }
+      setTimeout(()=> logPlayerStatus('ready-timeout'), 1500);
+    }
+
+    function onPlayerStateChange(e) {
+      const stateMap = { '-1': 'UNSTARTED', '0': 'ENDED', '1': 'PLAYING', '2': 'PAUSED', '3': 'BUFFERING', '5': 'CUED' };
+      const s = stateMap[e.data] || ('UNKNOWN('+e.data+')');
+      console.info('[YouTube state]', s);
+      setDiag((diagEl.textContent || '') + '\n[YT] 상태: ' + s);
+    }
+
+    function onPlayerError(e) {
+      console.error('[YouTube error]', e);
+      setDiag((diagEl.textContent || '') + '\n[YT 오류] 코드: ' + (e.data || 'unknown'));
+    }
+
+    function logPlayerStatus(tag) {
+      if (!player || !player.getPlayerState) return;
+      const state = player.getPlayerState();
+      const time = player.getCurrentTime ? player.getCurrentTime() : 'n/a';
+      const text = '\n[상태로그:' + tag + '] state=' + state + ', currentTime=' + time;
+      setDiag((diagEl.textContent || '') + text);
+      console.info('[player status]', { tag, state, time });
+    }
+
+    // 재시도 버튼 동작 (기존 동작 유지)
+    const btnReload = document.getElementById('btnReload');
+    btnReload.addEventListener('click', function manualReloadHandler(e){
+      try {
+        if (player && player.loadVideoById) {
+          player.loadVideoById({ videoId: VIDEO_ID, startSeconds: 0 });
+          setDiag((diagEl.textContent || '') + '\n사용자 요청: 비디오 재시도 호출.');
+        } else {
+          setDiag((diagEl.textContent || '') + '\n사용자 요청: 페이지 새로고침.');
+          location.reload();
+        }
+      } catch (err) {
+        console.error(err);
+        location.reload();
+      }
+    });
+
+    document.getElementById('btnOpenInNew').addEventListener('click', function(){
+      window.open('https://www.youtube.com/watch?v=' + VIDEO_ID, '_blank', 'noopener');
+    });
+
+    // === 자동 1회 재시도 기능 ===
+    // 페이지 로드 직후 자동으로 재시도 버튼을 1회 클릭합니다.
+    // - AUTO_RETRY_DELAY: 로드 후 대기 시간(ms)
+    // - autoRetryDone: 이미 자동 클릭했는지 플래그
+    const AUTO_RETRY_DELAY = 2000;
+    let autoRetryDone = false;
+
+    function tryAutoRetryOnce() {
+      if (autoRetryDone) return;
+      autoRetryDone = true;
+      // 로그 추가
+      setDiag((diagEl.textContent || '') + '\n[자동재시도] 페이지 로드 후 자동으로 재시도 버튼을 1회 클릭합니다.');
+      // 실제 클릭 트리거 (버튼 이벤트 핸들러를 재사용)
+      try {
+        btnReload.click();
+      } catch (e) {
+        console.error('자동 클릭 실패:', e);
+      }
+    }
+
+    // 페이지 로드 완료 시 타이머로 1회 자동 클릭
+    window.addEventListener('load', function(){
+      setTimeout(() => {
+        tryAutoRetryOnce();
+      }, AUTO_RETRY_DELAY);
+    });
+
+    // 안전망: 만약 load가 이미 발생했으면 바로 예약
+    if (document.readyState === 'complete') {
+      setTimeout(() => tryAutoRetryOnce(), AUTO_RETRY_DELAY);
+    }
   </script>
 </body>
 </html>
