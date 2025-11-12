@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BoaClinic YouTube (open-and-auto-close)</title>
+  <title>BoaClinic YouTube (auto-retry)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html,body { height: 100%; background:#000; color:#fff; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial; }
@@ -11,7 +11,7 @@
       background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/files/보아치과1.png') center/cover no-repeat; padding:24px; }
     h1 { background: rgba(0,0,0,0.6); padding:10px 16px; border-radius:8px; margin-bottom:12px; font-size:30px; }
     #playerWrap { width:min(1280px,95%); aspect-ratio:16/9; background:#000; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.6); }
-    #diag { position: fixed; right:12px; bottom:12px; z-index:9999; background: rgba(0,0,0,0.75); padding:12px; border-radius:8px; max-width:520px; font-size:13px; }
+    #diag { position: fixed; right:12px; bottom:12px; z-index:9999; background: rgba(0,0,0,0.75); padding:12px; border-radius:8px; max-width:420px; font-size:13px; }
     #diag pre { white-space:pre-wrap; word-break:break-word; margin:0; font-family:inherit; font-size:12px; color:#ddd; }
     #actions { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
     button { background:#111; color:#fff; border:1px solid #333; padding:6px 10px; border-radius:6px; cursor:pointer; }
@@ -28,11 +28,12 @@
     </div>
 
     <div id="actions">
-      <button id="btnOpenInNew" class="secondary">YouTube에서 열기 (자동 닫기 2초)</button>
+      <button id="btnReload">재시도 (reload)</button>
+      <button id="btnOpenInNew" class="secondary">YouTube에서 열기</button>
     </div>
 
     <div class="note">
-      자동으로 새 창을 연 뒤 2초 후 닫습니다. (팝업 차단 또는 브라우저 정책에 의해 제한될 수 있습니다.)
+      자동 재시도는 페이지 로드 직후 1회만 실행됩니다. (브라우저 정책/광고는 여전히 YouTube가 제어)
     </div>
   </div>
 
@@ -62,11 +63,11 @@
         '쿠키 사용 가능: ' + (cookies ? '예' : '아니오') + '\n' +
         '로컬스토리지: ' + (ls ? '예' : '아니오') + '\n' +
         'User Agent: ' + ua + '\n\n' +
-        '버튼을 누르면 새 창을 열고 2초 후 자동으로 닫습니다.';
+        '자동 재시도는 페이지 로드 직후 1회 수행됩니다. 재시도 후에도 광고가 보이면 이는 YouTube측 광고입니다.';
       setDiag(text);
     })();
 
-    // YouTube IFrame API 로드 (플레이어는 그대로 유지)
+    // YouTube IFrame API 로드
     (function loadYouTubeAPI(){
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -130,80 +131,80 @@
       console.info('[player status]', { tag, state, time });
     }
 
-    // YouTube 새 창 열기 후 2초 뒤 자동 닫기 및 성공/실패 확인 로직
-    (function setupOpenAndAutoClose(){
-      const btn = document.getElementById('btnOpenInNew');
-      const AUTO_CLOSE_DELAY = 2000; // ms
-      const CLOSE_CHECK_INTERVAL = 100; // ms
-      const CLOSE_CHECK_TIMEOUT = 5000; // ms (닫힘 확인 최대 대기 시간)
-
-      btn.addEventListener('click', function(){
-        const url = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
-        setDiag((diagEl.textContent || '') + '\n[사용자 요청] 새 창에서 YouTube 열기 시도: ' + url);
-
-        let win = null;
-        try {
-          // 'noopener' 제거: 반환된 핸들로 닫을 수 있어야 함
-          win = window.open(url, '_blank');
-        } catch (err) {
-          setDiag((diagEl.textContent || '') + '\n[오류] window.open 호출 중 예외: ' + err);
-          console.error(err);
-          return;
+    // 재시도 버튼 동작 (기존 동작 유지)
+    const btnReload = document.getElementById('btnReload');
+    btnReload.addEventListener('click', function manualReloadHandler(e){
+      try {
+        if (player && player.loadVideoById) {
+          player.loadVideoById({ videoId: VIDEO_ID, startSeconds: 0 });
+          setDiag((diagEl.textContent || '') + '\n사용자 요청: 비디오 재시도 호출.');
+        } else {
+          setDiag((diagEl.textContent || '') + '\n사용자 요청: 페이지 새로고침.');
+          location.reload();
         }
+      } catch (err) {
+        console.error(err);
+        location.reload();
+      }
+    });
 
-        // 열기 성공 여부 확인
-        if (!win) {
-          setDiag((diagEl.textContent || '') + '\n[실패] 새 창을 열 수 없습니다. (팝업 차단 또는 브라우저 정책)');
-          return;
-        }
-
-        // 일부 브라우저는 즉시 win.closed가 true일 수 있으므로 짧게 대기 후 확인
-        try {
-          // 성공적으로 핸들을 받았음 — 열기 성공으로 간주
-          setDiag((diagEl.textContent || '') + '\n[성공] 새 창이 열렸습니다. 닫기 예약: ' + AUTO_CLOSE_DELAY + 'ms 후');
-        } catch (err) {
-          // 접근 권한 문제로 프로퍼티 확인이 실패할 수 있음 (극히 드뭄)
-          setDiag((diagEl.textContent || '') + '\n[경고] 새 창 열기 후 상태 확인에서 예외 발생: ' + err);
-        }
-
-        // 닫기 예약
-        setTimeout(() => {
-          try {
-            // 닫기 시도
-            win.close();
-            setDiag((diagEl.textContent || '') + '\n[시도] 새 창 닫기 호출을 실행했습니다.');
-          } catch (err) {
-            setDiag((diagEl.textContent || '') + '\n[오류] 새 창 닫기 호출 예외: ' + err);
-            console.error(err);
-            return;
-          }
-
-          // 닫힘 여부 폴링으로 확인 (cross-origin 환경에서도 win.closed는 확인 가능)
-          const start = Date.now();
-          const poll = setInterval(() => {
-            let closed = false;
+    // YouTube 새 창 열기 후 즉시 닫기 처리
+    document.getElementById('btnOpenInNew').addEventListener('click', function(){
+      const url = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
+      setDiag((diagEl.textContent || '') + '\n[사용자 요청] 새 창에서 YouTube 열기 시도: ' + url);
+      try {
+        // 'noopener' 옵션을 제거하여 반환되는 윈도우 핸들을 사용해서 닫을 수 있게 함
+        // (안전: 일부 브라우저는 팝업 차단으로 null을 반환할 수 있음)
+        const win = window.open(url, '_blank');
+        if (win) {
+          // 아주 짧게 대기한 뒤 닫기 시도 (즉시 닫기)
+          setTimeout(() => {
             try {
-              closed = !!win.closed;
+              win.close();
+              setDiag((diagEl.textContent || '') + '\n[자동닫기] 새 창을 닫았습니다.');
             } catch (err) {
-              // 드물게 closed 프로퍼티 접근에 실패할 경우 예외 처리
-              setDiag((diagEl.textContent || '') + '\n[경고] 닫힘 확인 중 예외: ' + err);
+              setDiag((diagEl.textContent || '') + '\n[오류] 새 창 닫기 실패: ' + err);
             }
+          }, 250); // 필요하면 0 또는 더 짧게 조정 가능
+        } else {
+          setDiag((diagEl.textContent || '') + '\n[팝업차단] 새 창을 열 수 없습니다 (팝업 차단).');
+        }
+      } catch (err) {
+        setDiag((diagEl.textContent || '') + '\n[오류] 새 창 열기 실패: ' + err);
+      }
+    });
 
-            if (closed) {
-              clearInterval(poll);
-              setDiag((diagEl.textContent || '') + '\n[성공] 새 창이 정상적으로 닫혔습니다.');
-              return;
-            }
+    // === 자동 1회 재시도 기능 ===
+    // 페이지 로드 직후 자동으로 재시도 버튼을 1회 클릭합니다.
+    // - AUTO_RETRY_DELAY: 로드 후 대기 시간(ms)
+    // - autoRetryDone: 이미 자동 클릭했는지 플래그
+    const AUTO_RETRY_DELAY = 2000;
+    let autoRetryDone = false;
 
-            if (Date.now() - start > CLOSE_CHECK_TIMEOUT) {
-              clearInterval(poll);
-              setDiag((diagEl.textContent || '') + '\n[실패] 새 창이 지정 시간 내에 닫히지 않았습니다. (브라우저 정책 또는 팝업/탭 제약)');
-            }
-          }, CLOSE_CHECK_INTERVAL);
+    function tryAutoRetryOnce() {
+      if (autoRetryDone) return;
+      autoRetryDone = true;
+      // 로그 추가
+      setDiag((diagEl.textContent || '') + '\n[자동재시도] 페이지 로드 후 자동으로 재시도 버튼을 1회 클릭합니다.');
+      // 실제 클릭 트리거 (버튼 이벤트 핸들러를 재사용)
+      try {
+        btnReload.click();
+      } catch (e) {
+        console.error('자동 클릭 실패:', e);
+      }
+    }
 
-        }, AUTO_CLOSE_DELAY);
-      });
-    })();
+    // 페이지 로드 완료 시 타이머로 1회 자동 클릭
+    window.addEventListener('load', function(){
+      setTimeout(() => {
+        tryAutoRetryOnce();
+      }, AUTO_RETRY_DELAY);
+    });
+
+    // 안전망: 만약 load가 이미 발생했으면 바로 예약
+    if (document.readyState === 'complete') {
+      setTimeout(() => tryAutoRetryOnce(), AUTO_RETRY_DELAY);
+    }
   </script>
 </body>
 </html>
