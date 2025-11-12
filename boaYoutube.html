@@ -1,161 +1,213 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Intro + Board Grid (YouTube embed with hardcoded origin & diagnostics)</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BoaClinic YouTube (diagnostic + IFrame API, nocookie)</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { width: 100%; height: 100%; background-color: #000; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: #fff; }
-    #intro, #board { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-    #intro {
-      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 10;
-      padding: 20px;
-    }
-    h1 {
-      color: #fff; font-size: 24px; margin-bottom: 12px;
-      padding: 10px 16px; background-color: rgba(0,0,0,0.6); border-radius: 8px;
-    }
-    #videoPlayer {
-      width: min(1280px, 95%); height: calc(min(1280px, 95%) * 9 / 16);
-      background: #000; border: 0; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-    }
-
-    /* 진단 패널 */
-    #diag {
-      position: fixed; right: 12px; bottom: 12px; z-index: 9999;
-      background: rgba(0,0,0,0.7); color: #fff; padding: 12px; border-radius: 8px;
-      font-size: 13px; max-width: 360px; backdrop-filter: blur(4px);
-    }
-    #diag h3 { font-size: 13px; margin-bottom: 8px; }
-    #diag pre { white-space: pre-wrap; word-break: break-word; margin: 0; font-family: inherit; font-size: 12px; }
-    .adsbox { width: 1px; height: 1px; position: absolute; left: -9999px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; background:#000; color:#fff; font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial; }
+    #intro { width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column;
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/files/보아치과1.png') center/cover no-repeat; padding:24px; }
+    h1 { background: rgba(0,0,0,0.6); padding:10px 16px; border-radius:8px; margin-bottom:12px; font-size:20px; }
+    #playerWrap { width:min(1280px,95%); aspect-ratio:16/9; background:#000; border-radius:8px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.6); }
+    #diag { position: fixed; right:12px; bottom:12px; z-index:9999; background: rgba(0,0,0,0.75); padding:12px; border-radius:8px; max-width:420px; font-size:13px; }
+    #diag pre { white-space:pre-wrap; word-break:break-word; margin:0; font-family:inherit; font-size:12px; color:#ddd; }
+    #actions { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+    button { background:#111; color:#fff; border:1px solid #333; padding:6px 10px; border-radius:6px; cursor:pointer; }
+    button.secondary { background:transparent; border:1px solid #666; }
+    .note { margin-top:8px; font-size:12px; color:#cfcfcf; max-width:900px; text-align:center; }
   </style>
 </head>
 <body>
-  <!-- 인트로 영역 -->
   <div id="intro" role="main" aria-label="인트로 영역">
     <h1>YouTube #보아치과 #BoaClinic</h1>
-    <!-- YouTube 재생을 위해 iframe 사용 -->
-    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+
+    <div id="playerWrap" aria-hidden="false">
+      <!-- 빈 iframe을 IFrame API로 교체 -->
+      <div id="player"></div>
+    </div>
+
+    <div id="actions">
+      <button id="btnReload">재시도 (reload)</button>
+      <button id="btnOpenInNew" class="secondary">YouTube에서 열기</button>
+    </div>
+
+    <div class="note">
+      autoplay/mute 설정: 브라우저 정책 때문에 사운드 있는 자동재생은 차단될 수 있습니다. 진단 정보는 아래 패널과 콘솔을 확인하세요.
+    </div>
   </div>
 
-  <!-- 진단 패널 -->
   <div id="diag" aria-live="polite" title="진단 정보">
-    <h3>환경 진단</h3>
     <pre id="diagText">초기화 중...</pre>
   </div>
 
   <script>
-    (function () {
-      // --- 변경된 부분: 배포 도메인(origin)를 하드코딩했습니다 ---
-      // 사용자가 제공한 실제 배포 도메인:
-      // https://bencizion.github.io/Att_self/boaYoutube
-      // origin 파라미터에는 protocol + host(+ :port if any) 만 들어가야 하므로 아래와 같이 설정합니다:
-      const HARDCODED_ORIGIN = 'https://bencizion.github.io';
+    /**
+     * 요약 (한 문장)
+     * - YouTube가 제공하는 광고(프리롤/오버레이)는 임베드 파라미터로 완전히 제거할 수 없습니다.
+     * - 아래는 youtube-nocookie + IFrame Player API를 사용해 가능한 설정(modestbranding, iv_load_policy 등)과 디버그 출력을 추가한 수정본입니다.
+     *
+     * 핵심 포인트(다음에 바로 해볼 것들)
+     * 1) youtube-nocookie 도메인으로 변경 (privacy-enhanced mode): ads를 완전히 제거하지는 못하지만 추적 관련 쿠키를 줄임.
+     * 2) IFrame API로 명시적 play 호출 및 이벤트 로깅 추가 (자동재생 실패 원인 파악).
+     * 3) 광고 제거 방법: YouTube Premium 또는 광고 없는 호스팅(예: Vimeo Pro, 자체 호스팅) 외엔 신뢰할 수 있는 방법이 없음(YouTube TOS 관련).
+     */
 
-      // 재생할 YouTube 영상(필요시 ID 교체)
-      const videos = [
-        // 기본 예시(현재 mute + autoplay)
-        "https://www.youtube.com/embed/rSL_HbpbJzI?autoplay=1&mute=1&playsinline=1&enablejsapi=1"
-      ];
+    // 사용자 제공 배포 도메인(하드코딩)
+    const DEPLOY_ORIGIN = 'https://bencizion.github.io';
 
-      const player = document.getElementById("videoPlayer");
-      let current = 0;
+    // 바꿀 동영상 ID(원하시면 교체)
+    const VIDEO_ID = 'rSL_HbpbJzI';
 
-      function buildSrc(url) {
-        const sep = url.includes('?') ? '&' : '?';
-        // 하드코딩된 origin을 사용 (YouTube iFrame API와 일부 브라우저 정책에서 필요)
-        return url + sep + 'origin=' + encodeURIComponent(HARDCODED_ORIGIN) + '&modestbranding=1&rel=0';
-      }
+    // 진단 표시용 유틸
+    const diagEl = document.getElementById('diagText');
+    function setDiag(text) {
+      diagEl.textContent = text;
+      console.info('[diag]', text);
+    }
 
-      function playNext() {
-        player.src = buildSrc(videos[current]);
-      }
+    // 초기 진단 정보 표시
+    function baseDiagnostics() {
+      const cookies = (function(){ try{ document.cookie = 'test=1; SameSite=Lax'; const ok = document.cookie.indexOf('test=1') !== -1; document.cookie = 'test=; expires=Thu,01 Jan 1970 00:00:00 GMT'; return ok;}catch(e){return false;} })();
+      const ls = (function(){ try{ localStorage.setItem('__test__','1'); localStorage.removeItem('__test__'); return true;}catch(e){return false;} })();
+      const ua = navigator.userAgent || 'unknown';
+      let text =
+        '하드코딩 origin: ' + DEPLOY_ORIGIN + '\n' +
+        '페이지 URL: ' + location.href + '\n' +
+        '쿠키 사용 가능: ' + (cookies ? '예' : '아니오') + '\n' +
+        '로컬스토리지: ' + (ls ? '예' : '아니오') + '\n' +
+        'User Agent: ' + ua + '\n\n' +
+        '조치: 아래 "YouTube에서 열기" 버튼으로 브라우저에서 직접 열어 광고/프리롤이 나오는지 확인해 주세요.\n' +
+        '네트워크(DevTools)에서 doubleclick / googleadservices / googlesyndication 요청 유무를 확인하세요.';
+      setDiag(text);
+    }
 
-      // AdBlock 등 간단 진단 로직
-      function detectAdBlock() {
-        return new Promise((resolve) => {
-          const bait = document.createElement('div');
-          bait.className = 'adsbox ad-banner ad-top banner-ad advert';
-          bait.style.cssText = 'width:1px !important;height:1px !important;position:absolute !important;left:-9999px !important;';
-          document.body.appendChild(bait);
-          setTimeout(() => {
-            const blocked = (bait.offsetParent === null) || (bait.offsetHeight === 0) || (getComputedStyle(bait).display === 'none');
-            document.body.removeChild(bait);
-            resolve(!!blocked);
-          }, 60);
-        });
-      }
+    baseDiagnostics();
 
-      function canUseCookies() {
-        try {
-          document.cookie = 'cookie_test=1; SameSite=Lax';
-          const ok = document.cookie.indexOf('cookie_test=1') !== -1;
-          document.cookie = 'cookie_test=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-          return ok;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      function canUseLocalStorage() {
-        try {
-          const key = '__storage_test__';
-          localStorage.setItem(key, '1');
-          localStorage.removeItem(key);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      async function runDiagnostics() {
-        const adBlock = await detectAdBlock();
-        const cookies = canUseCookies();
-        const ls = canUseLocalStorage();
-        const ua = navigator.userAgent || 'unknown';
-
-        const diag = {
-          hardcoded_origin: HARDCODED_ORIGIN,
-          page_url: location.href,
-          cookiesEnabled: cookies,
-          localStorageAvailable: ls,
-          adBlockDetected: adBlock,
-          userAgent: ua
-        };
-
-        const diagTextEl = document.getElementById('diagText');
-        diagTextEl.textContent =
-          '하드코딩 origin: ' + diag.hardcoded_origin + '\n' +
-          '페이지 URL: ' + diag.page_url + '\n' +
-          '쿠키 사용 가능: ' + (diag.cookiesEnabled ? '예' : '아니오') + '\n' +
-          '로컬스토리지 사용 가능: ' + (diag.localStorageAvailable ? '예' : '아니오') + '\n' +
-          'AdBlock 추정: ' + (diag.adBlockDetected ? '감지됨' : '감지 안됨') + '\n' +
-          'User Agent: ' + diag.userAgent + '\n\n' +
-          '참고: AdBlock 감지는 확실한 진단이 아니며, 브라우저 확장/개인정보 설정/프라이빗 모드 등에서 임베드 동작이 달라질 수 있습니다.';
-
-        console.info('[진단 결과]', diag);
-
-        if (diag.adBlockDetected) {
-          diagTextEl.textContent += '\n권장: 광고 차단 확장(AdBlock/AdGuard 등)을 일시 중지하거나 예외 도메인에 현재 호스트를 추가해 보세요.';
-        }
-        if (!diag.cookiesEnabled) {
-          diagTextEl.textContent += '\n권장: 쿠키 비활성화는 임베드 작동에 영향을 줄 수 있습니다. 쿠키 허용을 확인하세요.';
-        }
-      }
-
-      // 실행
-      playNext();
-      runDiagnostics();
-
-      player.addEventListener('error', function (e) {
-        console.error('iframe error', e);
-      });
-
+    // 1) youtube-nocookie.com + IFrame API 로드
+    // 참고: origin 파라미터는 player 생성시 playerVars로 넘깁니다.
+    (function loadYouTubeAPI(){
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      document.head.appendChild(tag);
     })();
+
+    // 전역으로 onYouTubeIframeAPIReady가 호출됨
+    let player;
+    function onYouTubeIframeAPIReady() {
+      // playerVars로 가능한 한 광고 관련 UI를 줄여봄(완전 제거 보장 못함)
+      const playerVars = {
+        autoplay: 1,          // 자동시작(브라우저 정책으로 차단될 수 있음)
+        mute: 1,              // 음소거 -> 대부분 브라우저에서 autoplay 허용
+        playsinline: 1,
+        controls: 1,
+        modestbranding: 1,    // YouTube 로고 축소
+        rel: 0,               // 재생 후 관련 동영상 최소화
+        iv_load_policy: 3,    // 동영상의 카드/주석(인벤토리) 숨김 시도
+        enablejsapi: 1,
+        // origin 파라미터는 URL이 아니라 player 생성시 postMessage 보안용으로 쓰입니다.
+        // YouTube iFrame API는 내부적으로 origin을 사용하므로 명시적으로 전달.
+        origin: DEPLOY_ORIGIN
+      };
+
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: VIDEO_ID,
+        host: 'https://www.youtube-nocookie.com', // privacy-enhanced mode
+        playerVars: playerVars,
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+          onError: onPlayerError
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      setDiag((diagEl.textContent || '') + '\n[IFrame API] onReady 호출. playVideo 시도 중...');
+      // 명시적으로 재생 시도
+      try {
+        // 음소거 되어 있으므로 대부분의 브라우저에서 재생 허용
+        event.target.playVideo();
+      } catch (e) {
+        console.warn('playVideo 호출 실패', e);
+      }
+      // 짧게 상태 확인 로깅
+      setTimeout(() => {
+        logPlayerStatus('ready-timeout');
+      }, 1500);
+    }
+
+    function onPlayerStateChange(e) {
+      const stateMap = {
+        '-1': 'UNSTARTED',
+        '0': 'ENDED',
+        '1': 'PLAYING',
+        '2': 'PAUSED',
+        '3': 'BUFFERING',
+        '5': 'CUED'
+      };
+      const s = stateMap[e.data] || ('UNKNOWN('+e.data+')');
+      console.info('[YouTube state]', s);
+      setDiag((diagEl.textContent || '') + '\n[YT] 상태: ' + s);
+
+      // 재생이 오래 버퍼링되거나 프리롤 광고가 끝난 뒤 정상 재생으로 넘어가지 않는다면 추가 진단 필요
+      if (e.data === 3) { // BUFFERING
+        setDiag((diagEl.textContent || '') + '\n[YT] 현재 버퍼링 중입니다. 네트워크 또는 광고 로딩일 수 있습니다.');
+      }
+      if (e.data === 1) { // PLAYING
+        setDiag((diagEl.textContent || '') + '\n[YT] 재생 중입니다. 만약 화면에 광고가 보이면 이는 YouTube가 서비스하는 광고입니다.');
+      }
+    }
+
+    function onPlayerError(e) {
+      // 에러코드: 2,5,100,101,150 등
+      console.error('[YouTube error]', e);
+      setDiag((diagEl.textContent || '') + '\n[YT 오류] 코드: ' + (e.data || 'unknown') +
+        '\n(코드 100/101/150: 비공개 또는 사용이 제한된 동영상일 수 있음)');
+    }
+
+    function logPlayerStatus(tag) {
+      if (!player || !player.getPlayerState) {
+        console.warn('player 미존재');
+        return;
+      }
+      const state = player.getPlayerState();
+      const time = player.getCurrentTime ? player.getCurrentTime() : 'n/a';
+      const text = '\n[상태로그:' + tag + '] state=' + state + ', currentTime=' + time;
+      setDiag((diagEl.textContent || '') + text);
+      console.info('[player status]', { tag, state, time });
+    }
+
+    // 버튼 동작
+    document.getElementById('btnReload').addEventListener('click', function(){
+      try {
+        if (player && player.loadVideoById) {
+          // 같은 비디오로 다시 로드해서 재시도
+          player.loadVideoById({ videoId: VIDEO_ID, startSeconds: 0 });
+          setDiag((diagEl.textContent || '') + '\n사용자 요청: 비디오 재시도 호출.');
+        } else {
+          // fallback: 전체 페이지 reload
+          location.reload();
+        }
+      } catch (e) {
+        console.error(e);
+        location.reload();
+      }
+    });
+
+    document.getElementById('btnOpenInNew').addEventListener('click', function(){
+      const url = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
+      window.open(url, '_blank', 'noopener');
+    });
+
+    // 부가 진단 안내(사용자에게 직접 볼 것을 안내)
+    // 개발자 도구에서 확인할 것들: 네트워크 탭에서 doubleclick, googleadservices, googlesyndication 도메인 요청 여부.
+    // 광고가 나오는 경우: 브라우저 콘솔에 어떤 요청이 로드됐는지/차단됐는지 스크린샷을 받아 보내주세요.
+    // 또한 YouTube에서 재생 중 광고가 나오면 이는 업로더/YouTube 정책(수익화) 때문에 발생합니다.
   </script>
 </body>
 </html>
