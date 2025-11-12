@@ -1,196 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Boa YouTube Player (resumable)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intro +  Board Grid</title>
   <style>
-    html,body { height:100%; margin:0; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; }
-    #player { width:100%; height:100%; }
-    #info { position:fixed; left:12px; bottom:12px; background:rgba(0,0,0,0.6); padding:8px 10px; border-radius:6px; font-size:13px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+    }
+
+    #intro, #board {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #intro {
+      background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 8px;
+    }
+
+    #videoPlayer {
+      width: 1280px;
+      height: 720px;
+      background: #000;
+      border: 0;
+    }
+
   </style>
 </head>
 <body>
-  <div id="player"></div>
-  <div id="info">로딩중...</div>
+  <!-- 인트로 영역 -->
+  <div id="intro">
+    <h1>YouTube #보아치과 #BoaClinic</h1>
+    <!-- YouTube 재생을 위해 iframe 사용 -->
+    <iframe id="videoPlayer"
+      src=""
+      allow="autoplay; encrypted-media; picture-in-picture"
+      allowfullscreen
+      style="width:1280px;height:720px;border:0;">
+    </iframe>
+  </div>
 
-<script>
-  // This page runs inside the iframe and communicates with parent to report time & accept seek commands.
-  const PARENT_ORIGIN = window.origin || (document.referrer ? new URL(document.referrer).origin : '*');
-  // Use the deploy origin for YouTube origin param if needed; here we'll send postMessage to parent using PARENT_ORIGIN
-  const VIDEO_ID = 'rSL_HbpbJzI';
-  let player;
-  let lastSentTime = 0;
-  let periodicTimer = null;
-  let pendingSeek = null;
+  <script>
+    // 요청하신 유튜브 영상으로 변경 (URL: https://www.youtube.com/watch?v=rSL_HbpbJzI)
+    // embed 형식으로 autoplay(1) 및 mute(1) 포함
+    const videos = [
+      "https://www.youtube.com/embed/rSL_HbpbJzI?autoplay=1&mute=1&playsinline=1&enablejsapi=1"
+    ];
 
-  const infoEl = document.getElementById('info');
+    const player = document.getElementById("videoPlayer");
+    let current = 0;
 
-  function setInfo(t) {
-    infoEl.textContent = t;
-    console.debug('[child] info:', t);
-  }
-
-  // load YouTube IFrame API
-  (function loadYT(){
-    const s = document.createElement('script');
-    s.src = 'https://www.youtube.com/iframe_api';
-    s.async = true;
-    document.head.appendChild(s);
-  })();
-
-  // API callback
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-      height: '100%',
-      width: '100%',
-      videoId: VIDEO_ID,
-      host: 'https://www.youtube-nocookie.com',
-      playerVars: {
-        autoplay: 1,
-        mute: 1,
-        playsinline: 1,
-        controls: 1,
-        modestbranding: 1,
-        rel: 0,
-        iv_load_policy: 3,
-        enablejsapi: 1
-      },
-      events: {
-        onReady: onReady,
-        onStateChange: onStateChange,
-        onError: onError
-      }
-    });
-  }
-
-  function sendToParent(msg) {
-    try {
-      window.parent.postMessage(msg, PARENT_ORIGIN);
-    } catch (e) {
-      console.warn('[child] postMessage failed', e);
-    }
-  }
-
-  function onReady() {
-    setInfo('player ready');
-    // notify parent that YT player is ready
-    sendToParent({ type: 'yt-ready' });
-
-    // if there was a pending seek (received before ready), apply it now
-    if (pendingSeek != null) {
-      try {
-        player.seekTo(pendingSeek, true);
-        setInfo('seeked to ' + pendingSeek.toFixed(1) + 's');
-      } catch (e) {
-        console.warn('[child] pending seek failed', e);
-      }
-      pendingSeek = null;
+    function playNext() {
+      player.src = videos[current];
+      // 여러 영상을 순환하려면 아래 주석을 해제하세요:
+      // current = (current + 1) % videos.length;
     }
 
-    // start periodic time reporting while playing
-    startPeriodicReporting();
-  }
-
-  function onStateChange(e) {
-    // states: -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
-    const map = { '-1':'UNSTART','0':'ENDED','1':'PLAYING','2':'PAUSED','3':'BUFFERING','5':'CUED' };
-    setInfo('state: ' + (map[e.data] || e.data));
-    if (e.data === 1) { // playing
-      startPeriodicReporting();
-    } else {
-      stopPeriodicReporting();
-      // send one final time snapshot on pause/end
-      reportTimeOnce();
-    }
-  }
-
-  function onError(e) {
-    console.error('[YT error]', e);
-    setInfo('YT error: ' + (e.data || 'unknown'));
-  }
-
-  function startPeriodicReporting() {
-    if (periodicTimer) return;
-    periodicTimer = setInterval(() => {
-      reportTimeOnce();
-    }, 1000); // every second while playing
-  }
-
-  function stopPeriodicReporting() {
-    if (!periodicTimer) return;
-    clearInterval(periodicTimer);
-    periodicTimer = null;
-  }
-
-  function reportTimeOnce() {
-    if (!player || !player.getCurrentTime) return;
-    try {
-      const t = player.getCurrentTime();
-      // only send when changed sufficiently to reduce message spam
-      if (Math.abs(t - lastSentTime) > 0.3) {
-        lastSentTime = t;
-        sendToParent({ type: 'yt-time', time: t });
-      }
-    } catch (e) {
-      console.warn('[child] reportTimeOnce failed', e);
-    }
-  }
-
-  // handle messages from parent
-  window.addEventListener('message', (ev) => {
-    // Basic origin check (parent should be same origin)
-    // If PARENT_ORIGIN is '*' fallback (rare), we skip strict check
-    if (PARENT_ORIGIN !== '*' && ev.origin !== PARENT_ORIGIN) return;
-    const d = ev.data || {};
-    if (d.type === 'yt-seek' && typeof d.time === 'number') {
-      // if player ready -> seek now, else store pendingSeek
-      if (player && player.seekTo) {
-        try {
-          player.seekTo(d.time, true);
-          setInfo('seeked to ' + d.time.toFixed(1) + 's (parent)');
-          // small delay then play
-          setTimeout(() => {
-            try { player.playVideo(); } catch (e) {}
-          }, 300);
-        } catch (e) {
-          console.warn('[child] seekTo failed', e);
-        }
-      } else {
-        pendingSeek = d.time;
-      }
-    } else if (d.type === 'yt-request-time') {
-      // parent requests immediate time snapshot
-      reportTimeOnce();
-    }
-  });
-
-  // when iframe is about to unload (parent is switching away), send last time
-  window.addEventListener('beforeunload', () => {
-    try {
-      if (player && player.getCurrentTime) {
-        const t = player.getCurrentTime();
-        // best-effort sync postMessage
-        navigator.sendBeacon
-          ? navigator.sendBeacon('/__beacon_dummy', JSON.stringify({ time: t })) // avoid network error; still attempt parent message below
-          : null;
-        window.parent.postMessage({ type: 'yt-time', time: t }, PARENT_ORIGIN);
-      }
-    } catch (e) {
-      // ignore
-    }
-  });
-
-  // also send a periodic heartbeat to parent even if not playing so parent has a recent snapshot
-  setInterval(() => {
-    reportTimeOnce();
-  }, 5000);
-
-  // expose for debugging in console
-  window.__yt_child = {
-    getPlayerState: () => player ? player.getPlayerState() : null,
-    getCurrentTime: () => player ? player.getCurrentTime() : null
-  };
-</script>
+    playNext();
+  </script>
 </body>
 </html>
