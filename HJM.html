@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>허준박물관 야외 어트랙트 디스플레이</title>
+    <style>
+        /* 기본 리셋 및 높은 해상도 대비 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 디스플레이 해상도 (3960x2000) 전체를 사용하도록 설정 */
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* 스크롤 방지 */
+            background-color: #000;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        /* 메인 컨테이너: 고급스러운 다크 테마 적용 */
+        #display-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 배경색: 순수한 검정보다는 약간의 깊이가 있는 아주 어두운 색상 */
+            background-color: #0A0A0A; 
+            color: #E0E0E0; /* 밝은 회색 텍스트 */
+            padding: 30px;
+        }
+
+        /* 박물관 헤더 및 브랜드 강조 */
+        .museum-header {
+            width: 100%;
+            text-align: center;
+            padding: 40px 0 60px 0;
+            /* 폰트 크기: 3960px 가로 해상도에 맞춰 매우 크게 설정 */
+            font-size: 100px;
+            font-weight: 700;
+            /* 허준 박물관의 역사적 테마를 반영한 황금빛 강조색 */
+            color: #F8D783;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(248, 215, 131, 0.4); /* 미묘한 빛 번짐 효과 */
+        }
+        
+        /* 부제목 */
+        .museum-header small {
+            display: block;
+            font-size: 40px;
+            font-weight: 300;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* 어트랙트 컨테이너가 나머지 공간을 모두 채우도록 설정 */
+        .attractt-container {
+            width: 99%;
+            flex-grow: 1; /* 남은 수직 공간을 모두 차지 */
+            min-height: 0; /* Flexbox 내부에서 올바른 높이 계산을 위해 필요 */
+        }
+    </style>
+</head>
+<body>
+    <div id="display-wrapper">
+        <header class="museum-header">
+            허준박물관
+            <small>Heo Jun Museum - Official Media Display</small>
+        </header>
+
+        <!-- Attractt 임베드 코드 시작 -->
+        <script type="text/javascript">
+            (function(d, s) {
+                var j, e = d.getElementsByTagName(s)[0], h = "https://cdn.attractt.com/embed_v2/index.js";
+                if (typeof AttracttTower === "function" || e.src === h) { return; }
+                j = d.createElement(s);
+                j.src = h;
+                j.async = true;
+                e.parentNode.insertBefore(j, e);
+            })(document, "script");
+        </script>
+        <div class="attractt-container" data-idx="0" data-code="XlEDr74EQCHrYpo" data-board="slide"></div>
+        <!-- Attractt 임베드 코드 끝 -->
+
+    </div>
+</body>
+</html>
