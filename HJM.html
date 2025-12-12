@@ -31,7 +31,8 @@
             align-items: center;
             background-color: #FFFFFF; /* 흰색 배경 */
             color: #333333; /* 어두운 회색 텍스트 */
-            padding: 40px 15px 80px 15px; /* 하단 여백을 80px로 증가 */
+            /* 상단 여백 축소, 하단 여백 80px 유지 */
+            padding: 20px 15px 80px 15px; 
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); /* 은은한 그림자 효과 */
         }
 
@@ -39,39 +40,39 @@
         .museum-header {
             width: 100%;
             text-align: center;
-            padding: 20px 0 20px 0;
-            margin-bottom: 20px; /* 헤더와 안내 문구 사이 간격 */
+            padding: 15px 0; /* 상하 패딩 축소 */
+            margin-bottom: 10px; /* 마진 축소 */
         }
         
         .museum-header .title-group {
             display: flex;
             justify-content: center;
             align-items: baseline;
-            gap: 15px; /* 한글 제목과 영문 제목 사이 간격 */
+            gap: 15px;
             line-height: 1.2;
         }
 
         .museum-header .title-group h1 {
-            /* 한글 제목 */
-            font-size: 72px; /* 폰트 크기 조정 */
+            /* 한글 제목 - 크기 축소 */
+            font-size: 55px; 
             font-weight: 800;
-            color: #333333; /* 어두운 색상 */
+            color: #333333;
         }
 
         .museum-header .title-group small {
-            /* 영문 제목 */
-            font-size: 72px; /* 한글 제목과 동일하게 조정 */
+            /* 영문 제목 - 크기 축소 */
+            font-size: 55px;
             font-weight: 500;
             color: #555555;
         }
 
         /* 안내 문구 스타일 */
         .info-text {
-            font-size: 32px;
+            font-size: 28px; /* 폰트 크기 축소 */
             font-weight: 400;
             color: #008080; /* 강조색 (청록색) 사용 */
-            margin-bottom: 40px; /* 안내 문구와 어트랙트 보드 사이 간격 */
-            padding: 10px 20px;
+            margin-bottom: 20px; /* 마진 축소 */
+            padding: 8px 15px; /* 패딩 축소 */
             border: 2px solid #008080;
             border-radius: 8px;
             letter-spacing: -0.5px;
@@ -82,7 +83,7 @@
         .attractt-container {
             width: 99%;
             flex-grow: 1; /* 남은 수직 공간을 모두 차지 */
-            min-height: 0;
+            min-height: 0; /* 최소 높이 0으로 설정하여 유연하게 공간 확보 */
             border-radius: 12px; /* 모서리 둥글게 */
             overflow: hidden;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* 콘텐츠 강조 */
@@ -96,7 +97,6 @@
                 <h1>허준박물관</h1>
                 <small>HEO JUN MUSEUM</small>
             </div>
-            <!-- 'Social Media Display' 문구 제거됨 -->
         </header>
         
         <!-- 인스타그램 해시태그 안내 문구 -->
