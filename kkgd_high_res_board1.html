@@ -3,114 +3,112 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>꽃게당 인스타그램 TV</title>
+    <title>꽃게당 인스타그램 TV - 4K UHD</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         html, body {
-            width: 100vw; height: 100vh; min-height: 100vh;
+            width: 100vw; 
+            height: 100vh; 
             background-color: #000;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        /* Intro / background */
-        #intro {
-            width: 100vw; height: 100vh;
-            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-        /* h1을 크게, 반응형으로 보이게 수정 */
-        h1 {
-            color: #fff;
-            /* 반응형 큰 글자: 최소 28px, 화면비례로 확대, 최대 120px */
-            font-size: clamp(28px, 3.5vw + 1rem, 120px);
-            line-height: 1.05;
-            margin-bottom: 0;
-            padding: 14px 28px;
-            background-color: rgba(0,0,0,0.6);
-            border-radius: 8px;
-            text-align: center;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.02);
-            letter-spacing: 0.02em;
-        }
-
-        /* Player area: responsive 16:9 that will fit a 3840x2160 (4K) TV
-           - width limited to viewport width or 3840px (native 4K width)
-           - aspect-ratio keeps exact 16:9
-           - max-height ensures it never overflows the screen height
-        */
-        .player-area {
-            width: min(100vw, 3840px);
-            aspect-ratio: 16 / 9;
-            height: auto;                 /* computed from aspect-ratio */
-            max-height: 100vh;            /* never exceed viewport height */
-            background: #000;
-            position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            border-radius: 4px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
         }
-
-        /* Board grid: keeps 4 x 2 grid cells that fill the 16:9 player-area */
+        
+        #intro {
+            width: 100vw; 
+            height: 100vh;
+            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat fixed;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            position: relative;
+        }
+        
+        h1 {
+            color: #fff; 
+            font-size: clamp(32px, 4vw, 72px); 
+            margin-bottom: 30px; 
+            padding: 15px 30px;
+            background-color: rgba(0,0,0,0.7); 
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 90%;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .player-area {
+            width: 100vw; 
+            height: 100vh;
+            position: relative; 
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
         #board01 {
-            width: 100%; height: 100%;
+            width: 100%; 
+            height: 100%;
+            max-width: 3840px;
+            max-height: 2160px;
+            aspect-ratio: 16/9;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 6px;
+            gap: 8px;
             overflow: hidden;
-            padding: 6px; /* small inner gap so items don't touch edges on TV */
-            box-sizing: border-box;
-            background: #000;
-
-            /* center content inside each cell */
-            align-items: center;
-            justify-items: center;
+            background: #111;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
         }
-
-        /*
-         Container rule for each cell: keep the grid cell as a centered frame
-         and avoid stretching media to different heights. This ensures every
-         grid cell has the same size and the media inside fits without being
-         cropped (letterboxing will appear when aspect ratio differs).
-        */
-        #board01 > * {
+        
+        #board01 video,
+        #board01 img {
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: #000;
-        }
-
-        /* media inside each cell: don't crop (use contain), preserve aspect, center */
-        #board01 img,
-        #board01 video {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            object-position: center;
+            object-fit: cover;
             display: block;
             background: #000;
         }
-
-        /* Improve video rendering on large screens */
-        video {
-            -webkit-font-smoothing: antialiased;
-            image-rendering: auto;
+        
+        /* 4K TV 최적화 */
+        @media screen and (min-width: 3840px) and (min-height: 2160px) {
+            .player-area {
+                padding: 40px;
+            }
+            
+            #board01 {
+                gap: 16px;
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 72px;
+                padding: 20px 40px;
+            }
         }
-
-        /* Responsive tweaks for smaller displays (mobile/dev) */
-        @media (max-aspect-ratio: 16/9) {
-            /* If viewport is taller than 16:9, limit width to viewport minus padding */
-            .player-area { width: calc(100vh * 16 / 9); max-width: 100vw; }
+        
+        /* TV 브라우저 안전장치 */
+        @media screen and (max-aspect-ratio: 16/10) {
+            #board01 {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+            }
+        }
+        
+        /* 비디오 로딩 최적화 */
+        video {
+            will-change: transform;
+        }
+        
+        /* 포커스/리모컨 지원 */
+        #board01:focus-within {
+            box-shadow: 0 0 60px rgba(255, 165, 0, 0.5);
         }
     </style>
 </head>
@@ -119,7 +117,7 @@
         <h1>Instagram #꽃게당 #KkotGeDang #シンサコッケタン</h1>
         <div class="player-area" id="mainPlayerArea">
             <div id="board01">
-                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251205_173226532_01.webp" alt="" />             
+                <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251205_173226532_01.webp" alt="꽃게당 콘텐츠" loading="eager" />             
                 <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/KakaoTalk_20251216_133917786.mp4" autoplay muted loop playsinline preload="auto"></video>
                 <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/KakaoTalk_20251216_133920425.mp4" autoplay muted loop playsinline preload="auto"></video>
                 <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/KakaoTalk_20251216_133922768.mp4" autoplay muted loop playsinline preload="auto"></video>
