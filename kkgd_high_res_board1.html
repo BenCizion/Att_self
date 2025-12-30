@@ -11,28 +11,54 @@
             background-color: #000;
             display: flex; justify-content: center; align-items: center;
         }
+
+        /* Intro / background */
         #intro {
             width: 100vw; height: 100vh;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px;
+            padding: 20px;
         }
         h1 {
-            color: #fff; font-size: 24px; margin-bottom: 20px; padding: 10px 20px;
+            color: #fff; font-size: 24px; margin-bottom: 0; padding: 10px 20px;
             background-color: rgba(0,0,0,0.6); border-radius: 8px;
         }
+
+        /* Player area: responsive 16:9 that will fit a 3840x2160 (4K) TV
+           - width limited to viewport width or 3840px (native 4K width)
+           - aspect-ratio keeps exact 16:9
+           - max-height ensures it never overflows the screen height
+        */
         .player-area {
-            width: 1280px; height: 720px;
-            max-width: 90vw; max-height: 70vw;
-            position: relative; background: #000; overflow: hidden; display: flex;
+            width: min(100vw, 3840px);
+            aspect-ratio: 16 / 9;
+            height: auto;                 /* computed from aspect-ratio */
+            max-height: 100vh;            /* never exceed viewport height */
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            border-radius: 4px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
         }
+
+        /* Board grid: keeps 4 x 2 grid cells that fill the 16:9 player-area */
         #board01 {
             width: 100%; height: 100%;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: 1fr 1fr;
-            gap: 4px;
+            grid-template-rows: repeat(2, 1fr);
+            gap: 6px;
             overflow: hidden;
+            padding: 6px; /* small inner gap so items don't touch edges on TV */
+            box-sizing: border-box;
+            background: #000;
         }
+
+        /* Each media item fills its grid cell and maintains cover behavior */
         #board01 video,
         #board01 img {
             width: 100%;
@@ -40,7 +66,18 @@
             object-fit: cover;
             display: block;
             background: #000;
-            aspect-ratio: 16/9;
+        }
+
+        /* Improve video rendering on large screens */
+        video {
+            -webkit-font-smoothing: antialiased;
+            image-rendering: auto;
+        }
+
+        /* Responsive tweaks for smaller displays (mobile/dev) */
+        @media (max-aspect-ratio: 16/9) {
+            /* If viewport is taller than 16:9, limit width to viewport minus padding */
+            .player-area { width: calc(100vh * 16 / 9); max-width: 100vw; }
         }
     </style>
 </head>
