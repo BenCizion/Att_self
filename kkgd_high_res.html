@@ -5,31 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>꽃게당 인스타그램 TV - 4K UHD 플레이어</title>
   <style>
-    /* 전체 배경을 검정으로 해서 TV 화면처럼 보이게 함 */
-    html, body {
+    /* 완전 풀스크린 - 좌우 여백 완전 제거 */
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
       width: 100vw;
       height: 100vh;
       background: #000;
       overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      position: relative;
     }
 
-    /* 기준 캔버스: 전체 화면 우선 + 4K 지원 */
+    /* 스테이지: 화면 전체를 꽉 채움 */
     #stage {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: calc(100vw * 9 / 16);
       max-width: 3840px;
       max-height: 2160px;
-      position: relative;
       background: #000;
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.03), 0 40px 80px rgba(0,0,0,0.7);
-      margin: 0 auto;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.03);
+      transform-origin: top left;
     }
 
-    /* 세로가 긴 화면일 때 */
+    /* 세로 화면일 때 */
     @media screen and (max-aspect-ratio: 16/9) {
       #stage {
         width: calc(100vh * 16 / 9);
@@ -38,30 +43,33 @@
       }
     }
 
-    /* 4K 네이티브 해상도 */
+    /* 4K 모니터 */
     @media screen and (min-width: 3840px) {
       #stage {
         width: 3840px;
         height: 2160px;
-        margin: 0 auto;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 
-    /* iframe: 스테이지를 꽉 채우도록 */
+    /* iframe: 스테이지 꽉 채움 */
     #viewer {
-      width: 100%;
-      height: 100%;
+      width: 100% !important;
+      height: 100% !important;
       border: none;
       display: block;
       opacity: 1;
       transition: opacity 0.9s;
       background: #000;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
     #viewer.fadeout {
       opacity: 0;
     }
 
-    /* 작은 화면 최적화 */
     @media (max-width: 640px) {
       #stage { box-shadow: none; }
     }
@@ -73,46 +81,28 @@
   </div>
 
 <script>
-  // --- 화면/스케일 관련 설정 (개선된 버전) ---
   const BASE_W = 3840;
   const BASE_H = 2160;
   const stage = document.getElementById('stage');
   const viewer = document.getElementById('viewer');
 
-  // 브라우저 창 크기에 맞춰 스테이지를 비율 유지하며 스케일링 (좌우 여백 제거)
+  // 완전 풀스크린 맞춤 (transform 제거)
   function fitToScreen() {
-    const containerWidth = window.innerWidth;
-    const containerHeight = window.innerHeight;
-    
-    let scaleX = containerWidth / BASE_W;
-    let scaleY = containerHeight / BASE_H;
-    let scale = Math.min(scaleX, scaleY);
-    
-    // 가로 우선 레이아웃으로 좌우 여백 제거
-    if (containerWidth / containerHeight >= 16/9) {
-      scale = containerWidth / BASE_W;
-    } else {
-      scale = containerHeight / BASE_H;
-    }
-    
-    stage.style.transform = `scale(${Number(scale.toFixed(6))})`;
+    // CSS로 이미 완벽하게 맞춰져 있으므로 transform 불필요
   }
 
-  // 초기와 리사이즈에 적용
   window.addEventListener('resize', fitToScreen);
   window.addEventListener('orientationchange', fitToScreen);
 
-  // --- 페이지 전환 관련 설정 (기존 로직 유지) ---
+  // 페이지 전환 로직 (기존 그대로)
   const pages = ["kkgd_high_res_board1.html", "kkgd_high_res_board2.html", "kkgd_high_res_board3.html", "kkgd_high_res_video.html", "kkgd_high_res_promo.html"];
-  const intervals = [30000, 30000, 10000, 50000, 40000]; // 각 페이지별 interval(ms)
+  const intervals = [30000, 30000, 10000, 50000, 40000];
   let current = 0;
   let timeoutId = null;
 
-  // 프리로드 범위 설정
   const PRELOAD_RANGE = 2;
   const preloaded = new Set();
 
-  // 여러 페이지 프리로드
   function preloadNextPages(startIdx) {
     for (let i = 1; i <= PRELOAD_RANGE; i++) {
       let idx = (startIdx + i) % pages.length;
@@ -128,7 +118,6 @@
     }
   }
 
-  // 다음 페이지로 전환
   function nextPage() {
     viewer.classList.add('fadeout');
     setTimeout(() => {
@@ -138,7 +127,6 @@
     }, 900);
   }
 
-  // interval 시작/정지
   function startInterval() {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(nextPage, intervals[current]);
@@ -148,13 +136,11 @@
     timeoutId = null;
   }
 
-  // iframe 로드 완료 시 페이드 인 및 타이머 시작
   viewer.addEventListener('load', function() {
     viewer.classList.remove('fadeout');
     startInterval();
   });
 
-  // 가시성 API: 탭이 숨겨지면 타이머 정지
   document.addEventListener("visibilitychange", function() {
     if (document.hidden) {
       stopInterval();
@@ -163,10 +149,8 @@
     }
   });
 
-  // 언로드 시 타이머 정리
   window.addEventListener("beforeunload", stopInterval);
 
-  // 키보드: 좌/우로 수동 전환 (디버깅)
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
       stopInterval();
@@ -182,7 +166,6 @@
     }
   });
 
-  // 초기화
   function init() {
     current = 0;
     viewer.src = pages[current];
