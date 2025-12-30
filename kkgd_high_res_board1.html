@@ -17,7 +17,11 @@
         #intro {
             width: 100vw; 
             height: 100vh;
-            background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat fixed;
+            /* 배경 이미지 직접 호스팅으로 교체 */
+            background: linear-gradient(135deg, #1a0033 0%, #000 50%, #330066 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -25,46 +29,70 @@
             position: relative;
         }
         
+        /* 배경 패턴 오버레이 */
+        #intro::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255,100,150,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100,200,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,100,0.05) 0%, transparent 50%);
+            background-size: 1000px 1000px;
+            animation: sparkle 20s linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+        
         h1 {
             color: #fff; 
-            font-size: clamp(32px, 4vw, 72px); 
-            margin-bottom: 30px; 
-            padding: 15px 30px;
-            background-color: rgba(0,0,0,0.7); 
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
+            font-size: clamp(36px, 3.5vw, 80px); 
+            margin-bottom: 0;
+            padding: 20px 40px;
+            background: linear-gradient(45deg, rgba(255,100,150,0.9), rgba(100,200,255,0.9));
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
             text-align: center;
-            max-width: 90%;
+            max-width: 95%;
             z-index: 10;
             position: relative;
+            box-shadow: 0 10px 40px rgba(255,100,150,0.3);
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
         
         .player-area {
             width: 100vw; 
-            height: 100vh;
+            height: calc(100vh - 180px);
             position: relative; 
-            background: #000;
+            background: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
             box-sizing: border-box;
+            z-index: 5;
         }
         
         #board01 {
             width: 100%; 
             height: 100%;
-            max-width: 3840px;
-            max-height: 2160px;
-            aspect-ratio: 16/9;
+            max-width: min(95vw, 3840px);
+            max-height: min(95vh, 2160px);
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 8px;
             overflow: hidden;
-            background: #111;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.9);
+            border-radius: 16px;
+            box-shadow: 0 0 50px rgba(255,100,150,0.4);
+            padding: 8px;
+            box-sizing: border-box;
         }
         
         #board01 video,
@@ -74,41 +102,64 @@
             object-fit: cover;
             display: block;
             background: #000;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        #board01 video:hover,
+        #board01 img:hover {
+            transform: scale(1.02);
         }
         
         /* 4K TV 최적화 */
-        @media screen and (min-width: 3840px) and (min-height: 2160px) {
+        @media screen and (min-width: 3500px) {
             .player-area {
-                padding: 40px;
+                padding: 20px;
+                height: calc(100vh - 220px);
             }
             
             #board01 {
-                gap: 16px;
-                border-radius: 20px;
+                gap: 12px;
+                padding: 12px;
+                border-radius: 24px;
             }
             
             h1 {
-                font-size: 72px;
-                padding: 20px 40px;
+                font-size: 80px;
+                padding: 25px 50px;
             }
         }
         
-        /* TV 브라우저 안전장치 */
-        @media screen and (max-aspect-ratio: 16/10) {
+        /* 안전한 세로 비율 대응 */
+        @media screen and (max-aspect-ratio: 16/10) or (max-height: 2000px) {
+            .player-area {
+                height: calc(100vh - 160px);
+            }
+            
+            #board01 {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 6px;
+            }
+        }
+        
+        /* 모바일/TV 브라우저 호환 */
+        @media screen and (max-width: 1920px) {
             #board01 {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(4, 1fr);
             }
         }
         
-        /* 비디오 로딩 최적화 */
+        /* 비디오 성능 최적화 */
         video {
             will-change: transform;
+            transform: translateZ(0);
         }
         
-        /* 포커스/리모컨 지원 */
+        /* TV 리모컨 포커스 */
         #board01:focus-within {
-            box-shadow: 0 0 60px rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 80px rgba(255, 165, 0, 0.8);
         }
     </style>
 </head>
