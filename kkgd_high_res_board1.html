@@ -17,7 +17,6 @@
         #intro {
             width: 100vw; 
             height: 100vh;
-            /* 원래 배경 이미지 복원 */
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat fixed;
             display: flex; 
             flex-direction: column; 
@@ -60,10 +59,9 @@
             max-width: min(98vw, 3840px);
             max-height: min(98vh, 2160px);
             display: grid;
-            /* 모든 셀 완벽 동일 크기 */
+            /* 고정 4x2 그리드 */
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            /* 명시적 셀 크기 균등 분배 */
             grid-auto-rows: 1fr;
             gap: 8px;
             overflow: hidden;
@@ -101,27 +99,6 @@
                 font-size: 80px;
                 padding: 25px 50px;
                 margin-bottom: 25px;
-            }
-        }
-        
-        /* 안전한 세로 비율 대응 */
-        @media screen and (max-aspect-ratio: 16/10) or (max-height: 2000px) {
-            .player-area {
-                height: calc(100vh - 160px);
-            }
-            
-            #board01 {
-                grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(3, 1fr);
-                gap: 6px;
-            }
-        }
-        
-        /* 일반 TV/모니터 */
-        @media screen and (max-width: 2560px) {
-            #board01 {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(4, 1fr);
             }
         }
         
