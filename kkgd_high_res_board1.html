@@ -15,18 +15,19 @@
         #intro {
             width: 100vw; height: 100vh;
             background: url('https://raw.githubusercontent.com/BenCizion/Att_self/main/꽃게당 배경 패턴(용량)_6.webp') center/cover no-repeat;
+            background-color: #000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px;
         }
         h1 {
             color: #fff; font-size: clamp(24px, 4vw, 48px); margin-bottom: 20px; padding: 15px 25px;
-            background-color: rgba(0,0,0,0.7); border-radius: 12px; backdrop-filter: blur(10px);
+            background-color: rgba(0,0,0,0.5); border-radius: 12px; backdrop-filter: blur(10px);
             text-align: center; max-width: 90vw;
         }
         .player-area {
             width: min(3840px, 100vw); height: min(2160px, 100vh);
             max-width: 100vw; max-height: 90vh;
-            position: relative; background: #000; overflow: hidden;
+            position: relative; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
             aspect-ratio: 16/9;
         }
@@ -43,31 +44,33 @@
         .media-item {
             position: relative;
             width: 100%; height: 100%;
-            background: #111;
             overflow: hidden;
             display: flex; justify-content: center; align-items: center;
+        }
+        .media-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: inherit;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
         #board01 video,
         #board01 img {
             width: 100%; height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             display: block;
-            background: #000;
+            z-index: 1;
         }
         #board01 video {
             object-position: center;
         }
         @media (max-aspect-ratio: 16/9) {
-            .player-area {
-                width: 100vw;
-                height: calc(100vw * 9 / 16);
-            }
+            .player-area { width: 100vw; height: calc(100vw * 9 / 16); }
         }
         @media (min-aspect-ratio: 16/9) {
-            .player-area {
-                height: 90vh;
-                width: calc(90vh * 16 / 9);
-            }
+            .player-area { height: 90vh; width: calc(90vh * 16 / 9); }
         }
     </style>
 </head>
