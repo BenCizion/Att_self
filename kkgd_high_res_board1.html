@@ -20,9 +20,19 @@
             gap: 20px;
             padding: 20px;
         }
+        /* h1을 크게, 반응형으로 보이게 수정 */
         h1 {
-            color: #fff; font-size: 24px; margin-bottom: 0; padding: 10px 20px;
-            background-color: rgba(0,0,0,0.6); border-radius: 8px;
+            color: #fff;
+            /* 반응형 큰 글자: 최소 28px, 화면비례로 확대, 최대 120px */
+            font-size: clamp(28px, 3.5vw + 1rem, 120px);
+            line-height: 1.05;
+            margin-bottom: 0;
+            padding: 14px 28px;
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 8px;
+            text-align: center;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.02);
+            letter-spacing: 0.02em;
         }
 
         /* Player area: responsive 16:9 that will fit a 3840x2160 (4K) TV
