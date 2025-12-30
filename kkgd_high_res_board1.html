@@ -7,9 +7,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
-            width: 100vw; height: 100vh; min-height: 100vh;
+            width: 100vw; height: 100vh;
             background-color: #000;
-            display: flex; justify-content: center; align-items: center;
             overflow: hidden;
         }
         #intro {
@@ -32,24 +31,23 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
         .player-area {
-            width: min(3840px, 100vw); 
-            height: min(1944px, calc(100vh - 120px));
-            max-width: 100vw; 
-            max-height: calc(90vh - 60px);
+            width: 100vw;
+            height: calc(100vw * 9 / 16);
+            max-height: 100vh;
             position: relative; 
             overflow: hidden;
             display: flex; justify-content: center; align-items: center;
-            aspect-ratio: 16/9;
+            margin: 0 auto;
         }
         #board01 {
             width: 100%; height: 100%;
-            max-width: 3840px; max-height: 1944px;
+            max-width: 3840px; max-height: 2160px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 4px;
             padding: 4px;
-            box-sizing: content-box;
+            box-sizing: border-box;
         }
         .media-item {
             position: relative;
@@ -76,16 +74,47 @@
         #board01 video {
             object-position: center;
         }
-        @media (max-aspect-ratio: 16/9) {
-            .player-area { 
-                width: 100vw; 
-                height: calc(100vw * 9 / 16); 
+
+        /* 세로가 긴 화면일 때 */
+        @media screen and (max-aspect-ratio: 16/9) {
+            .player-area {
+                width: calc(100vh * 16 / 9);
+                height: 100vh;
+                max-width: 100vw;
             }
         }
-        @media (min-aspect-ratio: 16/9) {
-            .player-area { 
-                height: calc(90vh - 60px); 
-                width: calc((90vh - 60px) * 16 / 9); 
+
+        /* 4K 최적화 */
+        @media screen and (min-width: 3840px) {
+            .player-area {
+                width: 3840px;
+                height: 2160px;
+                margin: 0 auto;
+            }
+            #board01 {
+                max-width: 3840px;
+                max-height: 2160px;
+            }
+        }
+
+        /* 모바일 반응형 */
+        @media screen and (max-width: 768px) {
+            #board01 {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                gap: 4px;
+                padding: 4px;
+            }
+            h1 {
+                font-size: 28px;
+                padding: 20px 30px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            #board01 {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(8, 1fr);
             }
         }
     </style>
@@ -96,7 +125,7 @@
         <div class="player-area" id="mainPlayerArea">
             <div id="board01">
                 <div class="media-item">
-                    <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251205_173226532_01.webp" alt="꽃게당 콘텐츠 1" />
+                    <img src="https://raw.githubusercontent.com/BenCizion/Att_self/main/files/KakaoTalk_20251205_173226532_01.webp" alt="꽃게당 콘텐츠 1" loading="eager" />
                 </div>
                 <div class="media-item">
                     <video src="https://raw.githubusercontent.com/BenCizion/Att_self/main/KakaoTalk_20251216_133917786.mp4" 
