@@ -3,33 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>꽃게당 인스타그램 TV</title>
+  <title>꽃게당 인스타그램 TV - 4K UHD 플레이어</title>
   <style>
     /* 전체 배경을 검정으로 해서 TV 화면처럼 보이게 함 */
     html, body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* 기준 캔버스: 실제 콘텐츠 해상도(3840x2160) */
+    /* 기준 캔버스: 전체 화면 우선 + 4K 지원 */
     #stage {
-      width: 3840px;
-      height: 2160px;
+      width: 100vw;
+      height: calc(100vw * 9 / 16);
+      max-width: 3840px;
+      max-height: 2160px;
       position: relative;
-      transform-origin: center center;
-      will-change: transform;
-      /* optional: 약간의 박스 쉐도우로 테두리 구분 가능 (TV 테두리 느낌) */
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.03), 0 40px 80px rgba(0,0,0,0.7);
       background: #000;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.03), 0 40px 80px rgba(0,0,0,0.7);
+      margin: 0 auto;
+    }
+
+    /* 세로가 긴 화면일 때 */
+    @media screen and (max-aspect-ratio: 16/9) {
+      #stage {
+        width: calc(100vh * 16 / 9);
+        height: 100vh;
+        max-width: 100vw;
+      }
+    }
+
+    /* 4K 네이티브 해상도 */
+    @media screen and (min-width: 3840px) {
+      #stage {
+        width: 3840px;
+        height: 2160px;
+        margin: 0 auto;
+      }
     }
 
     /* iframe: 스테이지를 꽉 채우도록 */
@@ -46,7 +61,7 @@
       opacity: 0;
     }
 
-    /* 작은 화면(디버깅 등)에서 스케일을 너무 작게 하지 않도록 최소 스케일 설정 가능 (선택적) */
+    /* 작은 화면 최적화 */
     @media (max-width: 640px) {
       #stage { box-shadow: none; }
     }
@@ -58,18 +73,28 @@
   </div>
 
 <script>
-  // --- 화면/스케일 관련 설정 ---
+  // --- 화면/스케일 관련 설정 (개선된 버전) ---
   const BASE_W = 3840;
   const BASE_H = 2160;
   const stage = document.getElementById('stage');
   const viewer = document.getElementById('viewer');
 
-  // 브라우저 창 크기에 맞춰 스테이지를 비율 유지하며 스케일링
+  // 브라우저 창 크기에 맞춰 스테이지를 비율 유지하며 스케일링 (좌우 여백 제거)
   function fitToScreen() {
-    const scaleX = window.innerWidth / BASE_W;
-    const scaleY = window.innerHeight / BASE_H;
-    const scale = Math.min(scaleX, scaleY);
-    // 소수점 이슈로 인해 소수 자릿수를 제한
+    const containerWidth = window.innerWidth;
+    const containerHeight = window.innerHeight;
+    
+    let scaleX = containerWidth / BASE_W;
+    let scaleY = containerHeight / BASE_H;
+    let scale = Math.min(scaleX, scaleY);
+    
+    // 가로 우선 레이아웃으로 좌우 여백 제거
+    if (containerWidth / containerHeight >= 16/9) {
+      scale = containerWidth / BASE_W;
+    } else {
+      scale = containerHeight / BASE_H;
+    }
+    
     stage.style.transform = `scale(${Number(scale.toFixed(6))})`;
   }
 
@@ -77,13 +102,13 @@
   window.addEventListener('resize', fitToScreen);
   window.addEventListener('orientationchange', fitToScreen);
 
-  // --- 페이지 전환 관련 설정 (기존 로직 유지, 약간 정리) ---
+  // --- 페이지 전환 관련 설정 (기존 로직 유지) ---
   const pages = ["kkgd_high_res_board1.html", "kkgd_high_res_board2.html", "kkgd_high_res_board3.html", "kkgd_high_res_video.html", "kkgd_high_res_promo.html"];
   const intervals = [30000, 30000, 10000, 50000, 40000]; // 각 페이지별 interval(ms)
   let current = 0;
   let timeoutId = null;
 
-  // 프리로드 범위 설정(미리 불러올 페이지 개수)
+  // 프리로드 범위 설정
   const PRELOAD_RANGE = 2;
   const preloaded = new Set();
 
@@ -93,8 +118,6 @@
       let idx = (startIdx + i) % pages.length;
       let page = pages[idx];
       if (!preloaded.has(page)) {
-        // <link rel="preload">를 사용하되, 모든 브라우저가 문서 preloading을 동일하게 지원하지 않음.
-        // fallback: 비동기 fetch로 캐시할 수도 있음. (여기서는 link + 이미지/리소스 간단 preload)
         const link = document.createElement('link');
         link.rel = 'preload';
         link.href = page;
@@ -105,15 +128,14 @@
     }
   }
 
-  // 다음 페이지로 전환 (페이드 아웃 후 src 변경)
+  // 다음 페이지로 전환
   function nextPage() {
     viewer.classList.add('fadeout');
-    // fade out 완료 후 페이지 교체
     setTimeout(() => {
       current = (current + 1) % pages.length;
       viewer.src = pages[current];
       preloadNextPages(current);
-    }, 900); // CSS transition 시간과 동기화
+    }, 900);
   }
 
   // interval 시작/정지
@@ -128,7 +150,6 @@
 
   // iframe 로드 완료 시 페이드 인 및 타이머 시작
   viewer.addEventListener('load', function() {
-    // 소스가 동일하게 재로딩될 경우 load가 발생하니 안전하게 처리
     viewer.classList.remove('fadeout');
     startInterval();
   });
@@ -138,7 +159,6 @@
     if (document.hidden) {
       stopInterval();
     } else {
-      // 복원 시 현재 페이지의 남은 시간을 정확히 복원하지는 않음(단순 재시작)
       startInterval();
     }
   });
@@ -146,14 +166,13 @@
   // 언로드 시 타이머 정리
   window.addEventListener("beforeunload", stopInterval);
 
-  // 키보드(선택): 좌/우로 수동 전환 (디버깅 또는 리모컨 테스트에 유용)
+  // 키보드: 좌/우로 수동 전환 (디버깅)
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
       stopInterval();
       nextPage();
     } else if (e.key === 'ArrowLeft') {
       stopInterval();
-      // 이전 페이지로 이동 (페이드 적용)
       viewer.classList.add('fadeout');
       setTimeout(() => {
         current = (current - 1 + pages.length) % pages.length;
@@ -163,19 +182,14 @@
     }
   });
 
-  // 초기화: 첫 페이지 로드, 프리로드, 스케일 적용
+  // 초기화
   function init() {
-    // 첫 페이지 설정
     current = 0;
     viewer.src = pages[current];
-    // 첫 화면 기준으로 미리 불러오기
     preloadNextPages(0);
-    // 맞춤 스케일 적용
     fitToScreen();
-    // startInterval는 iframe의 load 이벤트에서 시작되므로 별도 호출 불필요
   }
 
-  // 문서 로드 시 초기화
   window.addEventListener('load', init);
 </script>
 </body>
