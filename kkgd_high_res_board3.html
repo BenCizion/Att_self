@@ -63,10 +63,9 @@
             width: 100%;
             height: 100%;
             background-color: black;
-            gap: clamp(6px, 0.8vw, 12px);
-            border: clamp(12px, 1.5vw, 24px) solid #222;
+            gap: 6px;
+            border: 12px solid #222;
             box-sizing: border-box;
-            padding: clamp(12px, 1.5vw, 24px);
         }
         #board01 img {
             width: 100%;
@@ -74,7 +73,6 @@
             object-fit: cover;
             background: #000;
             display: block;
-            border-radius: clamp(4px, 0.5vw, 8px);
         }
 
         /* 4K 네이티브 해상도 최적화 */
@@ -85,11 +83,6 @@
             }
             h1 {
                 font-size: 32px;
-            }
-            #board01 {
-                gap: 12px;
-                border: 24px solid #222;
-                padding: 24px;
             }
         }
 
@@ -116,9 +109,6 @@
             #board01 {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(4, 1fr);
-                gap: 6px;
-                border: 12px solid #222;
-                padding: 12px;
             }
             h1 {
                 font-size: 20px;
@@ -131,9 +121,6 @@
             #board01 {
                 grid-template-columns: 1fr;
                 grid-template-rows: repeat(8, 1fr);
-                gap: 4px;
-                border: 8px solid #222;
-                padding: 8px;
             }
         }
     </style>
@@ -156,4 +143,3 @@
     </div>
 </body>
 </html>
-
