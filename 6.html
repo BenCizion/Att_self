@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <title>꽃게당 인스타그램 TV</title>
   <style>
-    body, html { margin: 0; padding: 0; width: 100vw; height: 100vh;}
+    body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background-color: #000; overflow: hidden; }
     #viewer {
       width: 100vw;
       height: 100vh;
       border: none;
       display: block;
       opacity: 1;
-      transition: opacity 0.9s;
+      transition: opacity 0.9s ease-in-out; /* 부드러운 전환 */
+      background-color: #000;
     }
     #viewer.fadeout {
       opacity: 0;
@@ -19,22 +20,21 @@
   </style>
 </head>
 <body>
-  <iframe id="viewer" src="board1.html"></iframe>
+  <!-- 초기 src는 비워두거나 첫 페이지로 설정 -->
+  <iframe id="viewer" src=""></iframe>
+
 <script>
+  // 설정값
   const pages = ["board1.html", "board2.html", "board3.html", "video.html", "promo.html"];
-  const intervals = [30000, 30000, 10000, 50000, 40000]; // 각 페이지별 interval(ms) 값
+  const intervals = [30000, 30000, 10000, 50000, 40000]; // 각 페이지별 노출 시간(ms)
+  const PRELOAD_RANGE = 2; // 미리 불러올 페이지 개수
+
   let current = 0;
-  let intervalId = null;
   let timeoutId = null;
   const viewer = document.getElementById("viewer");
-
-  // 프리로드 범위 설정(미리 불러올 페이지 개수)
-  const PRELOAD_RANGE = 2;
-
-  // 이미 프리로드한 링크 중복 방지
   const preloaded = new Set();
 
-  // 여러 페이지 프리로드
+  // 1. 프리로드 함수
   function preloadNextPages(startIdx) {
     for (let i = 1; i <= PRELOAD_RANGE; i++) {
       let idx = (startIdx + i) % pages.length;
@@ -50,56 +50,58 @@
     }
   }
 
-  // 다음 페이지로 전환
-  function nextPage() {
-    current = (current + 1) % pages.length;
-    viewer.src = pages[current];
-    clearInterval(intervalId);
-    intervalId = setInterval(nextPage, intervals[current]);
-    viewer.classList.add('fadeout');
+  // 2. 다음 페이지 전환 시작 (Fade Out)
+  function startTransition() {
+    viewer.classList.add('fadeout'); // 화면 어둡게
+
+    // 0.9초(CSS transition 시간) 뒤에 페이지 교체
     setTimeout(() => {
+      // 인덱스 증가 (여기서만 1회 증가)
       current = (current + 1) % pages.length;
+      
+      // 페이지 소스 변경 (이때 onload 이벤트가 트리거됨)
       viewer.src = pages[current];
-      // 다음 PRELOAD_RANGE개 페이지 프리로드
+      
+      // 다음 페이지들 미리 로딩
       preloadNextPages(current);
-    }, 900); // fade out 시간과 맞춤
+    }, 900);
   }
 
-  // interval 시작
-  function startInterval() {
+  // 3. 타이머 스케줄러
+  function scheduleNextMove() {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(nextPage, intervals[current]);
+    // 현재 페이지의 설정된 시간만큼 대기 후 전환 시작
+    // intervals[current]가 없으면 기본값 10초
+    const delay = intervals[current] || 10000;
+    console.log(`Current: ${pages[current]}, Next transition in: ${delay/1000}s`);
+    timeoutId = setTimeout(startTransition, delay);
   }
 
-  // interval 정지
-  function stopInterval() {
-    clearTimeout(timeoutId);
-  }
-
-  // 최초 interval 설정
-  intervalId = setInterval(nextPage, intervals[current]);
-  // iframe 로드 완료 시
+  // 4. iframe 로드 완료 시 (Fade In)
   viewer.onload = function() {
+    // 페이지가 로드되면 화면 밝게
     viewer.classList.remove('fadeout');
-    startInterval();
+    // 다음 전환 스케줄링 시작
+    scheduleNextMove();
   };
 
-  // 페이지가 숨겨지면 interval 정지, 보이면 재개
+  // 5. 탭 활성화/비활성화 처리 (메모리 및 타이밍 절약)
   document.addEventListener("visibilitychange", function() {
     if (document.hidden) {
-      stopInterval();
+      clearTimeout(timeoutId); // 숨겨지면 타이머 정지
     } else {
-      startInterval();
+      // 다시 보이면 즉시 다음 스텝으로 진행하거나 남은 시간 계산 (여기선 단순 재시작)
+      scheduleNextMove();
     }
   });
 
-  // window unload 시 interval 정리 (메모리 누수 방지)
-  window.addEventListener("beforeunload", stopInterval);
-
-  // 초기 시작: 첫번째 프리로드와 interval 시작
+  // 6. 초기 실행
   window.onload = function() {
-    preloadNextPages(0); // 첫 화면 기준 preload
-    startInterval();
+    // 첫 페이지 설정
+    current = 0;
+    viewer.src = pages[current];
+    preloadNextPages(0);
+    // 첫 페이지는 iframe onload가 자동으로 실행되며 스케줄링됨
   };
 </script>
 </body>
