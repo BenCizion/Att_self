@@ -83,11 +83,15 @@
       // 입력값이 없으면 기본값 사용 (안전장치)
       adsRequest.adTagUrl = inputUrl || 'https://attractt.livere.org/3SwYxPrHIjtMpYA/vast'; 
 
-      // ★ 핵심: 요청 사이즈를 1200x750으로 강제 지정 (이게 없으면 503 에러 남)
+      // ★ 핵심: 요청 사이즈를 1200x750으로 강제 지정
       adsRequest.linearAdSlotWidth = 1200;
       adsRequest.linearAdSlotHeight = 750;
       adsRequest.nonLinearAdSlotWidth = 1200;
       adsRequest.nonLinearAdSlotHeight = 750;
+
+      // ★ [수정] 501 에러 해결을 위한 핵심 옵션: 전체 화면 이미지 허용
+      // 이미지가 화면 전체를 덮는 경우(풀스크린 배너) SDK가 이를 허용하도록 설정합니다.
+      adsRequest.forceNonLinearFullSlot = true;
 
       adsLoader.requestAds(adsRequest);
     }
